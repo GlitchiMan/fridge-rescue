@@ -9,16 +9,10 @@ import { getSiteImage } from "@/lib/images";
  */
 const STONE = "#5C6068";
 
-const POINTS = [
-  { title: "Notice what needs using", text: "Enter the dates on the label and we surface those ingredients first." },
-  { title: "Swap instead of shop", text: "Recipe-approved substitutions turn “missing one thing” into dinner." },
-  { title: "Buy only the gaps", text: "Plan the week, then send just the missing items to your list." },
-];
-
 /**
- * Image-led section built on ingredients-editorial.*: the ingredients run
- * along the top of the frame and the lower half is clean stone, so the copy
- * sits in that empty space on large screens and below the photo on small ones.
+ * One benefit, image-led (ingredients-editorial.*): ingredients run along the
+ * top of the frame and the lower half is clean stone, so the copy sits there
+ * on large screens and directly below the photo on small ones.
  */
 export function WasteEditorial() {
   const src = getSiteImage("ingredients-editorial");
@@ -26,7 +20,7 @@ export function WasteEditorial() {
     <section aria-labelledby="waste" className="container-page">
       <div className="relative overflow-hidden rounded-[1.25rem] text-white" style={{ background: STONE }}>
         {src && (
-          <div className="relative aspect-[5/4] sm:aspect-[16/10] lg:aspect-[1.62]">
+          <div className="relative aspect-[16/10] sm:aspect-[2/1] lg:aspect-[2.2]">
             <Image
               src={src}
               alt="Tomatoes, basil, mushrooms, eggs, flour, dried chillies and garlic laid out on a dark stone worktop"
@@ -34,35 +28,27 @@ export function WasteEditorial() {
               sizes="(min-width: 1440px) 1344px, 100vw"
               className="object-cover object-top"
             />
-            {/* Small screens: blend the photo's stone into the panel below. */}
-            <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/3 lg:hidden" style={{ background: `linear-gradient(to bottom, transparent, ${STONE})` }} />
-            {/* Large screens: the copy sits on the empty stone; a quiet shade keeps white text above 4.5:1. */}
-            <div aria-hidden className="absolute inset-0 hidden lg:block" style={{ background: "linear-gradient(to top, rgb(24 26 30 / 0.62) 0%, rgb(24 26 30 / 0.38) 38%, transparent 62%)" }} />
+            <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/2 lg:hidden" style={{ background: `linear-gradient(to bottom, transparent, ${STONE})` }} />
+            <div aria-hidden className="absolute inset-0 hidden lg:block" style={{ background: "linear-gradient(to top, rgb(24 26 30 / 0.66) 0%, rgb(24 26 30 / 0.4) 40%, transparent 70%)" }} />
           </div>
         )}
 
-        <div className={src ? "relative px-6 pb-10 sm:px-10 lg:absolute lg:inset-x-0 lg:bottom-0 lg:px-14 lg:pb-14" : "px-6 py-14 sm:px-10 lg:px-14 lg:py-20"}>
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-end lg:gap-16">
+        <div className={src ? "relative -mt-6 px-6 pb-9 sm:px-10 lg:absolute lg:inset-x-0 lg:bottom-0 lg:mt-0 lg:px-14 lg:pb-12" : "px-6 py-14 sm:px-10 lg:px-14"}>
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-white/70">Why it matters</p>
-              <h2 id="waste" className="mt-4 text-[2.25rem] leading-[1.02] tracking-[-0.028em] text-white sm:text-5xl xl:text-[3.75rem]">
-                Less waste.
-                <br />
-                Better meals.
+              <h2 id="waste" className="text-[2.25rem] leading-[1.02] tracking-[-0.028em] text-white sm:text-[3rem] xl:text-[3.5rem]">
+                Less waste. Better meals.
               </h2>
-              <p className="mt-5 max-w-md text-[1.0625rem] leading-relaxed text-white/85">Make the most of the ingredients you already have.</p>
-              <Link href="/my-fridge" className="mt-7 inline-flex min-h-11 items-center gap-2 rounded-[0.625rem] bg-white px-4 text-[0.9375rem] font-medium text-ink transition-colors hover:bg-cream">
-                Start with your fridge <ArrowRight className="size-4" aria-hidden />
-              </Link>
+              <p className="mt-3 max-w-md text-[1.0625rem] leading-relaxed text-white/85">
+                We flag what needs using first and turn it into dinner – so less ends up in the bin.
+              </p>
             </div>
-            <ul className="grid gap-6 sm:grid-cols-3 sm:gap-8">
-              {POINTS.map((p) => (
-                <li key={p.title} className="border-t border-white/25 pt-4">
-                  <h3 className="font-sans text-[0.9375rem] font-medium tracking-normal text-white">{p.title}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-white/75">{p.text}</p>
-                </li>
-              ))}
-            </ul>
+            <Link
+              href="/my-fridge"
+              className="inline-flex min-h-12 shrink-0 items-center gap-2 self-start rounded-[0.625rem] bg-white px-5 text-[0.9375rem] font-medium text-ink transition-[background-color,transform] duration-150 hover:bg-cream active:scale-[0.97] lg:self-auto"
+            >
+              Set up My Fridge <ArrowRight className="size-4" aria-hidden />
+            </Link>
           </div>
         </div>
       </div>

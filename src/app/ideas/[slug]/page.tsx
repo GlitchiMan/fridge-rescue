@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { AdSlot } from "@/components/ads/ad-slot";
 import { GuideFridgeButton } from "@/components/content/guide-fridge-button";
 import { RecipeCard } from "@/components/recipes/recipe-card";
+import { recipeGridClass } from "@/components/recipes/recipe-grid";
 import { GUIDES, getGuide } from "@/data/guides";
 import { getIngredient } from "@/data/ingredients";
 import { getRecipeBySlug, toSummary } from "@/data/recipes";
@@ -65,8 +66,8 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
         <div className="mb-7 border-b border-line pb-4">
           <h2 id="guide-recipes" className="section-title">Recipes to try</h2>
         </div>
-        <ul className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-          {recipes.map((r) => <li key={r.id} className="flex [&>article]:flex-1"><RecipeCard recipe={r} /></li>)}
+        <ul className={recipeGridClass()}>
+          {recipes.map((r) => <li key={r.id}><RecipeCard recipe={r} /></li>)}
         </ul>
       </section>
 

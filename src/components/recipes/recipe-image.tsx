@@ -4,18 +4,9 @@ import Image from "next/image";
 import { useState } from "react";
 import { getIngredient } from "@/data/ingredients";
 import { getRecipeImage } from "@/lib/images";
+import { BACKGROUND_INGREDIENT_IDS as BACKGROUND_IDS, keyIngredientNames } from "@/lib/recipes/key-ingredients";
 import { cn } from "@/lib/utils/cn";
 import type { RecipeIngredient } from "@/types";
-
-const BACKGROUND_IDS = new Set(["salt", "black-pepper", "water", "cooking-oil", "olive-oil", "sugar", "baking-powder", "baking-soda", "vanilla", "flour", "butter"]);
-
-/** The few ingredients that define the dish – used for the neutral fallback. */
-export function keyIngredientNames(ingredients: RecipeIngredient[], max = 3): string[] {
-  return ingredients
-    .filter((i) => !i.optional && !i.toTaste && !BACKGROUND_IDS.has(i.ingredientId))
-    .map((i) => (getIngredient(i.ingredientId)?.name ?? i.ingredientId).replace(/ \(.*\)/, ""))
-    .slice(0, max);
-}
 
 interface Props {
   slug: string;

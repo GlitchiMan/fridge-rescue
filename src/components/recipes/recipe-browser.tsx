@@ -9,6 +9,7 @@ import { getIngredient } from "@/data/ingredients";
 import { useKitchen } from "@/hooks/use-kitchen";
 import { calculateRecipeMatch, checkRecipeAgainstPreferences, compareMatches, createMatchContext } from "@/lib/matching/engine";
 import { todayIso } from "@/lib/matching/freshness";
+import { photoFirst } from "@/lib/images";
 import { normalizeIngredientName } from "@/lib/matching/ingredient-search";
 import { DIETARY_LABELS } from "@/lib/recipes/dietary";
 import { cn } from "@/lib/utils/cn";
@@ -89,6 +90,9 @@ export function RecipeBrowser({ recipes }: { recipes: RecipeSummary[] }) {
     else if (sort === "az") list = [...list].sort((a, b) => a.title.localeCompare(b.title));
     else if (matches.size) {
       list = [...list].sort((a, b) => compareMatches(matches.get(a.id)!, matches.get(b.id)!, lookup));
+    } else {
+      // Default browsing order: photographed recipes lead.
+      list = photoFirst(list);
     }
     return list;
   }, [recipes, q, time, difficulty, category, diet, equipment, noOven, few, canMakeOnly, useSoonOnly, sort, matches]);
@@ -213,7 +217,7 @@ export function RecipeBrowser({ recipes }: { recipes: RecipeSummary[] }) {
       ) : (
         <ul className={cn("mt-8", recipeGridClass())}>
           {filtered.map((r) => (
-            <li key={r.id} className="flex [&>article]:flex-1">
+            <li key={r.id}>
               <RecipeCard recipe={r} match={matches.get(r.id)} />
             </li>
           ))}

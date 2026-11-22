@@ -40,7 +40,7 @@ export function SavedRecipes({ recipes }: { recipes: RecipeSummary[] }) {
         ) : (
           <ul className={recipeGridClass()}>
             {favorites.map((r) => (
-              <li key={r.id} className="flex [&>article]:flex-1" data-testid="saved-recipe">
+              <li key={r.id} data-testid="saved-recipe">
                 <RecipeCard recipe={r} match={matches.get(r.id)} />
               </li>
             ))}

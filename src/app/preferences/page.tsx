@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function PreferencesPage() {
   return (
-    <div className="container-page pt-10 sm:pt-16">
+    <div className="container-page pt-8 sm:pt-12">
       <PageHeader eyebrow="Settings" title="Preferences & data" description="All optional – Fridge Rescue works without any setup." />
       <div className="mt-4 max-w-4xl">
         <PreferencesForm />

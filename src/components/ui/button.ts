@@ -4,10 +4,10 @@ export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "soft
 export type ButtonSize = "sm" | "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-[0.625rem] font-medium tracking-[-0.005em] transition-[background-color,border-color,color,transform] duration-150 ease-out active:translate-y-px disabled:opacity-45 disabled:pointer-events-none select-none whitespace-nowrap";
+  "inline-flex items-center justify-center gap-2 rounded-[0.625rem] font-medium tracking-[-0.005em] transition-[background-color,border-color,color,transform,box-shadow] duration-150 ease-out active:scale-[0.97] disabled:opacity-45 disabled:pointer-events-none select-none whitespace-nowrap";
 
 const variants: Record<ButtonVariant, string> = {
-  primary: "bg-forest text-white hover:bg-forest-700",
+  primary: "bg-forest text-white hover:bg-forest-700 hover:shadow-[0_6px_16px_-6px_rgb(31_77_58_/_0.55)]",
   secondary: "bg-white text-ink border border-line-strong hover:border-ink/40",
   ghost: "text-ink-soft hover:bg-ink/[0.05] hover:text-ink",
   soft: "bg-ink/[0.05] text-ink hover:bg-ink/[0.09]",

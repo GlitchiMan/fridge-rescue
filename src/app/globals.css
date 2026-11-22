@@ -51,6 +51,23 @@
   --animate-pop: pop 200ms var(--ease-out-soft);
   --animate-fade-up: fade-up 420ms var(--ease-out-soft) both;
   --animate-toast: toast-in 260ms var(--ease-out-soft);
+  --animate-chip-in: chip-in 220ms var(--ease-out-soft) both;
+  --animate-chip-out: chip-out 160ms ease-in both;
+  --animate-heart: heart 420ms var(--ease-out-soft);
+
+  @keyframes chip-in {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: none; opacity: 1; }
+  }
+  @keyframes chip-out {
+    100% { transform: scale(0.8); opacity: 0; }
+  }
+  @keyframes heart {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.32); }
+    65% { transform: scale(0.92); }
+    100% { transform: scale(1); }
+  }
 
   @keyframes pop {
     0% { transform: translateY(4px) scale(0.985); opacity: 0; }
@@ -188,15 +205,15 @@
   }
   .page-title {
     font-family: var(--font-display);
-    font-size: 2.5rem;
-    line-height: 1.02;
+    font-size: 2.25rem;
+    line-height: 1.04;
     letter-spacing: -0.03em;
   }
   @media (min-width: 640px) {
-    .page-title { font-size: 3.5rem; }
+    .page-title { font-size: 2.875rem; }
   }
   @media (min-width: 1280px) {
-    .page-title { font-size: 4rem; }
+    .page-title { font-size: 3.25rem; }
   }
   .lede {
     font-size: 1.0625rem;
@@ -233,6 +250,18 @@
   }
 }
 
+/* Restrained section reveals: pure CSS, driven by scroll position where the
+   browser supports it (no JS, no scroll-jacking). Elsewhere content is static. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: fade-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 28%;
+    }
+  }
+}
+
 /* Respect reduced motion everywhere. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -247,6 +276,7 @@
 @media print {
   @page { margin: 1.5cm; }
   body { background: white !important; color: black; }
+  .reveal { animation: none !important; }
   .no-print, header[data-site-header], footer[data-site-footer], nav[data-bottom-nav], [data-ad-slot] { display: none !important; }
   .card { box-shadow: none !important; border-color: #ccc !important; }
   a { color: black; text-decoration: none; }

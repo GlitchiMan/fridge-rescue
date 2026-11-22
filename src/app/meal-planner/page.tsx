@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function MealPlannerPage() {
   return (
-    <div className="container-page pt-10 sm:pt-16">
+    <div className="container-page pt-8 sm:pt-12">
       <PageHeader eyebrow="Plan" title="This week's meals" description="Plan around what you have, then add only what's missing to your list." />
       <div className="mt-8">
         <MealPlanner recipes={getRecipeSummaries()} />

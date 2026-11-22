@@ -1,7 +1,7 @@
 "use client";
 
 import { Plus, Search, X } from "lucide-react";
-import { useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { getIngredient } from "@/data/ingredients";
 import { findIngredientByAlias, searchIngredients } from "@/lib/matching/ingredient-search";
 import { cn } from "@/lib/utils/cn";
@@ -18,6 +18,10 @@ interface Props {
   /** Exclude these ids from suggestions (e.g. already in fridge). */
   exclude?: string[];
   inputId?: string;
+  /** Called when Enter is pressed with an empty input (e.g. "search now"). */
+  onEnterEmpty?: () => void;
+  /** Lets a parent commit whatever is still typed (returns the new ids). */
+  actionRef?: React.MutableRefObject<{ commit: () => string[] } | null>;
 }
 
 export function IngredientPicker({
@@ -31,8 +35,11 @@ export function IngredientPicker({
   size = "md",
   exclude = [],
   inputId,
+  onEnterEmpty,
+  actionRef,
 }: Props) {
   const [query, setQuery] = useState("");
+  const [leaving, setLeaving] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
   const [notFound, setNotFound] = useState<string[]>([]);
@@ -47,7 +54,17 @@ export function IngredientPicker({
   const suggestions = useMemo(() => (fragment ? searchIngredients(fragment, 7, excludeSet) : []), [fragment, excludeSet]);
   const showList = open && suggestions.length > 0;
 
-  const commit = (pickedId?: string) => {
+  /** Animate a chip out, then remove it. */
+  const removeChip = (sid: string) => {
+    if (!onRemove || leaving) return;
+    setLeaving(sid);
+    setTimeout(() => {
+      onRemove(sid);
+      setLeaving(null);
+    }, 150);
+  };
+
+  const commit = (pickedId?: string): string[] => {
     const parts = query.split(/[,;\n]/).map((p) => p.trim()).filter(Boolean);
     const ids: string[] = [];
     const unknown: string[] = [];
@@ -66,7 +83,14 @@ export function IngredientPicker({
     setActive(0);
     setOpen(false);
     inputRef.current?.focus();
+    return fresh;
   };
+
+  // Expose "commit what's typed" to the parent (e.g. the Find recipes button).
+  useEffect(() => {
+    if (!actionRef) return;
+    actionRef.current = { commit: () => (query.trim() ? commit(showList ? suggestions[active]?.ingredient.id : undefined) : []) };
+  });
 
   return (
     <div className="relative">
@@ -113,12 +137,15 @@ export function IngredientPicker({
               setActive((a) => Math.max(a - 1, 0));
             } else if (e.key === "Enter") {
               e.preventDefault();
-              if (!query.trim()) return;
+              if (!query.trim()) {
+                onEnterEmpty?.();
+                return;
+              }
               commit(showList ? suggestions[active]?.ingredient.id : undefined);
             } else if (e.key === "Escape") {
               setOpen(false);
             } else if (e.key === "Backspace" && !query && selected.length && onRemove) {
-              onRemove(selected[selected.length - 1]!);
+              removeChip(selected[selected.length - 1]!);
             } else if (e.key === "," && fragment && suggestions[0]) {
               // Typing a comma accepts the best suggestion.
               e.preventDefault();
@@ -192,13 +219,13 @@ export function IngredientPicker({
             const ing = getIngredient(sid);
             if (!ing) return null;
             return (
-              <li key={sid} className="animate-pop">
+              <li key={sid} className={leaving === sid ? "animate-chip-out" : "animate-chip-in"}>
                 <span className="inline-flex min-h-8 items-center gap-2 rounded-[0.5rem] bg-forest py-0.5 pl-2.5 pr-0.5 text-[0.8125rem] font-medium text-white">
                   {ing.name}
                   {onRemove && (
                     <button
                       type="button"
-                      onClick={() => onRemove(sid)}
+                      onClick={() => removeChip(sid)}
                       aria-label={`Remove ${ing.name}`}
                       className="inline-flex size-7 items-center justify-center rounded-[0.375rem] text-white/75 transition-colors hover:bg-white/15 hover:text-white"
                     >

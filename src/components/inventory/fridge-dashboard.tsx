@@ -12,6 +12,7 @@ import { getIngredient } from "@/data/ingredients";
 import { useKitchen } from "@/hooks/use-kitchen";
 import { suggestRecipesForInventory } from "@/lib/matching/engine";
 import { getSoonToUseIngredients, todayIso } from "@/lib/matching/freshness";
+import { hasRecipeImage } from "@/lib/images";
 import { formatShoppingItem } from "@/lib/shopping/merge";
 import { cn } from "@/lib/utils/cn";
 import type { RecipeSummary } from "@/types";
@@ -170,14 +171,23 @@ export function FridgeDashboard({ recipes }: { recipes: RecipeSummary[] }) {
 
           {hydrated && inspiration && inspirationRecipe && (
             <section aria-labelledby="inspiration" className="mt-16 first:mt-0">
-              <Link href={`/recipes/${inspiration.slug}`} className="group grid overflow-hidden rounded-[1rem] bg-forest text-white sm:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
-                <RecipeImage
-                  slug={inspirationRecipe.slug}
-                  title={inspirationRecipe.title}
-                  ingredients={inspirationRecipe.ingredients}
-                  sizes="(min-width: 640px) 360px, 100vw"
-                  className="aspect-[16/10] sm:aspect-auto sm:h-full sm:min-h-56"
-                />
+              <Link
+                href={`/recipes/${inspiration.slug}`}
+                className={cn(
+                  "group grid overflow-hidden rounded-[1rem] bg-forest text-white transition-transform duration-200 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0",
+                  hasRecipeImage(inspirationRecipe.slug) && "sm:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]",
+                )}
+              >
+                {hasRecipeImage(inspirationRecipe.slug) && (
+                  <RecipeImage
+                    slug={inspirationRecipe.slug}
+                    title={inspirationRecipe.title}
+                    ingredients={inspirationRecipe.ingredients}
+                    sizes="(min-width: 640px) 360px, 100vw"
+                    className="aspect-[16/10] sm:aspect-auto sm:h-full sm:min-h-56"
+                    imageClassName="transition-transform duration-500 group-hover:scale-[1.04]"
+                  />
+                )}
                 <div className="flex flex-col justify-center p-7 sm:p-9">
                   <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-white/65">Today&apos;s idea</p>
                   <h2 id="inspiration" className="mt-3 text-[1.75rem] leading-tight text-white sm:text-[2.125rem]">{inspirationRecipe.title}</h2>

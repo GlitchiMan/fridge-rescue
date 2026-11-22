@@ -10,5 +10,11 @@ export const IMAGE_MANIFEST: {
     "hero-kitchen": "/images/hero-kitchen.png",
     "ingredients-editorial": "/images/ingredients-editorial.png"
   },
-  "recipes": {}
+  "recipes": {
+    "basic-pancakes": "/images/recipes/basic-pancakes.jpg",
+    "chicken-fried-rice": "/images/recipes/chicken-fried-rice.jpg",
+    "classic-cheese-omelette": "/images/recipes/classic-cheese-omelette.jpg",
+    "creamy-mushroom-pasta": "/images/recipes/creamy-mushroom-pasta.jpg",
+    "tomato-soup": "/images/recipes/tomato-soup.jpg"
+  }
 };

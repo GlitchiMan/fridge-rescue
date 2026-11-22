@@ -1,7 +1,9 @@
 "use client";
 
 import { ArrowRightLeft, CalendarDays, Plus, ShoppingBasket, Trash2, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import { getRecipeImage } from "@/lib/images";
 import { useMemo, useState } from "react";
 import { ReadinessBadge } from "@/components/recipes/recipe-card";
 import { buttonClass, iconButtonClass } from "@/components/ui/button";
@@ -106,7 +108,13 @@ export function MealPlanner({ recipes }: { recipes: RecipeSummary[] }) {
                           {entries.map((e) => {
                             const r = recipeMap.get(e.recipeId);
                             return (
-                              <li key={e.id} className="group/entry rounded-[0.5rem] bg-forest-50 px-2.5 py-2" data-testid="plan-entry">
+                              <li key={e.id} className="group/entry animate-chip-in overflow-hidden rounded-[0.625rem] bg-forest-50" data-testid="plan-entry">
+                                {r && getRecipeImage(r.slug) && (
+                                  <div className="relative aspect-[16/9] overflow-hidden">
+                                    <Image src={getRecipeImage(r.slug)!} alt="" fill sizes="(min-width: 1280px) 180px, (min-width: 640px) 45vw, 90vw" className="object-cover" />
+                                  </div>
+                                )}
+                                <div className="px-2.5 py-2">
                                 <Link href={`/recipes/${r?.slug ?? e.recipeId}`} className="line-clamp-2 text-[0.875rem] font-medium leading-snug text-ink hover:text-forest">
                                   {r?.title ?? "Unknown recipe"}
                                 </Link>
@@ -120,6 +128,7 @@ export function MealPlanner({ recipes }: { recipes: RecipeSummary[] }) {
                                       <X className="size-3.5" aria-hidden strokeWidth={1.75} />
                                     </button>
                                   </span>
+                                </div>
                                 </div>
                               </li>
                             );

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function IdeasPage() {
   return (
-    <div className="container-page pt-10 sm:pt-16">
+    <div className="container-page pt-8 sm:pt-12">
       <PageHeader eyebrow="Guides" title="Cooking guides" description="Short, practical guides for the questions that come up at the fridge door." />
       <ul className="divide-y divide-line border-b border-line">
         {GUIDES.map((g, i) => (

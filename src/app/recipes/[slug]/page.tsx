@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AdSlot } from "@/components/ads/ad-slot";
 import { RecipeCard } from "@/components/recipes/recipe-card";
+import { recipeGridClass } from "@/components/recipes/recipe-grid";
 import { RecipeImage } from "@/components/recipes/recipe-image";
 import { IngredientsPanel, RecipeActions, RecipeProvider } from "@/components/recipes/recipe-workspace";
 import { StepTimer } from "@/components/recipes/step-timer";
@@ -41,13 +42,13 @@ const EQUIPMENT_LABEL: Record<string, string> = {
 
 function relatedFor(recipe: Recipe): Recipe[] {
   const chosen = recipe.relatedRecipes.map((id) => getRecipeBySlug(id)).filter((r): r is Recipe => Boolean(r));
-  if (chosen.length >= 4) return chosen.slice(0, 4);
+  if (chosen.length >= 3) return chosen.slice(0, 3);
   // Fill with recipes sharing the most ingredients (deterministic).
   const mine = new Set(recipe.ingredients.map((i) => i.ingredientId));
   const extra = RECIPES.filter((r) => r.id !== recipe.id && !chosen.includes(r))
     .map((r) => ({ r, shared: r.ingredients.filter((i) => mine.has(i.ingredientId)).length }))
     .sort((a, b) => b.shared - a.shared || a.r.slug.localeCompare(b.r.slug));
-  return [...chosen, ...extra.map((e) => e.r)].slice(0, 4);
+  return [...chosen, ...extra.map((e) => e.r)].slice(0, 3);
 }
 
 function safetyNotes(recipe: Recipe): string[] {
@@ -125,13 +126,27 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
         </nav>
 
         {/* ── Header ── */}
-        <header className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:gap-16">
+        <header className={hasPhoto ? "mt-6 grid gap-8 lg:mt-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:gap-16" : "mt-6 max-w-4xl lg:mt-8"}>
+          {/* Photo first on small screens so the dish is the first thing you see. */}
+          {hasPhoto && (
+            <figure className="no-print lg:order-2">
+              <RecipeImage
+                slug={recipe.slug}
+                title={recipe.title}
+                ingredients={recipe.ingredients}
+                sizes={IMAGE_SIZES.recipeHero}
+                priority
+                className="aspect-[4/3] rounded-[1rem] lg:aspect-[5/4] lg:rounded-[1.25rem]"
+              />
+              <figcaption className="mt-2 text-xs text-muted">Serving suggestion</figcaption>
+            </figure>
+          )}
           <div>
             <p className="eyebrow">{recipe.cuisine}</p>
-            <h1 className="mt-4 text-[2.5rem] sm:text-[3.5rem] xl:text-[4.25rem]">{recipe.title}</h1>
-            <p className="lede mt-5 max-w-xl">{recipe.fullDescription}</p>
+            <h1 className="mt-3 text-[2.375rem] sm:text-[3.25rem] xl:text-[4rem]">{recipe.title}</h1>
+            <p className="lede mt-4 max-w-xl">{recipe.shortDescription}</p>
 
-            <dl className="mt-8 grid grid-cols-3 gap-y-5 border-y border-line py-5 sm:grid-cols-5">
+            <dl className="mt-6 grid grid-cols-3 gap-y-4 border-y border-line py-4 sm:grid-cols-5">
               {facts.map(({ label, value }) => (
                 <div key={label} className="pr-3">
                   <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-muted">{label}</dt>
@@ -147,26 +162,14 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
                 ))}
               </ul>
             )}
-            <div className="mt-8">
+            <div className="mt-6">
               <RecipeActions />
             </div>
           </div>
-
-          <figure className="no-print">
-            <RecipeImage
-              slug={recipe.slug}
-              title={recipe.title}
-              ingredients={recipe.ingredients}
-              sizes={IMAGE_SIZES.recipeHero}
-              priority
-              className="aspect-[4/3] rounded-[1rem] lg:aspect-[5/4] lg:rounded-[1.25rem]"
-            />
-            {hasPhoto && <figcaption className="mt-2.5 text-xs text-muted">Serving suggestion</figcaption>}
-          </figure>
         </header>
 
         {/* ── Body ── */}
-        <div className="mt-16 grid gap-12 lg:mt-24 lg:grid-cols-[minmax(0,400px)_minmax(0,1fr)] lg:gap-16 xl:gap-24">
+        <div className="mt-10 grid gap-10 lg:mt-16 lg:grid-cols-[minmax(0,400px)_minmax(0,1fr)] lg:gap-16 xl:gap-24">
           <div className="lg:sticky lg:top-24 lg:self-start">
             <IngredientsPanel />
             {recipe.equipment.length > 0 && (
@@ -200,11 +203,13 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
             </section>
 
             {recipe.whyItWorks && (
-              <section aria-labelledby="why" className="mt-14">
+              <section aria-labelledby="why" className="mt-12">
                 <p className="eyebrow" id="why">Why it works</p>
-                <p className="mt-4 max-w-2xl font-display text-[1.375rem] leading-[1.45] tracking-[-0.01em] sm:text-[1.5rem]">{recipe.whyItWorks}</p>
+                <p className="mt-3 max-w-2xl font-display text-[1.25rem] leading-[1.45] tracking-[-0.01em] sm:text-[1.375rem]">{recipe.whyItWorks}</p>
+                <p className="mt-4 max-w-2xl text-[0.9375rem] leading-relaxed text-muted">{recipe.fullDescription}</p>
               </section>
             )}
+            {!recipe.whyItWorks && <p className="mt-12 max-w-2xl text-[0.9375rem] leading-relaxed text-muted">{recipe.fullDescription}</p>}
 
             <AdSlot slot="recipe-mid" />
 
@@ -276,9 +281,9 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
 
         <section aria-labelledby="related" className="no-print mt-24 border-t border-line pt-14">
           <h2 id="related" className="section-title">You might also like</h2>
-          <ul className="mt-8 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className={`mt-6 ${recipeGridClass()}`}>
             {related.map((r) => (
-              <li key={r.id} className="flex [&>article]:flex-1">
+              <li key={r.id}>
                 <RecipeCard recipe={toSummary(r)} />
               </li>
             ))}

@@ -41,7 +41,7 @@ export function FavoriteButton({
           className,
         )}
       >
-        <Heart className={cn("size-4", saved && "fill-current")} aria-hidden strokeWidth={1.75} />
+        <Heart key={String(saved)} className={cn("size-4", saved && "animate-heart fill-current")} aria-hidden strokeWidth={1.75} />
         {saved ? "Saved" : "Save recipe"}
       </button>
     );
@@ -59,7 +59,7 @@ export function FavoriteButton({
         className,
       )}
     >
-      <Heart className={cn("size-[1.05rem]", saved && "fill-current")} aria-hidden strokeWidth={1.75} />
+      <Heart key={String(saved)} className={cn("size-[1.05rem]", saved && "animate-heart fill-current")} aria-hidden strokeWidth={1.75} />
     </button>
   );
 }

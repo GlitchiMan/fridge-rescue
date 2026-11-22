@@ -4,17 +4,21 @@ import type { RecipeMatch, RecipeSummary } from "@/types";
 import { RecipeCard } from "./recipe-card";
 
 /** Shared responsive grid for recipe cards. */
+/**
+ * Masonry-style columns: photo cards and compact text-first cards keep their
+ * natural heights and stack without gaps – no stretched or empty boxes.
+ */
 export function recipeGridClass() {
-  return "grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+  return "columns-1 gap-4 sm:columns-2 sm:gap-5 lg:columns-3 [&>li]:mb-4 [&>li]:break-inside-avoid sm:[&>li]:mb-5";
 }
 
 /**
  * `dense` rows (dashboard sections) swipe horizontally on phones so a page of
  * several sections stays short, and become a 2–3 column grid from tablet up.
  */
-const DENSE_LIST =
-  "-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-5 px-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-x-5 sm:gap-y-10 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3";
-const DENSE_ITEM = "w-[78%] shrink-0 snap-start sm:w-auto";
+export const DENSE_LIST =
+  "-mx-5 flex snap-x snap-mandatory items-start gap-3 overflow-x-auto scroll-px-5 px-5 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:block sm:columns-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 lg:columns-3 sm:[&>li]:mb-5 sm:[&>li]:break-inside-avoid";
+export const DENSE_ITEM ="w-[80%] shrink-0 snap-start sm:w-auto";
 
 export function RecipeGrid({
   items,
@@ -34,7 +38,7 @@ export function RecipeGrid({
         const r = recipes.get(m.recipeId);
         if (!r) return null;
         return (
-          <li key={m.recipeId} className={cn("flex animate-fade-up [&>article]:flex-1", dense && DENSE_ITEM)} style={{ animationDelay: `${Math.min(i, 6) * 40}ms` }}>
+          <li key={m.recipeId} className={cn("animate-fade-up", dense && DENSE_ITEM)} style={{ animationDelay: `${Math.min(i, 8) * 35}ms` }}>
             <RecipeCard recipe={r} match={m} />
           </li>
         );
@@ -57,8 +61,8 @@ export function ResultSection({
   count?: number;
 }) {
   return (
-    <section aria-labelledby={id} className="mt-16 first:mt-0">
-      <div className="mb-7 flex flex-wrap items-end justify-between gap-x-6 gap-y-2 border-b border-line pb-4">
+    <section aria-labelledby={id} className="mt-12 first:mt-0">
+      <div className="mb-5 flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
         <div>
           <h2 id={id} className="section-title">
             {title}
