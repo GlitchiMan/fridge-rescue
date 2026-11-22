@@ -3,25 +3,26 @@ import { getSiteImage } from "@/lib/images";
 
 /**
  * Homepage hero photograph (public/images/hero-kitchen.*).
- * The food sits along the front of the counter and spans most of the frame,
- * so every crop keeps the lower-middle band – microgreens through to the
- * bread – and trims sky, window and cabinets first.
+ * The ingredients fill the right half of the frame (basil → bread, eggs,
+ * garlic and parmesan) on a sunlit stone counter, with empty counter to the
+ * left. Every crop is anchored right so the food is never cut, and the
+ * frame trims empty counter first.
  */
 export function HeroVisual() {
   const src = getSiteImage("hero-kitchen");
   return (
     // Without the photo, small screens skip the visual so the search follows the headline.
     <figure className={src ? "relative" : "relative hidden lg:block"}>
-      <div className="relative aspect-[4/3] overflow-hidden rounded-[1rem] bg-cream-deep sm:aspect-[16/10] lg:aspect-[7/5] lg:rounded-[1.25rem]">
+      <div className="relative aspect-[3/2] overflow-hidden rounded-[1rem] bg-cream-deep sm:aspect-[2/1] lg:aspect-[7/5] lg:rounded-[1.25rem]">
         {src ? (
           <Image
             src={src}
-            alt="Eggs, avocado, cherry tomatoes, microgreens, fresh bread and a cast-iron pan on a sunlit kitchen counter"
+            alt="Vine tomatoes, red onions, basil, lemon, potatoes, a loaf of bread, eggs, garlic and parmesan on a sunlit stone kitchen counter"
             fill
             priority
             quality={85}
-            sizes="(min-width: 1440px) 820px, (min-width: 1024px) 56vw, 100vw"
-            className="object-cover object-[60%_78%] sm:object-[62%_72%] lg:object-[66%_64%]"
+            sizes="(min-width: 1440px) 760px, (min-width: 1024px) 54vw, 100vw"
+            className="object-cover object-[100%_45%]"
           />
         ) : (
           <HeroFallback />

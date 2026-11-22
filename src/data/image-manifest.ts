@@ -6,6 +6,9 @@ export const IMAGE_MANIFEST: {
   site: Record<string, string>;
   recipes: Record<string, string>;
 } = {
-  "site": {},
+  "site": {
+    "hero-kitchen": "/images/hero-kitchen.png",
+    "ingredients-editorial": "/images/ingredients-editorial.png"
+  },
   "recipes": {}
 };

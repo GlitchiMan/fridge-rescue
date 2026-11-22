@@ -3,8 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { getSiteImage } from "@/lib/images";
 
-/** Matches the stone surface in ingredients-editorial so photo and panel read as one. */
-const STONE = "#55585A";
+/**
+ * Sampled from the darker edge of the stone in ingredients-editorial so the
+ * photo and the panel below it read as one surface. White text on it is ≥ 6:1.
+ */
+const STONE = "#5C6068";
 
 const POINTS = [
   { title: "Notice what needs using", text: "Enter the dates on the label and we surface those ingredients first." },
@@ -31,8 +34,10 @@ export function WasteEditorial() {
               sizes="(min-width: 1440px) 1344px, 100vw"
               className="object-cover object-top"
             />
-            {/* Blends the photo's stone into the panel below on small screens. */}
+            {/* Small screens: blend the photo's stone into the panel below. */}
             <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/3 lg:hidden" style={{ background: `linear-gradient(to bottom, transparent, ${STONE})` }} />
+            {/* Large screens: the copy sits on the empty stone; a quiet shade keeps white text above 4.5:1. */}
+            <div aria-hidden className="absolute inset-0 hidden lg:block" style={{ background: "linear-gradient(to top, rgb(24 26 30 / 0.62) 0%, rgb(24 26 30 / 0.38) 38%, transparent 62%)" }} />
           </div>
         )}
 

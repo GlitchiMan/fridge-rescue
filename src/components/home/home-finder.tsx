@@ -79,8 +79,10 @@ export function HomeFinder({ recipes, intro, visual }: { recipes: RecipeSummary[
   return (
     <>
       {/* ── Hero ──
-          Mobile order: copy → photo → search. Desktop: copy + search left, photo right. */}
-      <section className="container-page grid gap-x-14 gap-y-8 pb-16 pt-8 [grid-template-areas:'intro'_'visual'_'search'] sm:pt-12 lg:grid-cols-[minmax(0,6fr)_minmax(0,7fr)] lg:gap-y-9 lg:pb-24 lg:pt-14 lg:[grid-template-areas:'intro_visual'_'search_visual'] xl:gap-x-20">
+          Phone: copy → photo → search (search still above the fold).
+          Tablet: copy → search → photo, so the search isn't pushed below the fold.
+          Desktop: copy + search left, photo right. */}
+      <section className="container-page grid gap-x-14 gap-y-6 pb-16 pt-6 sm:gap-y-8 [grid-template-areas:'intro'_'visual'_'search'] sm:pt-12 sm:[grid-template-areas:'intro'_'search'_'visual'] lg:grid-cols-[minmax(0,6fr)_minmax(0,7fr)] lg:gap-y-9 lg:pb-24 lg:pt-14 lg:[grid-template-areas:'intro_visual'_'search_visual'] xl:gap-x-20">
         <div className="[grid-area:intro] lg:self-end">{intro}</div>
         <div className="[grid-area:visual] lg:self-center">{visual}</div>
 
