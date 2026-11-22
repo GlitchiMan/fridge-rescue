@@ -63,7 +63,7 @@ export function RecipeCard({
           ingredients={recipe.ingredients}
           sizes={large ? IMAGE_SIZES.cardLarge : IMAGE_SIZES.card}
           priority={priority}
-          className={cn("rounded-[0.75rem]", large ? "aspect-[4/3] lg:aspect-[16/11]" : "aspect-[4/3]")}
+          className={cn("rounded-[0.75rem]", large ? "aspect-[4/3] sm:aspect-[2/1] lg:aspect-[16/11]" : "aspect-[4/3]")}
           imageClassName="transition-[transform,opacity] duration-700 ease-out group-hover:scale-[1.025] motion-reduce:group-hover:scale-100"
         />
         {match && match.usesSoon.length > 0 && (
