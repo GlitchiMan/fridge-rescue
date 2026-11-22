@@ -51,21 +51,21 @@ export function Dialog({ open, onClose, title, description, children, footer, si
         if (e.target === ref.current) onClose();
       }}
       className={cn(
-        "m-auto max-h-[92dvh] w-[calc(100%-1.5rem)] overflow-hidden rounded-3xl border border-line bg-cream p-0 text-ink shadow-lift backdrop:bg-ink/40 backdrop:backdrop-blur-[2px] open:animate-pop",
+        "m-auto max-h-[92dvh] w-[calc(100%-1.5rem)] overflow-hidden rounded-[1rem] border border-line bg-white p-0 text-ink shadow-lift backdrop:bg-ink/35 backdrop:backdrop-blur-[3px] open:animate-pop",
         size === "md" && "max-w-lg",
         size === "lg" && "max-w-2xl",
-        size === "full" && "h-[100dvh] max-h-[100dvh] w-full max-w-none rounded-none sm:h-[92dvh] sm:max-w-3xl sm:rounded-3xl",
+        size === "full" && "h-[100dvh] max-h-[100dvh] w-full max-w-none rounded-none bg-cream sm:h-[92dvh] sm:max-w-3xl sm:rounded-[1rem]",
       )}
     >
       {open && (
         <div className="flex max-h-[inherit] flex-col">
-          <div className="flex items-start justify-between gap-4 border-b border-line px-5 py-4">
+          <div className="flex items-start justify-between gap-4 px-6 pb-2 pt-5">
             <div>
-              <h2 id={titleId} className="text-xl font-semibold">
+              <h2 id={titleId} className="font-display text-[1.5rem] leading-tight tracking-[-0.02em]">
                 {title}
               </h2>
               {description && (
-                <p id={descId} className="mt-1 text-sm text-muted">
+                <p id={descId} className="mt-1.5 text-sm text-muted">
                   {description}
                 </p>
               )}
@@ -74,13 +74,13 @@ export function Dialog({ open, onClose, title, description, children, footer, si
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="-mr-2 inline-flex size-10 shrink-0 items-center justify-center rounded-full text-muted hover:bg-forest-50 hover:text-forest"
+              className="-mr-2 -mt-1 inline-flex size-9 shrink-0 items-center justify-center rounded-[0.5rem] text-muted hover:bg-ink/[0.05] hover:text-ink"
             >
-              <X className="size-5" aria-hidden />
+              <X className="size-[1.1rem]" aria-hidden />
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto px-5 py-4">{children}</div>
-          {footer && <div className="flex flex-wrap justify-end gap-2 border-t border-line bg-white/60 px-5 py-3">{footer}</div>}
+          <div className="flex-1 overflow-y-auto px-6 py-4">{children}</div>
+          {footer && <div className="flex flex-wrap justify-end gap-2 border-t border-line px-6 py-4">{footer}</div>}
         </div>
       )}
     </dialog>

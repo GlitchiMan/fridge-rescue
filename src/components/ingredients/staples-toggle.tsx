@@ -17,9 +17,9 @@ export function StaplesToggle({ compact = false }: { compact?: boolean }) {
   };
   return (
     <fieldset>
-      <legend className={cn("font-semibold text-ink", compact ? "text-sm" : "")}>Pantry basics you always have</legend>
+      <legend className={cn("font-medium text-ink", compact ? "text-sm" : "text-[0.9375rem]")}>Pantry basics you always have</legend>
       {!compact && <p className="mt-0.5 text-sm text-muted">We only count these as available if you tick them.</p>}
-      <div className="mt-2 flex flex-wrap gap-2">
+      <div className="mt-3 flex flex-wrap gap-1.5">
         {STAPLE_SUGGESTIONS.map((id) => {
           const ing = getIngredient(id);
           if (!ing) return null;
@@ -31,11 +31,11 @@ export function StaplesToggle({ compact = false }: { compact?: boolean }) {
               aria-pressed={on}
               onClick={() => toggle(id)}
               className={cn(
-                "inline-flex min-h-9 items-center gap-1.5 rounded-full border px-3 text-sm font-semibold transition-colors",
-                on ? "border-forest bg-forest text-white" : "border-line-strong bg-white text-muted hover:border-forest hover:text-forest",
+                "inline-flex min-h-9 items-center gap-1.5 rounded-[0.5rem] border px-3 text-[0.8125rem] font-medium transition-colors",
+                on ? "border-forest bg-forest text-white" : "border-line-strong bg-white text-ink-soft hover:border-ink/40 hover:text-ink",
               )}
             >
-              {on && <Check className="size-3.5" aria-hidden />}
+              {on && <Check className="size-3.5" aria-hidden strokeWidth={2.25} />}
               {ing.name}
             </button>
           );

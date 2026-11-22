@@ -5,10 +5,11 @@ import { buttonClass } from "@/components/ui/button";
 
 export default function ErrorPage({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
-    <div className="container-page flex max-w-xl flex-col items-center py-20 text-center">
-      <h1 className="text-4xl font-semibold">Something went wrong.</h1>
-      <p className="mt-3 text-muted">Please try again. Your kitchen data is safe in your browser.</p>
-      <div className="mt-6 flex flex-wrap justify-center gap-2">
+    <div className="container-narrow flex flex-col items-start py-24 sm:py-32">
+      <p className="eyebrow">Something went wrong</p>
+      <h1 className="mt-4 text-[2.75rem] sm:text-[4rem]">Something went wrong.</h1>
+      <p className="lede mt-5">Please try again. Your kitchen data is safe in your browser.</p>
+      <div className="mt-8 flex flex-wrap gap-2">
         <button type="button" onClick={reset} className={buttonClass("primary", "md")}>Try again</button>
         <Link href="/" className={buttonClass("secondary", "md")}>Go home</Link>
       </div>

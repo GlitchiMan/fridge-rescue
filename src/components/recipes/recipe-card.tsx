@@ -1,9 +1,9 @@
-import { AlertCircle, CheckCircle2, CircleHelp, Clock, Gauge, Sparkles } from "lucide-react";
 import Link from "next/link";
-import type { Readiness, RecipeMatch, RecipeSummary } from "@/types";
+import { IMAGE_SIZES } from "@/lib/images";
 import { cn } from "@/lib/utils/cn";
+import type { Readiness, RecipeMatch, RecipeSummary } from "@/types";
 import { FavoriteButton } from "./favorite-button";
-import { RecipeArt } from "./recipe-art";
+import { RecipeImage } from "./recipe-image";
 
 const DIFFICULTY_LABEL = { easy: "Easy", medium: "Medium", advanced: "Advanced" } as const;
 
@@ -20,25 +20,18 @@ export function readinessLabel(m: Pick<RecipeMatch, "readiness" | "missing">): s
   }
 }
 
-const READINESS_STYLE: Record<Readiness, string> = {
-  ready: "bg-forest text-white",
-  "check-quantities": "bg-leaf-soft text-forest-800",
-  short: "bg-orange-soft text-orange-ink",
-  missing: "bg-cream-deep text-ink",
-};
-
-const READINESS_ICON = {
-  ready: CheckCircle2,
-  "check-quantities": CircleHelp,
-  short: AlertCircle,
-  missing: AlertCircle,
+const READINESS_STYLE: Record<Readiness, { tag: string; dot: string }> = {
+  ready: { tag: "bg-forest text-white", dot: "bg-white" },
+  "check-quantities": { tag: "bg-forest-50 text-forest", dot: "bg-forest" },
+  short: { tag: "bg-orange-soft text-orange-ink", dot: "bg-orange" },
+  missing: { tag: "bg-cream-deep text-ink-soft", dot: "bg-faint" },
 };
 
 export function ReadinessBadge({ match, className }: { match: Pick<RecipeMatch, "readiness" | "missing">; className?: string }) {
-  const Icon = READINESS_ICON[match.readiness];
+  const s = READINESS_STYLE[match.readiness];
   return (
-    <span className={cn("inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold", READINESS_STYLE[match.readiness], className)}>
-      <Icon className="size-3.5" aria-hidden />
+    <span className={cn("tag", s.tag, className)}>
+      <span aria-hidden className={cn("size-1.5 rounded-full", s.dot)} />
       {readinessLabel(match)}
     </span>
   );
@@ -49,68 +42,75 @@ export function RecipeCard({
   match,
   headingLevel = "h3",
   priority = false,
+  size = "default",
 }: {
   recipe: RecipeSummary;
   match?: RecipeMatch;
   headingLevel?: "h2" | "h3";
   priority?: boolean;
+  size?: "default" | "large";
 }) {
   const Heading = headingLevel;
+  const large = size === "large";
   const missingNames = match?.missing.map((m) => m.name.toLowerCase()) ?? [];
+
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-[var(--radius-card)] border border-line bg-white shadow-soft transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-lift motion-reduce:hover:translate-y-0">
-      <div className="relative aspect-[4/3] overflow-hidden bg-surface">
-        <RecipeArt
+    <article className="group relative flex flex-col">
+      <div className="relative">
+        <RecipeImage
           slug={recipe.slug}
-          categories={recipe.categories}
+          title={recipe.title}
           ingredients={recipe.ingredients}
-          className="size-full transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
+          sizes={large ? IMAGE_SIZES.cardLarge : IMAGE_SIZES.card}
+          priority={priority}
+          className={cn("rounded-[0.75rem]", large ? "aspect-[4/3] lg:aspect-[16/11]" : "aspect-[4/3]")}
+          imageClassName="transition-[transform,opacity] duration-700 ease-out group-hover:scale-[1.025] motion-reduce:group-hover:scale-100"
         />
-        {match && <ReadinessBadge match={match} className="absolute left-3 top-3 shadow-soft" />}
         {match && match.usesSoon.length > 0 && (
-          <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-full bg-orange px-2.5 py-1 text-xs font-bold text-ink shadow-soft">
-            <Sparkles className="size-3.5" aria-hidden /> Uses {match.usesSoon[0]!.toLowerCase()}
+          <span className="tag absolute bottom-3 left-3 bg-white/95 text-orange-ink backdrop-blur">
+            <span aria-hidden className="size-1.5 rounded-full bg-orange" />
+            Uses your {match.usesSoon[0]!.toLowerCase()}
           </span>
         )}
-        <div className="absolute right-3 top-3 z-10">
+        <div className="absolute right-2.5 top-2.5 z-10">
           <FavoriteButton recipeId={recipe.id} title={recipe.title} />
         </div>
       </div>
-      <div className="flex flex-1 flex-col p-4">
-        <Heading className="text-lg font-semibold leading-snug">
+
+      <div className="flex flex-1 flex-col pt-4">
+        <p className="text-[0.75rem] font-medium uppercase tracking-[0.1em] text-muted">
+          {recipe.totalMinutes} min <span aria-hidden className="mx-1 text-faint">/</span> {DIFFICULTY_LABEL[recipe.difficulty]}
+        </p>
+        <Heading className={cn("mt-1.5 font-display leading-[1.15] tracking-[-0.015em]", large ? "text-[1.75rem] sm:text-[2rem]" : "text-[1.3125rem]")}>
           <Link
             href={`/recipes/${recipe.slug}`}
             prefetch={priority ? undefined : false}
-            className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none group-has-[:focus-visible]:underline"
+            className="decoration-ink/30 underline-offset-[0.18em] after:absolute after:inset-0 after:content-[''] focus-visible:outline-none group-hover:underline group-has-[:focus-visible]:underline"
           >
             {recipe.title}
           </Link>
         </Heading>
-        <p className="mt-1 line-clamp-2 text-sm text-muted">{recipe.shortDescription}</p>
-        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted">
-          <span className="inline-flex items-center gap-1">
-            <Clock className="size-4" aria-hidden />
-            {recipe.totalMinutes} min
-          </span>
-          <span className="inline-flex items-center gap-1">
-            <Gauge className="size-4" aria-hidden />
-            {DIFFICULTY_LABEL[recipe.difficulty]}
-          </span>
-        </div>
+        <p className={cn("mt-1.5 text-muted", large ? "max-w-xl text-[1rem] leading-relaxed" : "line-clamp-2 text-[0.875rem] leading-relaxed")}>
+          {recipe.shortDescription}
+        </p>
+
         {match && (
-          <div className="mt-3 border-t border-line pt-3 text-sm">
-            <p className="font-semibold text-ink">
-              You have {match.essentialHave} of {match.essentialTotal} ingredients
-            </p>
-            {missingNames.length > 0 && (
-              <p className="mt-0.5 text-muted">
-                <span className="font-semibold text-coral-ink">Missing:</span> {missingNames.slice(0, 3).join(", ")}
-                {missingNames.length > 3 ? ` +${missingNames.length - 3} more` : ""}
+          <div className="mt-auto pt-4">
+            <div className="hairline-top pt-3">
+              <ReadinessBadge match={match} />
+              <p className="mt-2 text-[0.8125rem] text-ink-soft">
+                You have {match.essentialHave} of {match.essentialTotal} ingredients
+                {missingNames.length > 0 && (
+                  <span className="text-muted">
+                    {" "}· missing {missingNames.slice(0, 3).join(", ")}
+                    {missingNames.length > 3 ? ` +${missingNames.length - 3}` : ""}
+                  </span>
+                )}
+                {match.insufficient.length > 0 && missingNames.length === 0 && (
+                  <span className="text-muted"> · need more {match.insufficient.map((m) => m.name.toLowerCase()).join(", ")}</span>
+                )}
               </p>
-            )}
-            {match.insufficient.length > 0 && missingNames.length === 0 && (
-              <p className="mt-0.5 text-muted">Need more {match.insufficient.map((m) => m.name.toLowerCase()).join(", ")}</p>
-            )}
+            </div>
           </div>
         )}
       </div>

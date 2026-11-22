@@ -1,4 +1,5 @@
 import { getIngredient } from "@/data/ingredients";
+import { getRecipeImage } from "@/lib/images";
 import { formatQuantity } from "@/lib/quantities/units";
 import type { Recipe } from "@/types";
 import { SITE_NAME, absoluteUrl } from "./site";
@@ -21,10 +22,13 @@ export function ingredientLine(ri: Recipe["ingredients"][number]): string {
 
 /**
  * schema.org/Recipe. Only facts that are visible on the page: no ratings,
- * reviews, nutrition or photos (we don't have licensed dish photos yet).
+ * reviews or nutrition. `image` is included only when a real photo of this
+ * recipe exists in public/images/recipes.
  */
 export function recipeJsonLd(recipe: Recipe) {
+  const photo = getRecipeImage(recipe.slug);
   return {
+    ...(photo ? { image: [absoluteUrl(photo)] } : {}),
     "@context": "https://schema.org",
     "@type": "Recipe",
     name: recipe.title,

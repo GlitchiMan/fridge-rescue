@@ -1,6 +1,7 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PageHeader } from "@/components/layout/page-header";
 import { GUIDES } from "@/data/guides";
 
 export const metadata: Metadata = {
@@ -11,17 +12,18 @@ export const metadata: Metadata = {
 
 export default function IdeasPage() {
   return (
-    <div className="container-page py-10 sm:py-14">
-      <p className="eyebrow">Ideas</p>
-      <h1 className="mt-2 text-4xl font-semibold sm:text-5xl">Cooking guides</h1>
-      <p className="mt-3 max-w-2xl text-lg text-muted">Short, practical guides for the questions that come up at the fridge door.</p>
-      <ul className="mt-10 grid gap-4 md:grid-cols-2">
-        {GUIDES.map((g) => (
+    <div className="container-page pt-10 sm:pt-16">
+      <PageHeader eyebrow="Guides" title="Cooking guides" description="Short, practical guides for the questions that come up at the fridge door." />
+      <ul className="divide-y divide-line border-b border-line">
+        {GUIDES.map((g, i) => (
           <li key={g.slug}>
-            <Link href={`/ideas/${g.slug}`} className="card group flex h-full flex-col p-6 transition-shadow hover:shadow-lift">
-              <h2 className="text-2xl font-semibold group-hover:text-forest">{g.title}</h2>
-              <p className="mt-2 flex-1 text-muted">{g.description}</p>
-              <span className="mt-4 inline-flex items-center gap-1 font-semibold text-forest">Read guide <ArrowRight className="size-4" aria-hidden /></span>
+            <Link href={`/ideas/${g.slug}`} className="group grid gap-3 py-8 transition-colors sm:grid-cols-[4rem_minmax(0,1fr)_auto] sm:gap-8 sm:py-10">
+              <span className="font-display text-[0.9375rem] italic text-muted">{String(i + 1).padStart(2, "0")}</span>
+              <div>
+                <h2 className="text-[1.75rem] leading-tight transition-colors group-hover:text-forest sm:text-[2.25rem]">{g.title}</h2>
+                <p className="mt-3 max-w-2xl text-[0.9375rem] leading-relaxed text-muted">{g.description}</p>
+              </div>
+              <ArrowUpRight className="hidden size-6 text-faint transition-[color,transform] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink sm:block" aria-hidden strokeWidth={1.5} />
             </Link>
           </li>
         ))}

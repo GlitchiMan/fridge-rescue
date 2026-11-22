@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHeader } from "@/components/layout/page-header";
 import { PreferencesForm } from "@/components/preferences/preferences-form";
 
 export const metadata: Metadata = {
@@ -10,11 +11,9 @@ export const metadata: Metadata = {
 
 export default function PreferencesPage() {
   return (
-    <div className="container-page max-w-3xl py-8 sm:py-12">
-      <p className="eyebrow">Settings</p>
-      <h1 className="mt-2 text-4xl font-semibold sm:text-5xl">Preferences &amp; data</h1>
-      <p className="mt-2 text-lg text-muted">All optional – Fridge Rescue works without any setup.</p>
-      <div className="mt-8">
+    <div className="container-page pt-10 sm:pt-16">
+      <PageHeader eyebrow="Settings" title="Preferences & data" description="All optional – Fridge Rescue works without any setup." />
+      <div className="mt-4 max-w-4xl">
         <PreferencesForm />
       </div>
     </div>

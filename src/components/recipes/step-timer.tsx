@@ -81,29 +81,29 @@ export function StepTimer({ minutes, label, large = false }: { minutes: number; 
   return (
     <div
       className={cn(
-        "no-print inline-flex items-center gap-1 rounded-full border bg-white p-1 pl-3",
-        done ? "border-coral bg-coral-soft" : running ? "border-forest" : "border-line-strong",
+        "no-print inline-flex items-center gap-1 rounded-[0.625rem] border bg-white p-1 pl-3 text-[0.875rem]",
+        done ? "border-coral/50 bg-coral-soft" : running ? "border-forest" : "border-line-strong",
         large && "p-1.5 pl-4 text-lg",
       )}
       role="timer"
       aria-label={`${label} timer`}
     >
-      {done ? <BellRing className="size-4 text-coral-ink" aria-hidden /> : <Timer className="size-4 text-forest" aria-hidden />}
-      <span className={cn("min-w-[3.2rem] font-mono font-semibold tabular-nums", done && "text-coral-ink")} aria-live={done ? "assertive" : "off"}>
+      {done ? <BellRing className="size-4 text-coral-ink" aria-hidden strokeWidth={1.75} /> : <Timer className="size-4 text-muted" aria-hidden strokeWidth={1.75} />}
+      <span className={cn("min-w-[3.2rem] font-medium tabular-nums", done && "text-coral-ink")} aria-live={done ? "assertive" : "off"}>
         {done ? "Time's up!" : fmt(remaining)}
       </span>
       {running ? (
-        <button type="button" onClick={pause} aria-label="Pause timer" className="inline-flex size-9 items-center justify-center rounded-full bg-forest-50 text-forest hover:bg-forest-100">
-          <Pause className="size-4" aria-hidden />
+        <button type="button" onClick={pause} aria-label="Pause timer" className="inline-flex size-8 items-center justify-center rounded-[0.5rem] bg-ink/[0.06] text-ink hover:bg-ink/[0.1]">
+          <Pause className="size-3.5" aria-hidden />
         </button>
       ) : (
-        <button type="button" onClick={start} aria-label={done ? "Restart timer" : "Start timer"} className="inline-flex size-9 items-center justify-center rounded-full bg-forest text-white hover:bg-forest-700" disabled={remaining === 0 && !done}>
-          <Play className="size-4" aria-hidden />
+        <button type="button" onClick={start} aria-label={done ? "Restart timer" : "Start timer"} className="inline-flex size-8 items-center justify-center rounded-[0.5rem] bg-forest text-white hover:bg-forest-700" disabled={remaining === 0 && !done}>
+          <Play className="size-3.5" aria-hidden />
         </button>
       )}
       {(remaining !== total || done) && (
-        <button type="button" onClick={reset} aria-label="Reset timer" className="inline-flex size-9 items-center justify-center rounded-full text-muted hover:bg-forest-50">
-          <RotateCcw className="size-4" aria-hidden />
+        <button type="button" onClick={reset} aria-label="Reset timer" className="inline-flex size-8 items-center justify-center rounded-[0.5rem] text-muted hover:bg-ink/[0.05]">
+          <RotateCcw className="size-3.5" aria-hidden />
         </button>
       )}
     </div>

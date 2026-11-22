@@ -36,12 +36,12 @@ export function FavoriteButton({
         onClick={toggle}
         aria-pressed={saved}
         className={cn(
-          "inline-flex min-h-11 items-center gap-2 rounded-full border px-4 text-sm font-semibold transition-colors",
-          saved ? "border-coral/50 bg-coral-soft text-coral-ink" : "border-line-strong bg-white text-ink hover:border-forest",
+          "inline-flex min-h-11 items-center gap-2 rounded-[0.625rem] border px-4 text-[0.9375rem] font-medium transition-colors",
+          saved ? "border-coral/30 bg-coral-soft text-coral-ink" : "border-line-strong bg-white text-ink hover:border-ink/40",
           className,
         )}
       >
-        <Heart className={cn("size-4", saved && "fill-current")} aria-hidden />
+        <Heart className={cn("size-4", saved && "fill-current")} aria-hidden strokeWidth={1.75} />
         {saved ? "Saved" : "Save recipe"}
       </button>
     );
@@ -54,12 +54,12 @@ export function FavoriteButton({
       aria-pressed={saved}
       aria-label={saved ? `Remove ${title} from saved recipes` : `Save ${title}`}
       className={cn(
-        "inline-flex size-10 items-center justify-center rounded-full bg-white/95 shadow-soft transition-transform hover:scale-105",
-        saved ? "text-coral" : "text-muted hover:text-coral",
+        "inline-flex size-9 items-center justify-center rounded-full bg-white/90 backdrop-blur transition-[color,transform] hover:scale-105",
+        saved ? "text-coral" : "text-ink-soft hover:text-coral",
         className,
       )}
     >
-      <Heart className={cn("size-5", saved && "fill-current")} aria-hidden />
+      <Heart className={cn("size-[1.05rem]", saved && "fill-current")} aria-hidden strokeWidth={1.75} />
     </button>
   );
 }

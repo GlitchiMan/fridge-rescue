@@ -106,36 +106,36 @@ export function IngredientsPanel() {
   };
 
   return (
-    <section aria-labelledby="ingredients-heading" className="card p-5 print-break-avoid">
+    <section aria-labelledby="ingredients-heading" className="card p-5 print-break-avoid sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 id="ingredients-heading" className="text-2xl font-semibold">
+        <h2 id="ingredients-heading" className="section-title">
           Ingredients
         </h2>
-        <div className="no-print flex items-center gap-1 rounded-full border border-line-strong bg-white p-1" role="group" aria-label="Servings">
-          <button type="button" onClick={() => setServings(servings - 1)} disabled={servings <= 1} aria-label="Fewer servings" className="inline-flex size-9 items-center justify-center rounded-full text-forest hover:bg-forest-50 disabled:opacity-40">
+        <div className="no-print flex items-center rounded-[0.625rem] border border-line-strong bg-white" role="group" aria-label="Servings">
+          <button type="button" onClick={() => setServings(servings - 1)} disabled={servings <= 1} aria-label="Fewer servings" className="inline-flex size-10 items-center justify-center rounded-l-[0.625rem] text-ink-soft hover:bg-ink/[0.05] disabled:opacity-35">
             <Minus className="size-4" aria-hidden />
           </button>
-          <output aria-live="polite" className="min-w-[5.5rem] text-center text-sm font-semibold">
+          <output aria-live="polite" className="min-w-[6rem] border-x border-line text-center text-[0.8125rem] font-medium tabular-nums leading-10">
             {servings} serving{servings === 1 ? "" : "s"}
           </output>
-          <button type="button" onClick={() => setServings(servings + 1)} disabled={servings >= 24} aria-label="More servings" className="inline-flex size-9 items-center justify-center rounded-full text-forest hover:bg-forest-50 disabled:opacity-40">
+          <button type="button" onClick={() => setServings(servings + 1)} disabled={servings >= 24} aria-label="More servings" className="inline-flex size-10 items-center justify-center rounded-r-[0.625rem] text-ink-soft hover:bg-ink/[0.05] disabled:opacity-35">
             <Plus className="size-4" aria-hidden />
           </button>
         </div>
       </div>
       <p className="mt-1 hidden text-sm text-muted print:block">Serves {servings}</p>
       {servings !== recipe.servings && (
-        <p className="mt-2 text-xs text-muted">
+        <p className="mt-3 text-xs text-muted">
           Scaled from {recipe.servings} servings. Cooking times may need adjusting for larger amounts.{" "}
-          <button type="button" className="font-semibold text-forest underline" onClick={() => setServings(recipe.servings)}>
+          <button type="button" className="link" onClick={() => setServings(recipe.servings)}>
             Reset
           </button>
         </p>
       )}
 
       {hasInventory && match && (
-        <div className="no-print mt-4 rounded-xl bg-surface p-3 text-sm">
-          <p className="font-semibold text-forest-800">
+        <div className="no-print mt-5 rounded-[0.625rem] bg-forest-50 px-4 py-3 text-sm">
+          <p className="font-medium text-forest">
             You have {match.essentialHave} of {match.essentialTotal} ingredients
             {match.readiness === "ready" ? " – ready to cook!" : match.readiness === "check-quantities" ? " – check quantities." : "."}
           </p>
@@ -149,7 +149,7 @@ export function IngredientsPanel() {
         </div>
       )}
 
-      <ul className="mt-4 divide-y divide-line">
+      <ul className="mt-4 divide-y divide-line border-t border-line">
         {recipe.ingredients.map((ri) => {
           const ing = getIngredient(ri.ingredientId);
           const q = scaleQuantity({ quantity: ri.quantity, unit: ri.unit }, factor);
@@ -160,11 +160,11 @@ export function IngredientsPanel() {
           const amount = ri.toTaste ? "to taste" : formatQuantity(q, ing);
           const pieceNoun = q.unit === "pcs" && ing?.noun && !ri.displayName;
           return (
-            <li key={ri.ingredientId} className="py-2.5">
-              <label className="flex cursor-pointer items-start gap-3">
+            <li key={ri.ingredientId} className="py-3">
+              <label className="flex cursor-pointer items-start gap-3 text-[0.9375rem]">
                 <input
                   type="checkbox"
-                  className="no-print mt-1 size-5 shrink-0 accent-forest"
+                  className="no-print mt-0.5 size-[1.1rem] shrink-0 accent-forest"
                   checked={isChecked}
                   onChange={() =>
                     setChecked((s) => {
@@ -176,13 +176,13 @@ export function IngredientsPanel() {
                   }
                 />
                 <span className={cn("flex-1", isChecked && "text-muted line-through")}>
-                  <span className="font-semibold">{pieceNoun ? amount : <>{amount} </>}</span>
+                  <span className="font-medium tabular-nums">{pieceNoun ? amount : <>{amount} </>}</span>
                   {!pieceNoun && <span>{ri.toTaste ? `– ${name}` : name.toLowerCase()}</span>}
                   {ri.preparationNote && <span className="text-muted">, {ri.preparationNote}</span>}
-                  {ri.optional && <span className="ml-1.5 rounded-full bg-cream-deep px-2 py-0.5 text-xs font-semibold text-muted">optional</span>}
-                  {excluded.has(ri.ingredientId) && <span className="ml-1.5 rounded-full bg-coral-soft px-2 py-0.5 text-xs font-semibold text-coral-ink">excluded – leave out</span>}
+                  {ri.optional && <span className="tag ml-1.5 bg-cream-deep text-muted">optional</span>}
+                  {excluded.has(ri.ingredientId) && <span className="tag ml-1.5 bg-coral-soft text-coral-ink">excluded – leave out</span>}
                   {meta && m && !ri.toTaste && (
-                    <span className={cn("no-print mt-0.5 flex items-center gap-1 text-xs font-semibold", meta.cls)}>
+                    <span className={cn("no-print mt-1 flex items-center gap-1 text-xs font-medium", meta.cls)}>
                       <meta.icon className="size-3.5" aria-hidden />
                       {m.substitutedBy ? `Using your ${m.substitutedBy.name.toLowerCase()}` : meta.label}
                       {m.status === "insufficient" && m.shortfall && ` – need ${formatQuantity(m.shortfall, ing)} more`}
@@ -195,7 +195,7 @@ export function IngredientsPanel() {
         })}
       </ul>
 
-      <div className="no-print mt-4 flex flex-col gap-2">
+      <div className="no-print mt-5 flex flex-col gap-2">
         {hasInventory && missingToBuy.length > 0 && (
           <button type="button" onClick={addMissing} className={buttonClass("primary", "md")}>
             <ShoppingBasket className="size-4" aria-hidden /> Add {missingToBuy.length} missing to shopping list
@@ -364,7 +364,7 @@ export function RecipeActions() {
             <p className="text-sm text-muted">For {servings} servings, we&apos;d make these changes:</p>
             <ul className="mt-3 space-y-2">
               {lines.map((l) => (
-                <li key={l.itemId} className={cn("rounded-xl p-3 text-sm", l.uncertain ? "bg-orange-soft text-orange-ink" : "bg-surface")}>
+                <li key={l.itemId} className={cn("rounded-[0.625rem] p-3 text-sm", l.uncertain ? "bg-orange-soft text-orange-ink" : "bg-white border border-line")}>
                   {l.description}
                 </li>
               ))}

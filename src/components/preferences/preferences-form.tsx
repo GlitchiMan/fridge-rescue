@@ -18,7 +18,7 @@ const EQUIPMENT_LABELS: Record<string, string> = { stovetop: "Stovetop", oven: "
 
 function Chip({ on, onClick, children }: { on: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
-    <button type="button" aria-pressed={on} onClick={onClick} className={cn("inline-flex min-h-10 items-center rounded-full border px-4 text-sm font-semibold transition-colors", on ? "border-forest bg-forest text-white" : "border-line-strong bg-white hover:border-forest")}>
+    <button type="button" aria-pressed={on} onClick={onClick} className={cn("inline-flex min-h-9 items-center rounded-[0.5rem] border px-3 text-[0.8125rem] font-medium transition-colors", on ? "border-forest bg-forest text-white" : "border-line-strong bg-white text-ink-soft hover:border-ink/40 hover:text-ink")}>
       {children}
     </button>
   );
@@ -60,10 +60,10 @@ export function PreferencesForm() {
   if (!hydrated) return <p className="text-muted">Loading your preferences…</p>;
 
   return (
-    <div className="space-y-6">
-      <section className="card p-5" aria-labelledby="p-cooking">
-        <h2 id="p-cooking" className="text-xl font-semibold">Cooking</h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+    <div className="divide-y divide-line">
+      <section className="grid content-start gap-3 py-9 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] md:gap-x-10 md:[&>h2]:row-span-3" aria-labelledby="p-cooking">
+        <h2 id="p-cooking" className="font-display text-[1.375rem] leading-tight">Cooking</h2>
+        <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="p-time" className="label">Preferred maximum cooking time</label>
             <select id="p-time" className="field" value={prefs.maxMinutes ?? ""} onChange={(e) => kitchenStore.updatePreferences({ maxMinutes: e.target.value ? Number(e.target.value) : null })}>
@@ -80,13 +80,13 @@ export function PreferencesForm() {
         </div>
       </section>
 
-      <section className="card p-5" aria-labelledby="p-staples">
-        <h2 id="p-staples" className="sr-only">Pantry staples</h2>
+      <section className="grid content-start gap-3 py-9 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] md:gap-x-10 md:[&>h2]:row-span-3" aria-labelledby="p-staples">
+        <h2 id="p-staples" className="font-display text-[1.375rem] leading-tight">Pantry staples</h2>
         <StaplesToggle />
       </section>
 
-      <section className="card p-5" aria-labelledby="p-diet">
-        <h2 id="p-diet" className="text-xl font-semibold">Diet</h2>
+      <section className="grid content-start gap-3 py-9 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] md:gap-x-10 md:[&>h2]:row-span-3" aria-labelledby="p-diet">
+        <h2 id="p-diet" className="font-display text-[1.375rem] leading-tight">Diet</h2>
         <p className="mt-1 text-sm text-muted">Recipes that don&apos;t fit are hidden from recommendations. Labels are worked out from our ingredient data – always check packaging.</p>
         <div className="mt-3 flex flex-wrap gap-2">
           {DIETARY_TAGS.map((d) => (
@@ -95,8 +95,8 @@ export function PreferencesForm() {
         </div>
       </section>
 
-      <section className="card p-5" aria-labelledby="p-excl">
-        <h2 id="p-excl" className="text-xl font-semibold">Ingredients to avoid</h2>
+      <section className="grid content-start gap-3 py-9 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] md:gap-x-10 md:[&>h2]:row-span-3" aria-labelledby="p-excl">
+        <h2 id="p-excl" className="font-display text-[1.375rem] leading-tight">Ingredients to avoid</h2>
         <p className="mt-1 text-sm text-muted">
           Recipes that need these are hidden, and we never suggest them as substitutes. This helps with dislikes and allergies, but it can&apos;t guarantee a recipe is allergen-free – always check labels and cross-contact.
         </p>
@@ -113,8 +113,8 @@ export function PreferencesForm() {
         </div>
       </section>
 
-      <section className="card p-5" aria-labelledby="p-equip">
-        <h2 id="p-equip" className="text-xl font-semibold">Kitchen equipment</h2>
+      <section className="grid content-start gap-3 py-9 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] md:gap-x-10 md:[&>h2]:row-span-3" aria-labelledby="p-equip">
+        <h2 id="p-equip" className="font-display text-[1.375rem] leading-tight">Kitchen equipment</h2>
         <p className="mt-1 text-sm text-muted">Leave all unselected to see every recipe. Select what you have to hide recipes needing anything else.</p>
         <div className="mt-3 flex flex-wrap gap-2">
           {EQUIPMENT.map((e) => (
@@ -123,8 +123,8 @@ export function PreferencesForm() {
         </div>
       </section>
 
-      <section className="card p-5" aria-labelledby="p-data">
-        <h2 id="p-data" className="text-xl font-semibold">Your data</h2>
+      <section className="grid content-start gap-3 py-9 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] md:gap-x-10 md:[&>h2]:row-span-3" aria-labelledby="p-data">
+        <h2 id="p-data" className="font-display text-[1.375rem] leading-tight">Your data</h2>
         <p className="mt-1 text-sm text-muted">
           Everything is stored only in this browser ({persistent ? "saved" : "storage is blocked – changes won't be kept"}). Clearing your browser data removes it. Export a backup to move it to another device or keep it safe.
         </p>

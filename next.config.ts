@@ -10,6 +10,13 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  images: {
+    // Large PNG/JPEG originals in public/images are served as resized AVIF/WebP.
+    formats: ["image/avif", "image/webp"],
+    qualities: [75, 85],
+    deviceSizes: [640, 828, 1080, 1280, 1600, 1920, 2560],
+    minimumCacheTTL: 2_678_400,
+  },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },

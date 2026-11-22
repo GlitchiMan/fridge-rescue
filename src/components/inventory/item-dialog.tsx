@@ -106,7 +106,7 @@ function ItemForm({
       noValidate
     >
       {existing && !item && (
-        <div className="mb-4 rounded-xl bg-orange-soft p-3 text-sm text-orange-ink">
+        <div className="mb-5 rounded-[0.625rem] bg-orange-soft px-4 py-3 text-sm text-orange-ink">
           You already have <strong>{existing.displayName}</strong> ({formatQuantity({ quantity: existing.quantity, unit: existing.unit }, ing)}).{" "}
           {canCombine ? "We'll combine the amounts, or you can add it as a separate item." : "The units differ, so it'll be added as a separate item."}
         </div>
@@ -130,9 +130,9 @@ function ItemForm({
 
       <fieldset className="mt-4">
         <legend className="label">Stored in</legend>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-4 gap-0.5 rounded-[0.625rem] bg-ink/[0.05] p-0.5">
           {STORAGE_LOCATIONS.map((l) => (
-            <label key={l} className={`flex min-h-11 cursor-pointer items-center justify-center rounded-xl border text-sm font-semibold ${location === l ? "border-forest bg-forest-50 text-forest" : "border-line-strong bg-white"}`}>
+            <label key={l} className={`flex min-h-10 cursor-pointer items-center justify-center rounded-[0.5rem] text-[0.8125rem] font-medium transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-forest ${location === l ? "bg-white text-ink shadow-soft" : "text-muted hover:text-ink"}`}>
               <input type="radio" name="location" value={l} checked={location === l} onChange={() => setLocation(l)} className="sr-only" />
               {LOCATION_LABELS[l]}
             </label>
@@ -152,10 +152,10 @@ function ItemForm({
       </div>
       <p className="mt-1.5 text-xs text-muted">Copy dates from the label. Use-by is about safety; best-before is about quality. We never guess dates.</p>
 
-      <label className="mt-4 flex items-center gap-3 rounded-xl border border-line bg-white p-3">
-        <input type="checkbox" className="size-5 accent-forest" checked={isLeftover} onChange={(e) => setIsLeftover(e.target.checked)} />
+      <label className="mt-5 flex cursor-pointer items-center gap-3 rounded-[0.625rem] border border-line p-3.5 hover:border-line-strong">
+        <input type="checkbox" className="size-[1.1rem] accent-forest" checked={isLeftover} onChange={(e) => setIsLeftover(e.target.checked)} />
         <span>
-          <span className="font-semibold">This is a leftover</span>
+          <span className="text-[0.9375rem] font-medium">This is a leftover</span>
           <span className="block text-xs text-muted">e.g. cooked rice or roast chicken. Cool leftovers quickly and use them soon.</span>
         </span>
       </label>
@@ -167,7 +167,7 @@ function ItemForm({
 
       {error && <p id="item-error" role="alert" className="mt-3 text-sm font-semibold text-coral-ink">{error}</p>}
 
-      <div className="mt-6 flex flex-wrap justify-end gap-2">
+      <div className="-mx-6 mt-6 flex flex-wrap justify-end gap-2 border-t border-line px-6 pt-4">
         <button type="button" className={buttonClass("ghost", "md")} onClick={onCancel}>Cancel</button>
         {existing && !item && canCombine && (
           <button type="button" className={buttonClass("secondary", "md")} onClick={() => submit("new")}>Add separately</button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, PartyPopper } from "lucide-react";
+import { Check as PartyPopper, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { buttonClass } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
@@ -50,12 +50,12 @@ export function CookingMode({ recipe, open, onClose, onFinish }: { recipe: Recip
   return (
     <Dialog open={open} onClose={onClose} title={recipe.title} description={`Step ${step + 1} of ${total}${screenOn ? " · screen stays on" : ""}`} size="full">
       <div className="flex min-h-[60dvh] flex-col">
-        <div className="h-2 overflow-hidden rounded-full bg-line" role="progressbar" aria-valuemin={1} aria-valuemax={total} aria-valuenow={step + 1} aria-label="Cooking progress">
-          <div className="h-full rounded-full bg-forest transition-[width]" style={{ width: `${((step + 1) / total) * 100}%` }} />
+        <div className="h-[3px] overflow-hidden rounded-full bg-line" role="progressbar" aria-valuemin={1} aria-valuemax={total} aria-valuenow={step + 1} aria-label="Cooking progress">
+          <div className="h-full bg-forest transition-[width] duration-500 ease-out" style={{ width: `${((step + 1) / total) * 100}%` }} />
         </div>
-        <div className="flex flex-1 flex-col justify-center py-8" aria-live="polite">
+        <div className="flex flex-1 flex-col justify-center py-10" aria-live="polite">
           <p className="eyebrow">Step {step + 1}</p>
-          <p className="mt-3 font-display text-2xl leading-snug sm:text-3xl">{current.text}</p>
+          <p key={step} className="mt-4 animate-fade-up font-display text-[1.75rem] leading-[1.3] tracking-[-0.015em] sm:text-[2.25rem]">{current.text}</p>
           {current.timerMinutes && (
             <div className="mt-6">
               <StepTimer key={step} minutes={current.timerMinutes} label={`Step ${step + 1}`} large />

@@ -21,7 +21,7 @@ export default function ContactPage() {
           <ContactForm email={email} />
         </>
       ) : (
-        <p className="rounded-2xl bg-orange-soft p-4 text-orange-ink">
+        <p className="rounded-[0.75rem] bg-orange-soft px-5 py-4 text-orange-ink">
           A contact address hasn&apos;t been configured for this site yet. (Site owner: set <code>NEXT_PUBLIC_CONTACT_EMAIL</code> – see the README.)
         </p>
       )}

@@ -11,7 +11,7 @@ export function ContactForm({ email }: { email: string }) {
   const [error, setError] = useState<string | null>(null);
   return (
     <form
-      className="card space-y-4 p-5"
+      className="space-y-4 rounded-[0.875rem] border border-line bg-white p-6"
       noValidate
       onSubmit={(e) => {
         e.preventDefault();
@@ -32,7 +32,7 @@ export function ContactForm({ email }: { email: string }) {
         <textarea id="c-msg" className="field min-h-36" maxLength={4000} value={message} onChange={(e) => setMessage(e.target.value)} aria-describedby={error ? "c-err" : undefined} />
       </div>
       {error && <p id="c-err" role="alert" className="text-sm font-semibold text-coral-ink">{error}</p>}
-      <button type="submit" className={buttonClass("primary", "md", "!text-white !no-underline")}><Send className="size-4" aria-hidden /> Open in my email app</button>
+      <button type="submit" className={buttonClass("primary", "md")}><Send className="size-4" aria-hidden /> Open in my email app</button>
     </form>
   );
 }

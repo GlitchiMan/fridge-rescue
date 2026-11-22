@@ -9,12 +9,12 @@ import { setAnalyticsConsent } from "@/lib/analytics/events";
 
 function Row({ title, desc, checked, onChange, disabled, id }: { title: string; desc: string; checked: boolean; onChange?: (v: boolean) => void; disabled?: boolean; id: string }) {
   return (
-    <div className="flex items-start justify-between gap-4 rounded-2xl border border-line bg-white p-4">
+    <div className="flex items-start justify-between gap-6 border-b border-line py-5">
       <div>
-        <label htmlFor={id} className="font-semibold">{title}</label>
-        <p className="mt-1 text-sm text-muted">{desc}</p>
+        <label htmlFor={id} className="font-medium text-ink">{title}</label>
+        <p className="mt-1 text-sm leading-relaxed text-muted">{desc}</p>
       </div>
-      <input id={id} type="checkbox" role="switch" className="mt-1 size-6 shrink-0 accent-forest" checked={checked} disabled={disabled} onChange={(e) => onChange?.(e.target.checked)} />
+      <input id={id} type="checkbox" role="switch" className="mt-1 size-5 shrink-0 accent-forest" checked={checked} disabled={disabled} onChange={(e) => onChange?.(e.target.checked)} />
     </div>
   );
 }
@@ -36,7 +36,7 @@ export function CookieSettingsForm() {
   if (!hydrated) return <p className="text-muted">Loading…</p>;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 border-t border-line">
       <Row id="c-essential" title="Essential storage (always on)" desc="Saves your kitchen, lists, plan and these choices in your browser so the features you use work. Nothing is sent to us." checked disabled />
       <Row
         id="c-analytics"

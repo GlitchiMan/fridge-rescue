@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: "/my-fridge",
     scope: "/",
     display: "standalone",
-    background_color: "#FFF9EF",
-    theme_color: "#245C45",
+    background_color: "#F7F5F0",
+    theme_color: "#F7F5F0",
     categories: ["food", "lifestyle", "productivity"],
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },

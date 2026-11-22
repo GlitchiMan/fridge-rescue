@@ -79,6 +79,18 @@ tests/
 public/                sw.js, icons/
 ```
 
+### Images
+
+Photos live in `public/images/` and are served as resized AVIF/WebP by Next.js Image, so large PNG originals are fine.
+
+| File | Used for |
+| --- | --- |
+| `public/images/hero-kitchen.png` | Homepage hero (cropped to keep the food along the counter) |
+| `public/images/ingredients-editorial.png` | "Less waste. Better meals." section (copy sits on the empty stone) |
+| `public/images/recipes/<recipe-slug>.(avif\|webp\|jpg\|png)` | Photo of that finished recipe, e.g. `recipes/red-lentil-curry.jpg` |
+
+`npm run dev` and `npm run build` scan this folder automatically (`scripts/sync-images.mjs` → `src/data/image-manifest.ts`). If the dev server is already running, run `npm run images:sync` after adding files. Missing images show a neutral placeholder – never a substitute photo. Recipe photos work best at 4:3, at least 1600 px wide; they're also added to the recipe's structured data for search engines.
+
 ### Adding or editing recipes
 
 Add a `defineRecipe({...})` entry to one of the files in `src/data/recipes/`, using ingredient ids from `src/data/ingredients.ts`. Then run `npm run validate:data` – it checks unique ids/slugs, valid ingredient references, positive quantities, sensible times/servings, valid substitutions, related-recipe links, and that every essential ingredient is actually mentioned in the method.

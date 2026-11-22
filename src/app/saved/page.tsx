@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHeader } from "@/components/layout/page-header";
 import { SavedRecipes } from "@/components/saved/saved-recipes";
 import { getRecipeSummaries } from "@/data/recipes";
 
@@ -11,11 +12,9 @@ export const metadata: Metadata = {
 
 export default function SavedPage() {
   return (
-    <div className="container-page py-8 sm:py-12">
-      <p className="eyebrow">Saved</p>
-      <h1 className="mt-2 text-4xl font-semibold sm:text-5xl">Your recipes</h1>
-      <p className="mt-2 text-lg text-muted">Favourites and meals you&apos;ve cooked – saved in this browser.</p>
-      <div className="mt-8">
+    <div className="container-page pt-10 sm:pt-16">
+      <PageHeader eyebrow="Saved" title="Your recipes" description="Favourites and meals you've cooked – saved in this browser." />
+      <div className="mt-10">
         <SavedRecipes recipes={getRecipeSummaries()} />
       </div>
     </div>

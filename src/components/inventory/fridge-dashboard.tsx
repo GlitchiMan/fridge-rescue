@@ -1,10 +1,11 @@
 "use client";
 
-import { ArrowRight, CalendarDays, ChefHat, Flame, Heart, Lightbulb, Settings2, ShoppingBasket, Sparkles, Timer, UtensilsCrossed } from "lucide-react";
+import { ArrowRight, Settings2 } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
 import { StaplesToggle } from "@/components/ingredients/staples-toggle";
 import { RecipeGrid } from "@/components/recipes/recipe-grid";
+import { RecipeImage } from "@/components/recipes/recipe-image";
 import { buttonClass } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/empty-state";
 import { getIngredient } from "@/data/ingredients";
@@ -12,14 +13,15 @@ import { useKitchen } from "@/hooks/use-kitchen";
 import { suggestRecipesForInventory } from "@/lib/matching/engine";
 import { getSoonToUseIngredients, todayIso } from "@/lib/matching/freshness";
 import { formatShoppingItem } from "@/lib/shopping/merge";
+import { cn } from "@/lib/utils/cn";
 import type { RecipeSummary } from "@/types";
 import { FreshnessBadge, InventoryManager } from "./inventory-manager";
 
 function greeting(hour: number) {
   if (hour < 5) return "Late-night snack?";
-  if (hour < 12) return "Good morning!";
-  if (hour < 18) return "Good afternoon!";
-  return "Good evening!";
+  if (hour < 12) return "Good morning.";
+  if (hour < 18) return "Good afternoon.";
+  return "Good evening.";
 }
 
 /** Deterministic daily pick: same suggestion all day, changes tomorrow. */
@@ -29,18 +31,28 @@ function dailyIndex(today: string, length: number) {
   return length ? h % length : 0;
 }
 
-function Panel({ id, title, icon, children, action }: { id: string; title: string; icon: React.ReactNode; children: React.ReactNode; action?: React.ReactNode }) {
+function Panel({ id, title, description, children, action }: { id: string; title: string; description?: string; children: React.ReactNode; action?: React.ReactNode }) {
   return (
-    <section aria-labelledby={id} className="mt-10">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <h2 id={id} className="flex items-center gap-2.5 text-2xl font-semibold">
-          <span className="flex size-9 items-center justify-center rounded-xl bg-forest-50 text-forest">{icon}</span>
-          {title}
-        </h2>
+    <section aria-labelledby={id} className="mt-16 first:mt-0">
+      <div className="mb-7 flex items-end justify-between gap-4 border-b border-line pb-4">
+        <div>
+          <h2 id={id} className="section-title">
+            {title}
+          </h2>
+          {description && <p className="mt-1.5 text-[0.9375rem] text-muted">{description}</p>}
+        </div>
         {action}
       </div>
       {children}
     </section>
+  );
+}
+
+function SmallLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <Link href={href} className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-ink-soft hover:text-ink">
+      {children} <ArrowRight className="size-3.5" aria-hidden />
+    </Link>
   );
 }
 
@@ -60,6 +72,7 @@ export function FridgeDashboard({ recipes }: { recipes: RecipeSummary[] }) {
   const cookedThisWeek = data.history.filter((h) => new Date(h.cookedAt).getTime() >= weekAgo);
   const differentRecipes = new Set(data.history.map((h) => h.recipeId)).size;
   const toBuy = data.shoppingList.filter((i) => !i.purchased);
+  const empty = hydrated && data.inventory.length === 0;
 
   const cookTonight = result
     ? [...result.groups.canMake.filter((m) => recipeMap.get(m.recipeId)?.categories.includes("dinner")), ...result.groups.canMake].filter(
@@ -71,162 +84,214 @@ export function FridgeDashboard({ recipes }: { recipes: RecipeSummary[] }) {
   const oneAway = result ? result.groups.almost.filter((m) => m.missing.length === 1) : [];
   const inspirationPool = result ? [...result.groups.canMake, ...result.groups.almost] : [];
   const inspiration = inspirationPool.length ? inspirationPool[dailyIndex(today, inspirationPool.length)] : undefined;
+  const inspirationRecipe = inspiration ? recipeMap.get(inspiration.recipeId) : undefined;
   const recentCooked = data.history.filter((h, i, arr) => arr.findIndex((x) => x.recipeId === h.recipeId) === i).slice(0, 4);
+
+  const stats = [
+    { label: "In your kitchen", value: data.inventory.length },
+    { label: "Use soon", value: soon.length },
+    { label: "Cooked this week", value: cookedThisWeek.length },
+    { label: "Recipes tried", value: differentRecipes },
+  ];
 
   return (
     <div>
-      <div className="flex flex-wrap items-end justify-between gap-4">
+      <header className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <p className="eyebrow">My Fridge</p>
-          <h1 className="mt-2 text-4xl font-semibold sm:text-5xl">{hydrated ? greeting(new Date().getHours()) : "Welcome back!"}</h1>
-          <p className="mt-2 text-lg text-muted">Let&apos;s see what&apos;s cooking.</p>
+          <h1 className="page-title mt-4">{hydrated ? greeting(new Date().getHours()) : "Welcome back."}</h1>
+          <p className="lede mt-4">Here&apos;s what your kitchen can make today.</p>
         </div>
-        <Link href="/preferences" className={buttonClass("secondary", "sm")}>
-          <Settings2 className="size-4" aria-hidden /> Preferences
+        <Link href="/preferences" className={buttonClass("secondary", "sm", "self-start lg:self-auto")}>
+          <Settings2 className="size-4" aria-hidden strokeWidth={1.75} /> Preferences
         </Link>
-      </div>
+      </header>
 
       {/* Stats – all based on real entries */}
-      <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {[
-          { label: "In your kitchen", value: data.inventory.length, icon: UtensilsCrossed },
-          { label: "Use soon", value: soon.length, icon: Timer },
-          { label: "Cooked this week", value: cookedThisWeek.length, icon: Flame },
-          { label: "Recipes tried", value: differentRecipes, icon: ChefHat },
-        ].map(({ label, value, icon: Icon }) => (
-          <div key={label} className="rounded-2xl border border-line bg-white p-4">
-            <dt className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted">
-              <Icon className="size-3.5" aria-hidden /> {label}
-            </dt>
-            <dd className="mt-1 font-display text-3xl font-semibold">{hydrated ? value : "–"}</dd>
+      <dl className="mt-10 grid grid-cols-2 border-y border-line sm:grid-cols-4">
+        {stats.map(({ label, value }, i) => (
+          <div key={label} className={cn("py-5 sm:px-6 sm:first:pl-0", i % 2 === 1 && "pl-5 sm:pl-6", i > 0 && "sm:border-l sm:border-line", i % 2 === 1 && "border-l border-line", i >= 2 && "border-t border-line sm:border-t-0")}>
+            <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-muted">{label}</dt>
+            <dd className={cn("mt-2 font-display text-[2.5rem] leading-none tabular-nums", label === "Use soon" && value > 0 && "text-orange-ink")}>{hydrated ? value : "–"}</dd>
           </div>
         ))}
       </dl>
 
-      {!hydrated && (
-        <div className="mt-8 grid gap-4 sm:grid-cols-3">
-          <Skeleton className="h-64" />
-          <Skeleton className="h-64" />
-          <Skeleton className="h-64" />
-        </div>
-      )}
-
-      {hydrated && soon.length > 0 && (
-        <Panel id="use-soon" title="Use soon" icon={<Timer className="size-5" aria-hidden />}>
-          <ul className="flex flex-wrap gap-2">
-            {soon.map(({ item, freshness }) => (
-              <li key={item.id} className="flex items-center gap-2 rounded-2xl border border-line bg-white px-3 py-2">
-                <span className="size-2.5 rounded-full" style={{ background: getIngredient(item.ingredientId)?.color }} aria-hidden />
-                <span className="font-semibold">{item.displayName}</span>
-                <FreshnessBadge info={freshness} />
-              </li>
-            ))}
-          </ul>
-          <p className="mt-2 text-xs text-muted">Based on the dates you entered. Storage and the food&apos;s condition matter too – check before eating.</p>
-          {result && result.groups.useSoon.length > 0 ? (
-            <div className="mt-5">
-              <RecipeGrid items={result.groups.useSoon} recipes={recipeMap} limit={3} />
+      <div className="mt-14 grid gap-14 xl:grid-cols-[minmax(0,1fr)_minmax(0,27rem)] xl:gap-16">
+        {/* ── Suggestions ── */}
+        <div className="min-w-0">
+          {!hydrated && (
+            <div className="grid gap-6 sm:grid-cols-2">
+              <Skeleton className="h-72" />
+              <Skeleton className="h-72" />
             </div>
-          ) : (
-            <p className="mt-4 text-muted">No close recipe matches for these yet – try adding a few more ingredients.</p>
           )}
-        </Panel>
-      )}
 
-      {hydrated && inspiration && (
-        <section aria-labelledby="inspiration" className="mt-10 overflow-hidden rounded-3xl bg-forest p-6 text-white sm:p-8" style={{ background: "linear-gradient(135deg,#245C45,#1D4B38)" }}>
-          <p className="flex items-center gap-2 text-sm font-semibold text-orange">
-            <Lightbulb className="size-4" aria-hidden /> Today&apos;s idea
-          </p>
-          <h2 id="inspiration" className="mt-2 text-3xl font-semibold text-white">{recipeMap.get(inspiration.recipeId)?.title}</h2>
-          <p className="mt-2 max-w-xl text-white/85">{inspiration.explanation.slice(0, 3).join(" ")}</p>
-          <Link href={`/recipes/${inspiration.slug}`} className={buttonClass("secondary", "md", "mt-5 border-transparent")}>
-            Let&apos;s cook <ArrowRight className="size-4" aria-hidden />
-          </Link>
-        </section>
-      )}
+          {empty && (
+            <section aria-labelledby="getting-started" className="rounded-[1rem] border border-line bg-white p-7 sm:p-10">
+              <p className="eyebrow">Getting started</p>
+              <h2 id="getting-started" className="mt-4 max-w-lg font-display text-[2rem] leading-tight">Add a few ingredients and we&apos;ll do the rest.</h2>
+              <ol className="mt-8 grid gap-6 sm:grid-cols-3">
+                {[
+                  ["Add what you have", "Use the search or one-tap add. Amounts and dates are optional."],
+                  ["See what you can cook", "Recipes appear here, ranked by how close you are."],
+                  ["Waste less", "Enter label dates and we'll flag what to use first."],
+                ].map(([t, d], i) => (
+                  <li key={t} className="border-t border-line pt-4">
+                    <span className="font-display text-sm italic text-muted">{String(i + 1).padStart(2, "0")}</span>
+                    <p className="mt-2 font-medium">{t}</p>
+                    <p className="mt-1 text-sm text-muted">{d}</p>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          )}
 
-      {hydrated && data.inventory.length > 0 && (
-        <>
-          <Panel id="cook-tonight" title="Cook tonight" icon={<ChefHat className="size-5" aria-hidden />} action={<Link href="/recipes?canMake=1" className="text-sm font-semibold text-forest hover:underline">See all</Link>}>
-            {cookTonight.length ? (
-              <RecipeGrid items={cookTonight} recipes={recipeMap} limit={3} />
-            ) : (
-              <div className="rounded-2xl border border-dashed border-line-strong bg-white p-6">
-                <p className="font-semibold">Nothing is fully ready yet.</p>
-                <p className="mt-1 text-sm text-muted">Tell us which pantry basics you keep – it often unlocks more recipes.</p>
-                <div className="mt-3"><StaplesToggle compact /></div>
-              </div>
-            )}
-          </Panel>
-
-          {quick.length > 0 && (
-            <Panel id="quick-ideas" title={maxMin ? `Quick ideas (under ${maxMin} min)` : "Quick ideas"} icon={<Sparkles className="size-5" aria-hidden />}>
-              <RecipeGrid items={quick} recipes={recipeMap} limit={3} />
+          {hydrated && soon.length > 0 && (
+            <Panel id="use-soon" title="Use soon" description="Based on the dates you entered. Storage and the food's condition matter too – check before eating.">
+              <ul className="flex flex-wrap gap-2">
+                {soon.map(({ item, freshness }) => (
+                  <li key={item.id} className="flex items-center gap-2.5 rounded-[0.625rem] border border-line bg-white py-2 pl-3 pr-2 text-[0.9375rem]">
+                    <span className="size-2 rounded-full" style={{ background: getIngredient(item.ingredientId)?.color }} aria-hidden />
+                    <span className="font-medium">{item.displayName}</span>
+                    <FreshnessBadge info={freshness} />
+                  </li>
+                ))}
+              </ul>
+              {result && result.groups.useSoon.length > 0 ? (
+                <div className="mt-8">
+                  <RecipeGrid items={result.groups.useSoon} recipes={recipeMap} limit={3} dense />
+                </div>
+              ) : (
+                <p className="mt-5 text-muted">No close recipe matches for these yet – try adding a few more ingredients.</p>
+              )}
             </Panel>
           )}
 
-          {oneAway.length > 0 && (
-            <Panel id="almost-there" title="Almost there" icon={<ShoppingBasket className="size-5" aria-hidden />}>
-              <p className="-mt-2 mb-4 text-muted">You&apos;re only one ingredient away!</p>
-              <RecipeGrid items={oneAway} recipes={recipeMap} limit={3} />
-            </Panel>
+          {hydrated && inspiration && inspirationRecipe && (
+            <section aria-labelledby="inspiration" className="mt-16 first:mt-0">
+              <Link href={`/recipes/${inspiration.slug}`} className="group grid overflow-hidden rounded-[1rem] bg-forest text-white sm:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
+                <RecipeImage
+                  slug={inspirationRecipe.slug}
+                  title={inspirationRecipe.title}
+                  ingredients={inspirationRecipe.ingredients}
+                  sizes="(min-width: 640px) 360px, 100vw"
+                  className="aspect-[16/10] sm:aspect-auto sm:h-full sm:min-h-56"
+                />
+                <div className="flex flex-col justify-center p-7 sm:p-9">
+                  <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-white/65">Today&apos;s idea</p>
+                  <h2 id="inspiration" className="mt-3 text-[1.75rem] leading-tight text-white sm:text-[2.125rem]">{inspirationRecipe.title}</h2>
+                  <p className="mt-3 text-[0.9375rem] leading-relaxed text-white/80">{inspiration.explanation.slice(0, 3).join(" ")}</p>
+                  <span className="mt-6 inline-flex items-center gap-1.5 text-[0.9375rem] font-medium text-white">
+                    Let&apos;s cook <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
+                  </span>
+                </div>
+              </Link>
+            </section>
           )}
-        </>
-      )}
 
-      <div className="mt-10">
-        <InventoryManager />
+          {hydrated && data.inventory.length > 0 && (
+            <>
+              <Panel id="cook-tonight" title="Cook tonight" action={<SmallLink href="/recipes?canMake=1">See all</SmallLink>}>
+                {cookTonight.length ? (
+                  <RecipeGrid items={cookTonight} recipes={recipeMap} limit={3} dense />
+                ) : (
+                  <div className="rounded-[0.875rem] border border-dashed border-line-strong p-6">
+                    <p className="font-medium">Nothing is fully ready yet.</p>
+                    <p className="mt-1 text-sm text-muted">Tell us which pantry basics you keep – it often unlocks more recipes.</p>
+                    <div className="mt-4">
+                      <StaplesToggle compact />
+                    </div>
+                  </div>
+                )}
+              </Panel>
+
+              {quick.length > 0 && (
+                <Panel id="quick-ideas" title={maxMin ? `Quick ideas, under ${maxMin} min` : "Quick ideas"}>
+                  <RecipeGrid items={quick} recipes={recipeMap} limit={3} dense />
+                </Panel>
+              )}
+
+              {oneAway.length > 0 && (
+                <Panel id="almost-there" title="Almost there" description="You're only one ingredient away!">
+                  <RecipeGrid items={oneAway} recipes={recipeMap} limit={3} dense />
+                </Panel>
+              )}
+            </>
+          )}
+        </div>
+
+        {/* ── Inventory ── (first on small screens when the kitchen is empty) */}
+        <aside className={cn("min-w-0", empty && "-order-1 xl:order-none")}>
+          <InventoryManager />
+        </aside>
       </div>
 
       {hydrated && (
-        <div className="mt-10 grid gap-6 lg:grid-cols-3">
-          <section aria-labelledby="fav-preview" className="card p-5">
-            <h2 id="fav-preview" className="flex items-center gap-2 text-xl font-semibold"><Heart className="size-5 text-coral" aria-hidden /> Your favourites</h2>
+        <div className="mt-20 grid gap-10 border-t border-line pt-12 md:grid-cols-3 md:gap-8">
+          <section aria-labelledby="fav-preview">
+            <h2 id="fav-preview" className="font-display text-[1.375rem]">Your favourites</h2>
             {data.favorites.length ? (
-              <ul className="mt-3 space-y-1">
-                {data.favorites.slice(-5).reverse().map((id) => {
-                  const r = recipeMap.get(id);
-                  return r ? (
-                    <li key={id}><Link href={`/recipes/${r.slug}`} className="block rounded-lg py-1.5 font-semibold hover:text-forest hover:underline">{r.title}</Link></li>
-                  ) : null;
-                })}
+              <ul className="mt-4 divide-y divide-line border-y border-line">
+                {data.favorites
+                  .slice(-5)
+                  .reverse()
+                  .map((id) => {
+                    const r = recipeMap.get(id);
+                    return r ? (
+                      <li key={id}>
+                        <Link href={`/recipes/${r.slug}`} className="block py-2.5 text-[0.9375rem] hover:text-forest">
+                          {r.title}
+                        </Link>
+                      </li>
+                    ) : null;
+                  })}
               </ul>
             ) : (
-              <p className="mt-2 text-sm text-muted">No favourites yet. Save recipes you love to find them later.</p>
+              <p className="mt-3 text-sm text-muted">No favourites yet. Save recipes you love to find them later.</p>
             )}
-            <Link href="/saved" className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-forest hover:underline">Saved recipes <ArrowRight className="size-3.5" aria-hidden /></Link>
+            <div className="mt-4">
+              <SmallLink href="/saved">Saved recipes</SmallLink>
+            </div>
           </section>
 
-          <section aria-labelledby="shop-preview" className="card p-5">
-            <h2 id="shop-preview" className="flex items-center gap-2 text-xl font-semibold"><ShoppingBasket className="size-5 text-forest" aria-hidden /> Shopping list</h2>
+          <section aria-labelledby="shop-preview">
+            <h2 id="shop-preview" className="font-display text-[1.375rem]">Shopping list</h2>
             {toBuy.length ? (
-              <ul className="mt-3 space-y-1 text-sm">
-                {toBuy.slice(0, 5).map((i) => <li key={i.id} className="py-0.5">• {formatShoppingItem(i)}</li>)}
-                {toBuy.length > 5 && <li className="text-muted">+{toBuy.length - 5} more</li>}
+              <ul className="mt-4 divide-y divide-line border-y border-line text-[0.9375rem]">
+                {toBuy.slice(0, 5).map((i) => (
+                  <li key={i.id} className="py-2.5">
+                    {formatShoppingItem(i)}
+                  </li>
+                ))}
+                {toBuy.length > 5 && <li className="py-2.5 text-muted">+{toBuy.length - 5} more</li>}
               </ul>
             ) : (
-              <p className="mt-2 text-sm text-muted">All stocked up! Your shopping list is empty.</p>
+              <p className="mt-3 text-sm text-muted">All stocked up! Your shopping list is empty.</p>
             )}
-            <Link href="/shopping-list" className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-forest hover:underline">Open list <ArrowRight className="size-3.5" aria-hidden /></Link>
+            <div className="mt-4">
+              <SmallLink href="/shopping-list">Open list</SmallLink>
+            </div>
           </section>
 
-          <section aria-labelledby="recent" className="card p-5">
-            <h2 id="recent" className="flex items-center gap-2 text-xl font-semibold"><CalendarDays className="size-5 text-forest" aria-hidden /> Cook it again</h2>
+          <section aria-labelledby="recent">
+            <h2 id="recent" className="font-display text-[1.375rem]">Cook it again</h2>
             {recentCooked.length ? (
-              <ul className="mt-3 space-y-1">
+              <ul className="mt-4 divide-y divide-line border-y border-line">
                 {recentCooked.map((h) => {
                   const r = recipeMap.get(h.recipeId);
                   return r ? (
-                    <li key={h.id} className="flex items-center justify-between gap-2">
-                      <Link href={`/recipes/${r.slug}`} className="py-1.5 font-semibold hover:text-forest hover:underline">{r.title}</Link>
-                      <span className="text-xs text-muted">{new Date(h.cookedAt).toLocaleDateString(undefined, { day: "numeric", month: "short" })}</span>
+                    <li key={h.id} className="flex items-center justify-between gap-3">
+                      <Link href={`/recipes/${r.slug}`} className="py-2.5 text-[0.9375rem] hover:text-forest">
+                        {r.title}
+                      </Link>
+                      <span className="shrink-0 text-xs tabular-nums text-muted">{new Date(h.cookedAt).toLocaleDateString(undefined, { day: "numeric", month: "short" })}</span>
                     </li>
                   ) : null;
                 })}
               </ul>
             ) : (
-              <p className="mt-2 text-sm text-muted">Recipes you mark as cooked will appear here, so you can repeat a favourite meal quickly.</p>
+              <p className="mt-3 text-sm text-muted">Recipes you mark as cooked will appear here, so you can repeat a favourite meal quickly.</p>
             )}
           </section>
         </div>

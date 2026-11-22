@@ -58,14 +58,14 @@ export function ShoppingList() {
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-      <div>
-        <form onSubmit={add} className="card flex flex-col gap-3 p-4 sm:flex-row sm:items-end" noValidate>
+    <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_20rem] xl:gap-16">
+      <div className="min-w-0">
+        <form onSubmit={add} className="flex flex-col gap-3 rounded-[0.875rem] border border-line bg-white p-3 sm:flex-row sm:items-end sm:p-4" noValidate>
           <div className="flex-1">
             <label htmlFor="shop-name" className="label">Add an item</label>
             <input id="shop-name" className="field" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. onions" maxLength={120} autoComplete="off" />
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:w-56">
+          <div className="grid grid-cols-2 gap-3 sm:w-52">
             <div>
               <label htmlFor="shop-qty" className="label">Amount</label>
               <input id="shop-qty" className="field" inputMode="decimal" value={qty} onChange={(e) => setQty(e.target.value)} placeholder="–" />
@@ -80,9 +80,9 @@ export function ShoppingList() {
           </div>
           <button type="submit" className={buttonClass("primary", "md")}><Plus className="size-4" aria-hidden /> Add</button>
         </form>
-        {error && <p role="alert" className="mt-2 text-sm font-semibold text-coral-ink">{error}</p>}
+        {error && <p role="alert" className="mt-2 text-sm font-medium text-coral-ink">{error}</p>}
 
-        <div className="mt-6">
+        <div className="mt-10">
           {!hydrated ? (
             <Skeleton className="h-48" />
           ) : list.length === 0 ? (
@@ -90,26 +90,29 @@ export function ShoppingList() {
               Add items above, or add missing ingredients from any recipe with one tap.
             </EmptyState>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-10">
               {groups.map((g) => (
                 <section key={g.category} aria-labelledby={`grp-${g.category}`}>
-                  <h2 id={`grp-${g.category}`} className="mb-2 font-sans text-xs font-bold uppercase tracking-wider text-muted">{g.label}</h2>
-                  <ul className="divide-y divide-line rounded-2xl border border-line bg-white">
+                  <h2 id={`grp-${g.category}`} className="mb-2 flex items-baseline justify-between font-sans text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-muted">
+                    {g.label}
+                    <span className="tabular-nums tracking-normal">{g.items.length}</span>
+                  </h2>
+                  <ul className="divide-y divide-line border-y border-line">
                     {g.items.map((item) => (
-                      <li key={item.id} className="flex items-center gap-2 px-2 py-1.5" data-testid="shopping-item">
-                        <label className="flex min-h-12 flex-1 cursor-pointer items-center gap-3 px-2">
+                      <li key={item.id} className="flex items-center gap-1" data-testid="shopping-item">
+                        <label className="flex min-h-14 flex-1 cursor-pointer items-center gap-3.5">
                           <input
                             type="checkbox"
                             className="peer sr-only"
                             checked={item.purchased}
                             onChange={() => kitchenStore.toggleShoppingPurchased(item.id)}
                           />
-                          <span aria-hidden className={cn("flex size-6 shrink-0 items-center justify-center rounded-lg border-2 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-orange", item.purchased ? "border-forest bg-forest text-white" : "border-line-strong bg-white")}>
-                            {item.purchased && <Check className="size-4" />}
+                          <span aria-hidden className={cn("flex size-[1.35rem] shrink-0 items-center justify-center rounded-[0.375rem] border-[1.5px] transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-forest", item.purchased ? "border-forest bg-forest text-white" : "border-line-strong bg-white")}>
+                            {item.purchased && <Check className="size-3.5" strokeWidth={2.5} />}
                           </span>
-                          <span className={cn("text-[1.02rem]", item.purchased && "text-muted line-through")}>{formatShoppingItem(item)}</span>
+                          <span className={cn("text-[1rem] transition-colors", item.purchased && "text-faint line-through decoration-ink/30")}>{formatShoppingItem(item)}</span>
                         </label>
-                        <button type="button" className={cn(iconButtonClass, "text-xs font-semibold")} onClick={() => setEditing(item)} aria-label={`Edit amount for ${item.name}`}>
+                        <button type="button" className={cn(iconButtonClass, "w-auto px-2.5 text-[0.8125rem] font-medium")} onClick={() => setEditing(item)} aria-label={`Edit amount for ${item.name}`}>
                           Edit
                         </button>
                         <button type="button" className={cn(iconButtonClass, "hover:bg-coral-soft hover:text-coral-ink")} aria-label={`Remove ${item.name}`} onClick={() => kitchenStore.removeShoppingItem(item.id)}>
@@ -125,10 +128,22 @@ export function ShoppingList() {
         </div>
       </div>
 
-      <aside className="space-y-3 lg:sticky lg:top-20 lg:self-start">
-        <div className="card p-4">
-          <p className="font-semibold">{hydrated ? `${list.length - purchased.length} to buy · ${purchased.length} in basket` : "…"}</p>
-          <div className="mt-3 flex flex-col gap-2">
+      <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+        <div className="rounded-[0.875rem] border border-line bg-white p-5">
+          {hydrated && (
+            <div className="mb-4 grid grid-cols-2 border-b border-line pb-4">
+              <div>
+                <p className="font-display text-[2.25rem] leading-none tabular-nums">{list.length - purchased.length}</p>
+                <p className="mt-1.5 text-xs text-muted">to buy</p>
+              </div>
+              <div className="border-l border-line pl-4">
+                <p className="font-display text-[2.25rem] leading-none tabular-nums text-forest">{purchased.length}</p>
+                <p className="mt-1.5 text-xs text-muted">in basket</p>
+              </div>
+            </div>
+          )}
+          <p className="text-sm text-muted">{hydrated ? `${list.length - purchased.length} to buy · ${purchased.length} in basket` : "…"}</p>
+          <div className="mt-4 flex flex-col gap-2">
             <button type="button" className={buttonClass("secondary", "md")} onClick={copy} disabled={!list.length}>
               <ClipboardCopy className="size-4" aria-hidden /> Copy shopping list
             </button>
@@ -148,7 +163,7 @@ export function ShoppingList() {
             </button>
           </div>
         </div>
-        <p className="px-1 text-xs text-muted">Tip: tick items as you shop. Your list is saved in this browser, so it&apos;s there when you open the site on your phone at the store (same browser).</p>
+        <p className="px-1 text-xs leading-relaxed text-muted">Tip: tick items as you shop. Your list is saved in this browser, so it&apos;s there when you open the site on your phone at the store (same browser).</p>
       </aside>
 
       <Dialog
@@ -173,8 +188,8 @@ export function ShoppingList() {
           </>
         }
       >
-        <ul className="space-y-1 text-sm">
-          {purchased.filter((p) => p.ingredientId).map((p) => <li key={p.id}>• {formatShoppingItem(p)}</li>)}
+        <ul className="divide-y divide-line border-y border-line text-sm">
+          {purchased.filter((p) => p.ingredientId).map((p) => <li key={p.id} className="py-2">{formatShoppingItem(p)}</li>)}
         </ul>
         {purchased.some((p) => !p.ingredientId) && <p className="mt-3 text-xs text-muted">Items we don&apos;t recognise stay on the list.</p>}
       </Dialog>

@@ -43,10 +43,10 @@ export function MealPlanner({ recipes }: { recipes: RecipeSummary[] }) {
 
   return (
     <div>
-      <div className="card flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-[0.875rem] border border-line bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="font-semibold">{hydrated ? `${data.mealPlan.length} meal${data.mealPlan.length === 1 ? "" : "s"} planned this week` : "…"}</p>
-          <p className="text-sm text-muted">
+          <p className="font-display text-[1.375rem] leading-tight">{hydrated ? `${data.mealPlan.length} meal${data.mealPlan.length === 1 ? "" : "s"} planned this week` : "…"}</p>
+          <p className="mt-1 text-sm text-muted">
             {needs.length > 0
               ? `You'll need ${needs.length} more ingredient${needs.length === 1 ? "" : "s"} (after checking your fridge and list).`
               : data.mealPlan.length
@@ -66,61 +66,73 @@ export function MealPlanner({ recipes }: { recipes: RecipeSummary[] }) {
         </div>
       </div>
       {needs.length > 0 && (
-        <details className="mt-3 rounded-2xl border border-line bg-white p-4 text-sm">
-          <summary className="cursor-pointer font-semibold">See what&apos;s missing</summary>
-          <ul className="mt-2 grid gap-1 sm:grid-cols-2">{needs.map((n) => <li key={n.ingredientId}>• {formatShoppingItem({ ...n, ingredientId: n.ingredientId })}</li>)}</ul>
+        <details className="group mt-3 rounded-[0.875rem] border border-line bg-white text-sm">
+          <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-3.5 font-medium [&::-webkit-details-marker]:hidden">
+            See what&apos;s missing
+            <span aria-hidden className="text-lg leading-none text-muted transition-transform group-open:rotate-45">+</span>
+          </summary>
+          <ul className="grid gap-x-8 border-t border-line px-5 py-3 sm:grid-cols-2 lg:grid-cols-3">
+            {needs.map((n) => <li key={n.ingredientId} className="border-b border-line py-2 last:border-0">{formatShoppingItem({ ...n, ingredientId: n.ingredientId })}</li>)}
+          </ul>
         </details>
       )}
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {WEEKDAYS.map((day) => (
-          <section key={day} aria-labelledby={`day-${day}`} className={cn("card p-4", todayKey === day && "ring-2 ring-forest")}>
-            <h2 id={`day-${day}`} className="flex items-center justify-between text-xl font-semibold">
-              {DAY[day]}
-              {todayKey === day && <span className="rounded-full bg-forest px-2.5 py-0.5 font-sans text-xs font-bold text-white">Today</span>}
-            </h2>
-            <div className="mt-3 space-y-3">
-              {MEAL_SLOTS.map((slot) => {
-                const entries = data.mealPlan.filter((m) => m.day === day && m.slot === slot);
-                return (
-                  <div key={slot}>
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-sans text-xs font-bold uppercase tracking-wider text-muted">{SLOT[slot]}</h3>
-                      <button type="button" className={cn(iconButtonClass, "size-8")} aria-label={`Add ${SLOT[slot].toLowerCase()} on ${DAY[day]}`} onClick={() => setAdding({ day, slot })}>
-                        <Plus className="size-4" aria-hidden />
-                      </button>
+      <div className="mt-8 grid gap-px overflow-hidden rounded-[0.875rem] border border-line bg-line sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
+        {WEEKDAYS.map((day) => {
+          const isToday = todayKey === day;
+          return (
+            <section key={day} aria-labelledby={`day-${day}`} className={cn("flex flex-col bg-white", isToday && "bg-[#FBFCFA]")}>
+              <h2 id={`day-${day}`} className={cn("flex items-center justify-between border-b px-4 py-3 font-display text-[1.25rem] leading-tight", isToday ? "border-forest" : "border-line")}>
+                {DAY[day]}
+                {isToday && <span className="font-sans text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-forest">Today</span>}
+              </h2>
+              <div className="flex flex-1 flex-col divide-y divide-line">
+                {MEAL_SLOTS.map((slot) => {
+                  const entries = data.mealPlan.filter((m) => m.day === day && m.slot === slot);
+                  return (
+                    <div key={slot} className="px-4 py-3">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-sans text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-muted">{SLOT[slot]}</h3>
+                        <button type="button" className={cn(iconButtonClass, "-mr-2 size-8")} aria-label={`Add ${SLOT[slot].toLowerCase()} on ${DAY[day]}`} onClick={() => setAdding({ day, slot })}>
+                          <Plus className="size-4" aria-hidden strokeWidth={1.75} />
+                        </button>
+                      </div>
+                      {!hydrated ? (
+                        <Skeleton className="mt-1 h-8" />
+                      ) : entries.length === 0 ? (
+                        <p className="mt-0.5 text-[0.8125rem] text-faint">—</p>
+                      ) : (
+                        <ul className="mt-1 space-y-2">
+                          {entries.map((e) => {
+                            const r = recipeMap.get(e.recipeId);
+                            return (
+                              <li key={e.id} className="group/entry rounded-[0.5rem] bg-forest-50 px-2.5 py-2" data-testid="plan-entry">
+                                <Link href={`/recipes/${r?.slug ?? e.recipeId}`} className="line-clamp-2 text-[0.875rem] font-medium leading-snug text-ink hover:text-forest">
+                                  {r?.title ?? "Unknown recipe"}
+                                </Link>
+                                <div className="mt-1 flex items-center justify-between">
+                                  <span className="text-xs tabular-nums text-muted">{e.servings} serving{e.servings === 1 ? "" : "s"}</span>
+                                  <span className="-mr-1.5 flex">
+                                    <button type="button" className={cn(iconButtonClass, "size-7")} aria-label={`Move ${r?.title}`} onClick={() => setMoving(e)}>
+                                      <ArrowRightLeft className="size-3.5" aria-hidden strokeWidth={1.75} />
+                                    </button>
+                                    <button type="button" className={cn(iconButtonClass, "size-7")} aria-label={`Remove ${r?.title}`} onClick={() => kitchenStore.removeMealPlanEntry(e.id)}>
+                                      <X className="size-3.5" aria-hidden strokeWidth={1.75} />
+                                    </button>
+                                  </span>
+                                </div>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
                     </div>
-                    {!hydrated ? (
-                      <Skeleton className="h-9" />
-                    ) : entries.length === 0 ? (
-                      <p className="rounded-xl border border-dashed border-line px-3 py-2 text-sm text-muted">Nothing planned</p>
-                    ) : (
-                      <ul className="space-y-1.5">
-                        {entries.map((e) => {
-                          const r = recipeMap.get(e.recipeId);
-                          return (
-                            <li key={e.id} className="flex items-center gap-1 rounded-xl bg-surface py-1 pl-3 pr-1" data-testid="plan-entry">
-                              <Link href={`/recipes/${r?.slug ?? e.recipeId}`} className="min-w-0 flex-1 truncate py-1.5 text-sm font-semibold hover:text-forest hover:underline">
-                                {r?.title ?? "Unknown recipe"}
-                              </Link>
-                              <span className="text-xs text-muted">×{e.servings}</span>
-                              <button type="button" className={cn(iconButtonClass, "size-8")} aria-label={`Move ${r?.title}`} onClick={() => setMoving(e)}>
-                                <ArrowRightLeft className="size-3.5" aria-hidden />
-                              </button>
-                              <button type="button" className={cn(iconButtonClass, "size-8")} aria-label={`Remove ${r?.title}`} onClick={() => kitchenStore.removeMealPlanEntry(e.id)}>
-                                <X className="size-4" aria-hidden />
-                              </button>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-        ))}
+                  );
+                })}
+              </div>
+            </section>
+          );
+        })}
       </div>
 
       <RecipePickerDialog
@@ -180,9 +192,9 @@ function RecipePickerDialog({ target, recipes, onClose, onPick }: { target: { da
       <ul className="mt-3 divide-y divide-line">
         {list.map(({ r, m }) => (
           <li key={r.id}>
-            <button type="button" onClick={() => { setQ(""); onPick(r.id); }} className="flex w-full items-center justify-between gap-3 rounded-xl px-2 py-3 text-left hover:bg-forest-50">
+            <button type="button" onClick={() => { setQ(""); onPick(r.id); }} className="flex w-full items-center justify-between gap-3 rounded-[0.5rem] px-2 py-3 text-left hover:bg-cream">
               <span>
-                <span className="block font-semibold">{r.title}</span>
+                <span className="block font-medium">{r.title}</span>
                 <span className="text-xs text-muted">{r.totalMinutes} min · {m.essentialHave}/{m.essentialTotal} ingredients</span>
               </span>
               {data.inventory.length > 0 && <ReadinessBadge match={m} className="shrink-0" />}

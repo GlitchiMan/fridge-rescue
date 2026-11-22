@@ -70,16 +70,16 @@ export function IngredientPicker({
 
   return (
     <div className="relative">
-      <label htmlFor={id} className={cn("label", hideLabel && "sr-only")}>
+      <label htmlFor={id} className={cn("label", size === "lg" && "mb-2.5 text-[0.875rem]", hideLabel && "sr-only")}>
         {label}
       </label>
       <div
         className={cn(
-          "flex items-center gap-2 rounded-2xl border border-line-strong bg-white pl-4 pr-1.5 shadow-soft transition-shadow focus-within:border-forest focus-within:shadow-[0_0_0_4px_rgb(36_92_69_/_0.15)]",
-          size === "lg" ? "min-h-15" : "min-h-12",
+          "flex items-center gap-2.5 border border-line-strong bg-white pr-1.5 transition-[border-color,box-shadow] hover:border-[#BDB7A9] focus-within:border-forest focus-within:shadow-[0_0_0_3px_rgb(31_77_58_/_0.14)]",
+          size === "lg" ? "min-h-[3.75rem] rounded-[0.875rem] pl-4" : "min-h-12 rounded-[0.625rem] pl-3.5",
         )}
       >
-        <Search className="size-5 shrink-0 text-muted" aria-hidden />
+        <Search className={cn("shrink-0 text-muted", size === "lg" ? "size-5" : "size-[1.1rem]")} aria-hidden strokeWidth={1.75} />
         <input
           ref={inputRef}
           id={id}
@@ -125,16 +125,21 @@ export function IngredientPicker({
               commit(suggestions[active]?.ingredient.id);
             }
           }}
-          className={cn("min-w-0 flex-1 bg-transparent py-2 text-ink outline-none placeholder:text-muted/80", size === "lg" ? "text-lg" : "text-base")}
+          className={cn("min-w-0 flex-1 bg-transparent py-2 text-ink outline-none placeholder:text-faint", size === "lg" ? "text-[1.0625rem]" : "text-base")}
         />
         <button
           type="button"
           onClick={() => query.trim() && commit(showList ? suggestions[active]?.ingredient.id : undefined)}
           disabled={!query.trim()}
           aria-label="Add ingredient"
-          className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-forest-50 text-forest transition-colors hover:bg-forest-100 disabled:opacity-40"
+          className={cn(
+            "inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[0.5rem] text-[0.8125rem] font-medium transition-colors disabled:text-faint",
+            query.trim() ? "bg-ink text-white hover:bg-ink-soft" : "bg-transparent",
+            size === "lg" ? "h-11 px-3.5" : "h-9 px-2.5",
+          )}
         >
-          <Plus className="size-5" aria-hidden />
+          <Plus className="size-4" aria-hidden strokeWidth={2} />
+          <span className="hidden sm:inline">Add</span>
         </button>
       </div>
 
@@ -143,7 +148,7 @@ export function IngredientPicker({
           id={listId}
           role="listbox"
           aria-label="Ingredient suggestions"
-          className="absolute inset-x-0 top-full z-30 mt-2 max-h-80 overflow-auto rounded-2xl border border-line bg-white p-1.5 shadow-lift"
+          className="absolute inset-x-0 top-full z-30 mt-2 max-h-80 animate-pop overflow-auto rounded-[0.75rem] border border-line bg-white p-1 shadow-lift"
         >
           {suggestions.map((s, i) => (
             <li
@@ -157,15 +162,19 @@ export function IngredientPicker({
               }}
               onMouseEnter={() => setActive(i)}
               className={cn(
-                "flex cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5",
-                i === active ? "bg-forest-50 text-forest-800" : "text-ink",
+                "flex cursor-pointer items-center justify-between gap-3 rounded-[0.5rem] px-3 py-2.5 text-[0.9375rem]",
+                i === active ? "bg-cream-deep text-ink" : "text-ink-soft",
               )}
             >
-              <span className="flex items-center gap-2.5">
-                <span className="size-3 rounded-full border border-ink/10" style={{ background: s.ingredient.color }} aria-hidden />
-                <span className="font-semibold">{s.ingredient.name}</span>
+              <span className="flex items-center gap-3">
+                <span className="size-2 rounded-full" style={{ background: s.ingredient.color }} aria-hidden />
+                <span className="font-medium text-ink">{s.ingredient.name}</span>
               </span>
-              {s.matchedAlias && <span className="truncate text-xs text-muted">matches “{s.matchedAlias}”</span>}
+              {s.matchedAlias ? (
+                <span className="truncate text-xs text-muted">matches “{s.matchedAlias}”</span>
+              ) : (
+                i === active && <kbd className="hidden font-sans text-[0.6875rem] text-muted sm:inline">Enter</kbd>
+              )}
             </li>
           ))}
         </ul>
@@ -178,23 +187,22 @@ export function IngredientPicker({
       )}
 
       {showChips && selected.length > 0 && (
-        <ul className="mt-3 flex flex-wrap gap-2" aria-label="Selected ingredients">
+        <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Selected ingredients">
           {selected.map((sid) => {
             const ing = getIngredient(sid);
             if (!ing) return null;
             return (
               <li key={sid} className="animate-pop">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-forest-200 bg-forest-50 py-1 pl-3 pr-1 text-sm font-semibold text-forest-800">
-                  <span className="size-2.5 rounded-full" style={{ background: ing.color }} aria-hidden />
+                <span className="inline-flex min-h-8 items-center gap-2 rounded-[0.5rem] bg-forest py-0.5 pl-2.5 pr-0.5 text-[0.8125rem] font-medium text-white">
                   {ing.name}
                   {onRemove && (
                     <button
                       type="button"
                       onClick={() => onRemove(sid)}
                       aria-label={`Remove ${ing.name}`}
-                      className="inline-flex size-7 items-center justify-center rounded-full text-forest hover:bg-forest-100"
+                      className="inline-flex size-7 items-center justify-center rounded-[0.375rem] text-white/75 transition-colors hover:bg-white/15 hover:text-white"
                     >
-                      <X className="size-4" aria-hidden />
+                      <X className="size-3.5" aria-hidden strokeWidth={2} />
                     </button>
                   )}
                 </span>

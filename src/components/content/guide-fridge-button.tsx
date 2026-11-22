@@ -9,7 +9,7 @@ import { kitchenStore } from "@/hooks/use-kitchen";
 export function GuideFridgeButton({ ingredientIds }: { ingredientIds: string[] }) {
   const toast = useToast();
   return (
-    <div className="mt-3 flex flex-wrap gap-2">
+    <div className="flex shrink-0 flex-wrap gap-2">
       <button
         type="button"
         className={buttonClass("primary", "sm")}

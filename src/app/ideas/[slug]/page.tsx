@@ -31,55 +31,66 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
   if (!g) notFound();
   const recipes = g.recipeSlugs.map((s) => getRecipeBySlug(s)).filter((r) => r !== undefined).map(toSummary);
   const others = GUIDES.filter((x) => x.slug !== g.slug).slice(0, 3);
+  const names = g.keyIngredients.map((id) => getIngredient(id)?.name.toLowerCase().replace(/ \(.*\)/, ""));
 
   return (
-    <article className="container-page py-8 sm:py-12">
+    <article className="pt-6 sm:pt-10">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Ideas", path: "/ideas" }, { name: g.title, path: `/ideas/${g.slug}` }])) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Guides", path: "/ideas" }, { name: g.title, path: `/ideas/${g.slug}` }])) }}
       />
-      <nav aria-label="Breadcrumb" className="text-sm text-muted">
-        <ol className="flex flex-wrap items-center gap-1">
-          <li><Link href="/" className="hover:underline">Home</Link></li>
-          <ChevronRight className="size-3.5" aria-hidden />
-          <li><Link href="/ideas" className="hover:underline">Ideas</Link></li>
-          <ChevronRight className="size-3.5" aria-hidden />
-          <li aria-current="page" className="font-semibold text-ink">{g.title}</li>
-        </ol>
-      </nav>
-      <div className="mx-auto max-w-3xl">
-        <h1 className="mt-6 text-4xl font-semibold leading-tight sm:text-5xl">{g.title}</h1>
-        {g.intro.map((p) => <p key={p} className="mt-4 text-lg leading-relaxed text-muted">{p}</p>)}
-        <div className="mt-6 rounded-2xl bg-forest-50 p-4">
-          <p className="font-semibold text-forest-800">Got {g.keyIngredients.map((id) => getIngredient(id)?.name.toLowerCase().replace(/ \(.*\)/, "")).join(", ")}?</p>
-          <GuideFridgeButton ingredientIds={g.keyIngredients} />
-        </div>
+      <div className="container-page">
+        <nav aria-label="Breadcrumb" className="text-[0.8125rem] text-muted">
+          <ol className="flex flex-wrap items-center gap-1.5">
+            <li><Link href="/" className="hover:text-ink">Home</Link></li>
+            <ChevronRight className="size-3.5 text-faint" aria-hidden />
+            <li><Link href="/ideas" className="hover:text-ink">Guides</Link></li>
+            <ChevronRight className="size-3.5 text-faint" aria-hidden />
+            <li aria-current="page" className="text-ink">{g.title}</li>
+          </ol>
+        </nav>
       </div>
 
-      <section aria-labelledby="guide-recipes" className="mt-12">
-        <h2 id="guide-recipes" className="text-2xl font-semibold">Recipes to try</h2>
-        <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <header className="container-narrow mt-10 sm:mt-14">
+        <p className="eyebrow">Guide</p>
+        <h1 className="mt-4 text-[2.5rem] sm:text-[3.5rem]">{g.title}</h1>
+        {g.intro.map((p) => <p key={p} className="lede mt-6">{p}</p>)}
+        <div className="mt-8 flex flex-col gap-4 rounded-[0.875rem] border border-line bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
+          <p className="font-display text-[1.25rem] leading-snug">Got {names.join(", ")}?</p>
+          <GuideFridgeButton ingredientIds={g.keyIngredients} />
+        </div>
+      </header>
+
+      <section aria-labelledby="guide-recipes" className="container-page mt-20">
+        <div className="mb-7 border-b border-line pb-4">
+          <h2 id="guide-recipes" className="section-title">Recipes to try</h2>
+        </div>
+        <ul className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
           {recipes.map((r) => <li key={r.id} className="flex [&>article]:flex-1"><RecipeCard recipe={r} /></li>)}
         </ul>
       </section>
 
-      <div className="mx-auto mt-12 max-w-3xl">
+      <div className="container-narrow mt-20">
         {g.sections.map((s) => (
-          <section key={s.heading} className="mt-10 first:mt-0">
-            <h2 className="text-2xl font-semibold">{s.heading}</h2>
-            {s.paragraphs.map((p) => <p key={p} className="mt-3 leading-relaxed">{p}</p>)}
+          <section key={s.heading} className="mt-14 first:mt-0">
+            <h2 className="font-display text-[1.75rem] leading-tight">{s.heading}</h2>
+            {s.paragraphs.map((p) => <p key={p} className="mt-4 text-[1.0625rem] leading-[1.75] text-ink-soft">{p}</p>)}
             {s.tips && (
-              <ul className="mt-4 space-y-2 rounded-2xl border border-line bg-white p-5">
-                {s.tips.map((t) => <li key={t} className="flex gap-2"><span className="mt-2 size-1.5 shrink-0 rounded-full bg-orange" aria-hidden />{t}</li>)}
+              <ul className="mt-6 space-y-3 border-l-2 border-forest-200 pl-5">
+                {s.tips.map((t) => <li key={t} className="text-[0.9375rem] leading-relaxed text-ink-soft">{t}</li>)}
               </ul>
             )}
           </section>
         ))}
         <AdSlot slot="guide-bottom" />
-        <section aria-labelledby="more-guides" className="mt-12 border-t border-line pt-8">
-          <h2 id="more-guides" className="text-xl font-semibold">More guides</h2>
-          <ul className="mt-3 space-y-2">
-            {others.map((o) => <li key={o.slug}><Link href={`/ideas/${o.slug}`} className="font-semibold text-forest hover:underline">{o.title}</Link></li>)}
+        <section aria-labelledby="more-guides" className="mt-16 border-t border-line pt-10">
+          <h2 id="more-guides" className="eyebrow">More guides</h2>
+          <ul className="mt-4 divide-y divide-line">
+            {others.map((o) => (
+              <li key={o.slug}>
+                <Link href={`/ideas/${o.slug}`} className="block py-3 font-display text-[1.25rem] hover:text-forest">{o.title}</Link>
+              </li>
+            ))}
           </ul>
         </section>
       </div>

@@ -13,8 +13,9 @@ import { normalizeIngredientName } from "@/lib/matching/ingredient-search";
 import { DIETARY_LABELS } from "@/lib/recipes/dietary";
 import { cn } from "@/lib/utils/cn";
 import { DIETARY_TAGS, DIFFICULTIES, EQUIPMENT, RECIPE_CATEGORIES, type RecipeMatch, type RecipeSummary } from "@/types";
-import { SearchX } from "lucide-react";
+import { Search, SearchX } from "lucide-react";
 import { RecipeCard } from "./recipe-card";
+import { recipeGridClass } from "./recipe-grid";
 
 const CATEGORY_LABELS: Record<string, string> = {
   breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack", dessert: "Dessert", soup: "Soup",
@@ -120,8 +121,8 @@ export function RecipeBrowser({ recipes }: { recipes: RecipeSummary[] }) {
       title={hint}
       onClick={() => setParam(key, on ? null : "1")}
       className={cn(
-        "inline-flex min-h-10 items-center rounded-full border px-4 text-sm font-semibold transition-colors disabled:opacity-50",
-        on ? "border-forest bg-forest text-white" : "border-line-strong bg-white text-ink hover:border-forest",
+        "inline-flex min-h-9 items-center rounded-[0.5rem] border px-3 text-[0.8125rem] font-medium transition-colors disabled:opacity-45",
+        on ? "border-forest bg-forest text-white" : "border-line-strong bg-white text-ink-soft hover:border-ink/40 hover:text-ink",
       )}
     >
       {label}
@@ -131,14 +132,15 @@ export function RecipeBrowser({ recipes }: { recipes: RecipeSummary[] }) {
   return (
     <div>
       <div className="flex flex-col gap-3 sm:flex-row">
-        <div className="flex-1">
+        <div className="relative flex-1">
           <label htmlFor="recipe-search" className="sr-only">
             Search recipes by name or ingredient
           </label>
+          <Search className="pointer-events-none absolute left-4 top-1/2 size-[1.1rem] -translate-y-1/2 text-muted" aria-hidden strokeWidth={1.75} />
           <input
             id="recipe-search"
             type="search"
-            className="field min-h-12 rounded-2xl"
+            className="field min-h-12 pl-11 text-[1rem]"
             placeholder="Search by recipe or ingredient, e.g. chickpeas"
             defaultValue={q}
             onChange={(e) => setParam("q", e.target.value)}
@@ -155,14 +157,14 @@ export function RecipeBrowser({ recipes }: { recipes: RecipeSummary[] }) {
         </button>
       </div>
 
-      <div className="mt-3 flex flex-wrap gap-2">
+      <div className="mt-4 flex flex-wrap gap-1.5">
         {toggle("Only recipes I can make", "canMake", canMakeOnly, !hasInventory, hasInventory ? undefined : "Add ingredients to My Fridge first")}
         {toggle("Use my expiring ingredients", "useSoon", useSoonOnly, !hasInventory)}
         {toggle("5 ingredients or fewer", "few", few)}
         {toggle("No oven", "noOven", noOven)}
       </div>
 
-      <div id="recipe-filters" className={cn("mt-4 grid gap-3 rounded-2xl border border-line bg-white p-4 sm:grid sm:grid-cols-3 lg:grid-cols-6", !showFilters && "hidden")}>
+      <div id="recipe-filters" className={cn("mt-5 grid gap-3 border-y border-line py-5 sm:grid sm:grid-cols-3 lg:grid-cols-6", !showFilters && "hidden")}>
         {select("Time", "time", String(time || ""), [
           { value: "", label: "Any time" },
           { value: "15", label: "Under 15 minutes" },
@@ -181,18 +183,18 @@ export function RecipeBrowser({ recipes }: { recipes: RecipeSummary[] }) {
       </div>
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-2">
-        <p className="text-sm text-muted" aria-live="polite">
+        <p className="text-sm tabular-nums text-muted" aria-live="polite">
           {filtered.length} recipe{filtered.length === 1 ? "" : "s"}
           {hasInventory ? " · matched against your fridge" : ""}
         </p>
         {activeCount > 0 || q ? (
-          <button type="button" className="inline-flex items-center gap-1 text-sm font-semibold text-forest hover:underline" onClick={() => router.replace(pathname, { scroll: false })}>
+          <button type="button" className="link inline-flex items-center gap-1 text-sm" onClick={() => router.replace(pathname, { scroll: false })}>
             <X className="size-4" aria-hidden /> Clear filters
           </button>
         ) : null}
       </div>
       {diet && (
-        <p className="mt-2 rounded-xl bg-orange-soft p-3 text-sm text-orange-ink">
+        <p className="mt-3 rounded-[0.625rem] bg-orange-soft px-4 py-3 text-sm text-orange-ink">
           Diet labels are worked out from the ingredients we list. Brands differ, so always check packaging – especially for allergies, and be aware of cross-contact.
         </p>
       )}
@@ -209,7 +211,7 @@ export function RecipeBrowser({ recipes }: { recipes: RecipeSummary[] }) {
           </EmptyState>
         </div>
       ) : (
-        <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className={cn("mt-8", recipeGridClass())}>
           {filtered.map((r) => (
             <li key={r.id} className="flex [&>article]:flex-1">
               <RecipeCard recipe={r} match={matches.get(r.id)} />

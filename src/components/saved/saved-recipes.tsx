@@ -1,9 +1,10 @@
 "use client";
 
-import { Heart, History, RotateCcw, X } from "lucide-react";
+import { Heart, RotateCcw, X } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
 import { RecipeCard } from "@/components/recipes/recipe-card";
+import { recipeGridClass } from "@/components/recipes/recipe-grid";
 import { buttonClass, iconButtonClass } from "@/components/ui/button";
 import { EmptyState, Skeleton } from "@/components/ui/empty-state";
 import { kitchenStore, useKitchen } from "@/hooks/use-kitchen";
@@ -28,43 +29,46 @@ export function SavedRecipes({ recipes }: { recipes: RecipeSummary[] }) {
   return (
     <div>
       <section aria-labelledby="favs">
-        <h2 id="favs" className="flex items-center gap-2 text-2xl font-semibold"><Heart className="size-5 text-coral" aria-hidden /> Favourites</h2>
-        <div className="mt-4">
-          {favorites.length === 0 ? (
-            <EmptyState icon={Heart} title="No favorites yet." action={<Link href="/recipes" className={buttonClass("primary", "md")}>Browse recipes</Link>}>
-              Save recipes you love to find them later.
-            </EmptyState>
-          ) : (
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {favorites.map((r) => (
-                <li key={r.id} className="flex [&>article]:flex-1" data-testid="saved-recipe">
-                  <RecipeCard recipe={r} match={matches.get(r.id)} />
-                </li>
-              ))}
-            </ul>
-          )}
+        <div className="mb-7 flex items-end justify-between border-b border-line pb-4">
+          <h2 id="favs" className="section-title">Favourites</h2>
+          {favorites.length > 0 && <p className="text-sm tabular-nums text-muted">{favorites.length} saved</p>}
         </div>
+        {favorites.length === 0 ? (
+          <EmptyState icon={Heart} title="No favorites yet." action={<Link href="/recipes" className={buttonClass("primary", "md")}>Browse recipes</Link>}>
+            Save recipes you love to find them later.
+          </EmptyState>
+        ) : (
+          <ul className={recipeGridClass()}>
+            {favorites.map((r) => (
+              <li key={r.id} className="flex [&>article]:flex-1" data-testid="saved-recipe">
+                <RecipeCard recipe={r} match={matches.get(r.id)} />
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
-      <section aria-labelledby="history" className="mt-14">
-        <h2 id="history" className="flex items-center gap-2 text-2xl font-semibold"><History className="size-5 text-forest" aria-hidden /> Cooking history</h2>
+      <section aria-labelledby="history" className="mt-20">
+        <div className="mb-2 border-b border-line pb-4">
+          <h2 id="history" className="section-title">Cooking history</h2>
+        </div>
         {history.length === 0 ? (
-          <p className="mt-3 text-muted">When you mark a recipe as cooked, it shows up here so you can repeat a meal in one tap.</p>
+          <p className="mt-4 text-muted">When you mark a recipe as cooked, it shows up here so you can repeat a meal in one tap.</p>
         ) : (
-          <ul className="mt-4 divide-y divide-line rounded-2xl border border-line bg-white">
+          <ul className="divide-y divide-line">
             {history.map((h) => {
               const r = map.get(h.recipeId);
               if (!r) return null;
               return (
-                <li key={h.id} className="flex items-center gap-3 px-4 py-3">
+                <li key={h.id} className="flex items-center gap-3 py-4">
                   <div className="min-w-0 flex-1">
-                    <Link href={`/recipes/${r.slug}`} className="font-semibold hover:text-forest hover:underline">{r.title}</Link>
-                    <p className="text-xs text-muted">
+                    <Link href={`/recipes/${r.slug}`} className="font-display text-[1.25rem] leading-tight hover:text-forest">{r.title}</Link>
+                    <p className="mt-0.5 text-[0.8125rem] text-muted">
                       {new Date(h.cookedAt).toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" })} · {h.servings} servings
                       {h.deductedInventory ? " · fridge updated" : ""}
                     </p>
                   </div>
-                  <Link href={`/recipes/${r.slug}`} className={buttonClass("soft", "sm")}>
+                  <Link href={`/recipes/${r.slug}`} className={buttonClass("secondary", "sm")}>
                     <RotateCcw className="size-3.5" aria-hidden /> Cook again
                   </Link>
                   <button type="button" className={iconButtonClass} aria-label={`Remove ${r.title} from history`} onClick={() => kitchenStore.removeHistoryEntry(h.id)}>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHeader } from "@/components/layout/page-header";
 import { ShoppingList } from "@/components/shopping/shopping-list";
 
 export const metadata: Metadata = {
@@ -10,10 +11,8 @@ export const metadata: Metadata = {
 
 export default function ShoppingListPage() {
   return (
-    <div className="container-page py-8 sm:py-12">
-      <p className="eyebrow">Shop smart</p>
-      <h1 className="mt-2 text-4xl font-semibold sm:text-5xl">Shopping list</h1>
-      <p className="mt-2 text-lg text-muted">Only what you actually need – grouped so it&apos;s quick at the store.</p>
+    <div className="container-page pt-10 sm:pt-16">
+      <PageHeader eyebrow="Shop" title="Shopping list" description="Only what you actually need – grouped so it's quick at the store." />
       <div className="mt-8">
         <ShoppingList />
       </div>

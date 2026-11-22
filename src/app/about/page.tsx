@@ -24,7 +24,7 @@ export default function AboutPage() {
       </ul>
       <h2>Our recipes</h2>
       <p>
-        Every recipe on Fridge Rescue is written for this site, built around everyday ingredients and checked so the ingredient list matches the method. Recipe illustrations are original artwork generated from each recipe&apos;s ingredients – they&apos;re not photographs of the finished dish.
+        Every recipe on Fridge Rescue is written for this site, built around everyday ingredients and checked so the ingredient list matches the method. Where a recipe has a photo, it&apos;s a styled serving suggestion – your dish may look a little different.
       </p>
       <h2>Get in touch</h2>
       <p>

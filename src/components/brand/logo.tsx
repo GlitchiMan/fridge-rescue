@@ -1,35 +1,24 @@
 /**
- * Original Fridge Rescue mark: a rounded fridge silhouette with a fresh leaf
- * growing from the door handle and a small "rescue" spark.
+ * Fridge Rescue mark: an abstract fridge – a solid tile split by one door
+ * line, with a single handle. Geometric and quiet, so it works at 16px.
  */
-export function LogoMark({ className = "size-9", title }: { className?: string; title?: string }) {
+export function LogoMark({ className = "size-7", title }: { className?: string; title?: string }) {
   return (
-    <svg viewBox="0 0 48 48" className={className} role={title ? "img" : undefined} aria-hidden={title ? undefined : true} aria-label={title}>
-      <rect x="9" y="4" width="30" height="40" rx="9" fill="#245C45" />
-      <rect x="9" y="4" width="30" height="40" rx="9" fill="url(#fr-sheen)" />
-      <path d="M9 20.5h30" stroke="#FFF9EF" strokeWidth="2" strokeLinecap="round" opacity="0.9" />
-      <rect x="14" y="10" width="3" height="6.5" rx="1.5" fill="#FFF9EF" />
-      <rect x="14" y="25" width="3" height="11" rx="1.5" fill="#FFF9EF" />
-      <path d="M24.5 37c0-7 3.5-12 11-13.5-.5 7.5-4.5 12-11 13.5z" fill="#6FAF7B" />
-      <path d="M25 36.5c2.5-3.5 5-6.5 9-10" stroke="#245C45" strokeWidth="1.3" strokeLinecap="round" fill="none" />
-      <path d="M34 7.5l1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1z" fill="#F2A65A" />
-      <defs>
-        <linearGradient id="fr-sheen" x1="9" y1="4" x2="39" y2="44" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#fff" stopOpacity="0.14" />
-          <stop offset="1" stopColor="#fff" stopOpacity="0" />
-        </linearGradient>
-      </defs>
+    <svg viewBox="0 0 32 32" className={className} role={title ? "img" : undefined} aria-hidden={title ? undefined : true} aria-label={title}>
+      <rect x="4" y="2" width="24" height="28" rx="6" fill="#1F4D3A" />
+      <path d="M4 13h24" stroke="#F7F5F0" strokeWidth="1.5" />
+      <rect x="8.5" y="6" width="2" height="4" rx="1" fill="#F7F5F0" />
+      <rect x="8.5" y="16.5" width="2" height="7" rx="1" fill="#F7F5F0" />
+      <circle cx="22" cy="22" r="2.25" fill="#E3B27A" />
     </svg>
   );
 }
 
 export function Logo({ className = "" }: { className?: string }) {
   return (
-    <span className={`inline-flex items-center gap-2 ${className}`}>
+    <span className={`inline-flex items-center gap-2.5 ${className}`}>
       <LogoMark />
-      <span className="font-display text-[1.35rem] font-semibold leading-none tracking-tight text-ink">
-        Fridge<span className="text-forest"> Rescue</span>
-      </span>
+      <span className="text-[1.0625rem] font-semibold leading-none tracking-[-0.025em] text-ink">Fridge Rescue</span>
     </span>
   );
 }

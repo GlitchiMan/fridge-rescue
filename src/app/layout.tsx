@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Manrope } from "next/font/google";
+import { Geist, Newsreader } from "next/font/google";
 import { AdScriptLoader } from "@/components/ads/ad-script-loader";
 import { BottomNav } from "@/components/layout/nav-links";
 import { ServiceWorkerRegistration } from "@/components/layout/service-worker";
@@ -9,16 +9,19 @@ import { ToastProvider } from "@/components/ui/toast";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, getSiteUrl } from "@/lib/seo/site";
 import "./globals.css";
 
-const fraunces = Fraunces({
+/** Editorial serif for headlines and recipe titles. */
+const newsreader = Newsreader({
   subsets: ["latin"],
-  variable: "--font-fraunces",
+  variable: "--font-newsreader",
   display: "swap",
-  axes: ["SOFT", "opsz"],
+  style: ["normal", "italic"],
+  axes: ["opsz"],
 });
 
-const manrope = Manrope({
+/** Precise, neutral sans for the interface. */
+const geist = Geist({
   subsets: ["latin"],
-  variable: "--font-manrope",
+  variable: "--font-geist",
   display: "swap",
 });
 
@@ -49,7 +52,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#245C45",
+  themeColor: "#F7F5F0",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -57,11 +60,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${manrope.variable}`}>
-      <body className="min-h-dvh">
+    <html lang="en" className={`${newsreader.variable} ${geist.variable}`}>
+      <body className="flex min-h-dvh flex-col">
         <ToastProvider>
           <SiteHeader />
-          <main id="main" tabIndex={-1} className="outline-none">
+          <main id="main" tabIndex={-1} className="flex-1 outline-none">
             {children}
           </main>
           <SiteFooter />

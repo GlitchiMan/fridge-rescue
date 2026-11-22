@@ -52,7 +52,7 @@ export default function HowItWorksPage() {
         There&apos;s no account. Everything you enter is saved in your browser on this device. Read more in our <Link href="/privacy">privacy policy</Link>.
       </p>
       <p className="pt-4">
-        <Link href="/#find" className={buttonClass("primary", "lg", "!text-white !no-underline")}>Find my next meal</Link>
+        <Link href="/#find" className={buttonClass("primary", "lg")}>Find my next meal</Link>
       </p>
     </ContentPage>
   );

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function MyFridgePage() {
   return (
-    <div className="container-page py-8 sm:py-12">
+    <div className="container-page pt-10 sm:pt-16">
       <FridgeDashboard recipes={getRecipeSummaries()} />
     </div>
   );

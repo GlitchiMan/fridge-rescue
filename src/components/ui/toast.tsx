@@ -64,18 +64,18 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((t) => (
           <div
             key={t.id}
-            className="pointer-events-auto flex w-full max-w-md animate-toast items-center gap-3 rounded-2xl bg-ink px-4 py-3 text-sm text-white shadow-lift"
+            className="pointer-events-auto flex w-full max-w-md animate-toast items-center gap-3 rounded-[0.75rem] bg-ink px-4 py-3 text-sm text-white shadow-lift"
           >
             {t.tone === "success" ? (
-              <CheckCircle2 className="size-5 shrink-0 text-leaf" aria-hidden />
+              <CheckCircle2 className="size-[1.1rem] shrink-0 text-[#9CC7AE]" aria-hidden strokeWidth={1.75} />
             ) : (
-              <Info className="size-5 shrink-0 text-orange" aria-hidden />
+              <Info className="size-[1.1rem] shrink-0 text-[#E3B27A]" aria-hidden strokeWidth={1.75} />
             )}
             <p className="flex-1">{t.message}</p>
             {t.action && (
               <button
                 type="button"
-                className="rounded-full px-3 py-1.5 font-semibold text-orange hover:bg-white/10"
+                className="rounded-[0.5rem] px-3 py-1.5 font-medium text-white underline decoration-white/40 underline-offset-4 hover:bg-white/10"
                 onClick={() => {
                   t.action!.onClick();
                   dismiss(t.id);
@@ -84,7 +84,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 {t.action.label}
               </button>
             )}
-            <button type="button" aria-label="Dismiss notification" className="rounded-full p-1 text-white/70 hover:text-white" onClick={() => dismiss(t.id)}>
+            <button type="button" aria-label="Dismiss notification" className="rounded-[0.375rem] p-1 text-white/60 hover:text-white" onClick={() => dismiss(t.id)}>
               <X className="size-4" aria-hidden />
             </button>
           </div>
