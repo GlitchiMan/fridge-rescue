@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+/* ────────────────────────────────────────────────────────────
+   Fridge Rescue design tokens
+   Contrast-checked against cream (#FFF9EF) and white for WCAG AA.
+   ──────────────────────────────────────────────────────────── */
+@theme {
+  --color-forest-50: #EEF5F0;
+  --color-forest-100: #D7E9DD;
+  --color-forest-200: #B3D3BE;
+  --color-forest: #245C45;
+  --color-forest-700: #1D4B38;
+  --color-forest-800: #163A2B;
+  --color-leaf: #6FAF7B;
+  --color-leaf-soft: #DCEEDD;
+  --color-cream: #FFF9EF;
+  --color-cream-deep: #F8EFDF;
+  --color-surface: #F2F6EE;
+  --color-orange: #F2A65A;
+  --color-orange-soft: #FCE8D2;
+  --color-orange-ink: #9A5512;
+  --color-coral: #E97762;
+  --color-coral-soft: #FBE3DD;
+  --color-coral-ink: #A63E2B;
+  --color-ink: #24332A;
+  --color-muted: #5B675F;
+  --color-line: #E8E0CF;
+  --color-line-strong: #D6CCB6;
+
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --radius-card: 1.25rem;
+  --shadow-soft: 0 1px 2px rgb(36 51 42 / 0.04), 0 4px 16px rgb(36 51 42 / 0.06);
+  --shadow-lift: 0 2px 4px rgb(36 51 42 / 0.05), 0 12px 32px rgb(36 51 42 / 0.10);
+
+  --animate-pop: pop 180ms ease-out;
+  --animate-fade-up: fade-up 320ms ease-out both;
+  --animate-toast: toast-in 220ms ease-out;
+
+  @keyframes pop {
+    0% { transform: scale(0.92); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes fade-up {
+    0% { transform: translateY(6px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes toast-in {
+    0% { transform: translateY(12px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-orange);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  ::selection {
+    background: var(--color-leaf-soft);
+  }
+  input, select, textarea, button {
+    font: inherit;
+  }
+  [hidden] {
+    display: none !important;
+  }
+}
+
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+  @media (min-width: 640px) {
+    .container-page { padding-inline: 1.5rem; }
+  }
+  .card {
+    background: white;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-soft);
+  }
+  .field {
+    width: 100%;
+    min-height: 2.75rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-line-strong);
+    background: white;
+    padding: 0.55rem 0.85rem;
+    color: var(--color-ink);
+    transition: border-color 150ms, box-shadow 150ms;
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-forest);
+    box-shadow: 0 0 0 3px rgb(36 92 69 / 0.18);
+  }
+  .label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+    color: var(--color-ink);
+  }
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-forest);
+  }
+  .prose-recipe p {
+    line-height: 1.7;
+  }
+}
+
+/* Respect reduced motion everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print: clean recipe cards without navigation, ads or controls. */
+@media print {
+  @page { margin: 1.5cm; }
+  body { background: white !important; color: black; }
+  .no-print, header[data-site-header], footer[data-site-footer], nav[data-bottom-nav], [data-ad-slot] { display: none !important; }
+  .card { box-shadow: none !important; border-color: #ccc !important; }
+  a { color: black; text-decoration: none; }
+  .print-break-avoid { break-inside: avoid; }
+}
