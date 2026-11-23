@@ -21,9 +21,9 @@ export default function HomePage() {
         visual={<HeroVisual />}
         intro={
           <>
-            <p className="eyebrow">Free · No sign-up</p>
-            <h1 className="mt-4 text-[3rem] sm:text-[4.25rem] lg:text-[4.5rem] xl:text-[5.5rem]">What&apos;s in your fridge?</h1>
-            <p className="lede mt-4 max-w-md">Add what you have and get recipes you can cook right now.</p>
+            <p className="eyebrow">YOUR PERSONAL KITCHEN</p>
+            <h1 className="mt-4 text-[3rem] sm:text-[4.25rem] lg:text-[4.5rem] xl:text-[5.5rem]">Your kitchen. Your recipes. Your way.</h1>
+            <p className="lede mt-4 max-w-md">Beautiful ideas for the ingredients you already have. Find your next favorite meal in seconds.</p>
           </>
         }
       />
