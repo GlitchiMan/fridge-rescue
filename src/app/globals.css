@@ -282,3 +282,76 @@
   a { color: black; text-decoration: none; }
   .print-break-avoid { break-inside: avoid; }
 }
+
+
+/* Premium appearance collections. They adjust the existing design tokens
+   rather than adding a second, conflicting set of utility classes. */
+:root[data-palette="forest"] {
+  --color-forest: #183c31;
+  --color-forest-700: #143329;
+  --color-forest-800: #102a22;
+  --color-leaf: #688d77;
+  --color-forest-100: #dce9df;
+}
+:root[data-palette="sage"] {
+  --color-forest: #4c6d56;
+  --color-forest-700: #3d5946;
+  --color-forest-800: #2b4535;
+  --color-leaf: #7b9a83;
+  --color-forest-100: #e1ece2;
+}
+:root[data-palette="champagne"] {
+  --color-forest: #886044;
+  --color-forest-700: #734c32;
+  --color-forest-800: #573923;
+  --color-leaf: #ad8e6f;
+  --color-forest-100: #f1e6d9;
+}
+:root[data-palette="midnight"] {
+  --color-forest: #34536b;
+  --color-forest-700: #263f55;
+  --color-forest-800: #1d3143;
+  --color-leaf: #7b9fb8;
+  --color-forest-100: #e3ebf1;
+}
+:root[data-mode="dark"] {
+  color-scheme: dark;
+  --color-cream: #181d1b;
+  --color-cream-deep: #222a25;
+  --color-surface: #222a25;
+  --color-ink: #f5f1e8;
+  --color-ink-soft: #e1e1d9;
+  --color-muted: #bac2b9;
+  --color-faint: #b0b9af;
+  --color-line: #39433e;
+  --color-line-strong: #526058;
+  --color-forest: #a0c9ad;
+  --color-forest-700: #789d85;
+  --color-forest-800: #52735e;
+  --color-forest-100: #33473a;
+  --color-orange-soft: #403328;
+  --color-orange-ink: #f0b980;
+  --color-coral-soft: #402a2b;
+  --color-coral-ink: #ffb2a0;
+}
+/* Existing surfaces are mostly bg-white; make them readable in dark mode. */
+:root[data-mode="dark"] .bg-white,
+:root[data-mode="dark"] .bg-white\/70 {
+  background-color: #262e29;
+}
+:root[data-mode="dark"] .field {
+  background: #262e29;
+  color: var(--color-ink);
+}
+:root[data-mode="dark"] .card {
+  background: #262e29;
+}
+:root[data-mode="dark"] .text-white {
+  color: #ffffff;
+}
+:root[data-mode="dark"] .bg-forest.text-white {
+  background-color: #456c54;
+}
+:root[data-mode="dark"] .bg-ink.text-white {
+  background-color: #456c54;
+}
