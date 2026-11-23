@@ -10,7 +10,7 @@ Takes about 15 minutes. The Supabase Free plan is enough to start. Guests keep w
 ## 2. Create the database tables
 
 1. Open **SQL Editor → New query**.
-2. Paste the full contents of `supabase/migrations/20261123120000_accounts.sql`.
+2. Paste the full contents of `supabase/migrations/20261123120000_accounts.sql`. This is the **only** migration. An earlier draft called `0001_user_kitchens.sql` was removed, so do not run it.
 3. Click **Run**. You should see "Success".
 4. Under **Table Editor**, confirm `profiles` and `kitchen_states` exist and show RLS as enabled.
 
@@ -67,6 +67,7 @@ and the **Reset password** template link to:
 - [ ] Sign out and back in
 - [ ] Reset the password
 - [ ] Add guest ingredients, sign in, and choose **Add to my account**
+- [ ] Change palette and mode, then confirm they follow you to a second browser
 - [ ] Open the account in a second browser and confirm the data appears
 - [ ] Make changes in both browsers and confirm both survive
 - [ ] Sign in as a second user and confirm the first user's data is not visible

@@ -16,6 +16,14 @@ export function hasKitchenData(s: StorageSchema): boolean {
   );
 }
 
+/** Identifies a guest kitchen so an already-imported copy is not offered again. */
+export function guestFingerprint(s: StorageSchema): string {
+  const text = JSON.stringify(toCloudState(s));
+  let h = 5381;
+  for (let i = 0; i < text.length; i++) h = (Math.imul(h, 33) ^ text.charCodeAt(i)) >>> 0;
+  return `${text.length}:${h.toString(36)}`;
+}
+
 function mergeById<T extends { id: string }>(base: T[], local: T[], remote: T[]): T[] {
   const baseById = new Map(base.map((x) => [x.id, x]));
   const localById = new Map(local.map((x) => [x.id, x]));

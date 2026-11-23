@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { PGlite } from "@electric-sql/pglite";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { mergeGuestIntoAccount, threeWayMerge, toCloudState } from "@/lib/account/merge";
+import { guestFingerprint, mergeGuestIntoAccount, threeWayMerge, toCloudState } from "@/lib/account/merge";
 import { KitchenSync, type CloudKitchen, type SyncMeta, type SyncedStore } from "@/lib/account/sync";
 import { createEmptyState } from "@/lib/storage/schema";
 import { safeNextPath } from "@/lib/supabase/config";
@@ -38,6 +38,11 @@ describe("merging", () => {
     expect(m.preferences.maxMinutes).toBe(30);
     expect(m.preferences.excludedIngredients.sort()).toEqual(["mushrooms", "peanut-butter"]);
     expect(m.preferences.diets).toEqual(["vegetarian"]);
+  });
+  it("recognises an already-imported guest kitchen", () => {
+    const a = state({ favorites: ["soup"] });
+    expect(guestFingerprint(a)).toBe(guestFingerprint({ ...a, consent: { ...a.consent, decided: true } }));
+    expect(guestFingerprint(a)).not.toBe(guestFingerprint(state({ favorites: ["pasta"] })));
   });
   it("never sends browser consent to the cloud", () => {
     const s = state({ consent: { decided: true, analytics: true, advertising: true, updatedAt: "2026-11-01T00:00:00.000Z" } });
@@ -158,6 +163,14 @@ describe("database security (real Postgres, Supabase-style roles)", () => {
   it("cannot change another user's profile", async () => {
     await as("authenticated", A, () => db.query("update public.profiles set display_name = 'hacked' where id = $1", [B]));
     expect((await db.query<{ display_name: string | null }>("select display_name from public.profiles where id = $1", [B])).rows[0]!.display_name).toBeNull();
+  });
+  it("stores valid appearance for the owner and rejects invalid values", async () => {
+    await as("authenticated", A, () => db.query("update public.profiles set appearance = $1::jsonb where id = $2", [JSON.stringify({ palette: "sage", mode: "dark" }), A]));
+    expect((await db.query<{ appearance: { palette: string } }>("select appearance from public.profiles where id = $1", [A])).rows[0]!.appearance.palette).toBe("sage");
+    await expect(as("authenticated", A, () => db.query("update public.profiles set appearance = $1::jsonb where id = $2", [JSON.stringify({ palette: "neon", mode: "dark" }), A]))).rejects.toThrow(/check constraint/);
+  });
+  it("rejects oversized kitchens", async () => {
+    await expect(as("authenticated", A, () => save({ blob: "x".repeat(2_000_001) }, 1))).rejects.toThrow(/check constraint/);
   });
   it("rejects stale saves", async () => {
     const r1 = await as("authenticated", A, () => save({ v: 2 }, 1));

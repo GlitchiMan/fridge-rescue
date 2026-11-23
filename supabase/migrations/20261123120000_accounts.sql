@@ -4,13 +4,20 @@
 create table public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
   display_name text check (display_name is null or char_length(display_name) <= 80),
+  appearance jsonb check (
+    appearance is null or (
+      jsonb_typeof(appearance) = 'object'
+      and appearance ->> 'palette' in ('forest', 'sage', 'champagne', 'midnight')
+      and appearance ->> 'mode' in ('system', 'light', 'dark')
+    )
+  ),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 
 create table public.kitchen_states (
   user_id uuid primary key references auth.users (id) on delete cascade,
-  data jsonb not null check (jsonb_typeof(data) = 'object' and pg_column_size(data) <= 2000000),
+  data jsonb not null check (jsonb_typeof(data) = 'object' and octet_length(data::text) <= 2000000),
   revision bigint not null default 1 check (revision > 0),
   updated_at timestamptz not null default now()
 );
@@ -20,7 +27,7 @@ alter table public.kitchen_states enable row level security;
 
 revoke all on public.profiles, public.kitchen_states from public, anon;
 grant select on public.profiles to authenticated;
-grant update (display_name) on public.profiles to authenticated;
+grant update (display_name, appearance) on public.profiles to authenticated;
 -- Kitchen writes go through save_kitchen_state so concurrent devices can't overwrite each other.
 grant select on public.kitchen_states to authenticated;
 

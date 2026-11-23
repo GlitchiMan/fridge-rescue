@@ -1,61 +1,29 @@
-# Fridge Rescue 4.0 — Premium accounts implementation handoff
+# Fridge Rescue 4.0: premium accounts status
 
-**Work in progress on `feature/premium-accounts`. This is NOT a live account system.**
+Work in progress on `feature/premium-accounts`. **Not live. Do not merge until real Supabase testing is complete and the owner approves.**
 
-## What this branch currently adds
+## Built and locally tested
 
-- New premium color palettes: Forest, Sage, Champagne and Midnight.
-- Light, dark and system appearance preferences saved locally in this browser.
-- A more personal homepage heading and an accurate recipe-section title.
-- A proposed Supabase row-level-security migration for one kitchen per user.
+- Forest, Sage, Champagne and Midnight palettes with light, dark and system modes.
+- Saved appearance applied before first paint on every page.
+- Guest mode, with no Supabase code loaded for guests.
+- One database schema: `supabase/migrations/20261123120000_accounts.sql`.
+- Row Level Security, tested on Postgres with two users plus anonymous access.
+- Sync logic with optimistic locking and conflict merging, tested against a simulated cloud.
+- Guest import with explicit confirmation. The guest copy is kept on the device.
 
-## What is not implemented or enabled yet
+## Written but NOT yet proven against a real Supabase project
 
-- Sign-up, login, Google OAuth, email verification or password reset.
-- Actual Supabase connection, session handling or cross-device cloud sync.
-- Migration from local data to a signed-in user.
-- Account deletion and export from the cloud.
-- Auth-specific automated tests.
+- Sign-up, email confirmation, sign-in, password reset and Google sign-in.
+- Session cookies and the auth callback.
+- Real cross-device sync, profile name and appearance sync.
+- Account deletion.
 
-Do **not** market these as active features until verified. Production stays
-on `main` until the feature branch is reviewed, tested and merged.
+Do not describe these as working until the checklist in `docs/SUPABASE.md` passes.
 
-## Next implementation tasks
+## Decisions
 
-1. Configure a Supabase project; apply `supabase/migrations/0001_user_kitchens.sql`.
-   Confirm RLS with two separate authenticated test users.
-2. Install and lock a supported Supabase browser/server client library. Keep
-   server secrets outside the repository; publishable browser keys alone do not
-   grant access to private rows.
-3. Implement secure SSR-compatible auth session/cookie handling for Next.js 16.
-4. Add accessible sign-up, login, logout, recovery and Google OAuth callbacks.
-   Verify production redirect allowlists in Supabase.
-5. Map the existing `KitchenStore` to user-scoped cloud persistence without
-   making its currently synchronous `KitchenRepository` interface pretend that
-   network saves are synchronous.
-6. Preserve localStorage guest mode. On first login show an explicit import
-   preview and confirmation. Merge duplicates by stable IDs, keep a backup and
-   never delete guest data automatically.
-7. Maintain one authoritative sync source per signed-in session. Implement
-   optimistic concurrency using `revision` or a similar mechanism.
-8. Treat consent decisions separately from cloud kitchen preferences; confirm
-   which values are device-specific and legally appropriate to synchronize.
-9. Test anonymous access denial, user A/B isolation, reloads, multi-device
-   consistency, account deletion, and offline/network failure behavior.
-10. Run `npm run check` and `npm run test:e2e` in a real Node environment,
-    check the Netlify deploy preview, then request approval before merging.
-
-## Design note
-
-The original home page directly searches ingredients rather than forcing
-onboarding. Keep this useful guest path. A real `Get started free` CTA should
-only be added after registration and account saving actually work.
-
-## Configuration still required
-
-When auth is implemented, add the appropriate Supabase URL and publishable
-key to Netlify project settings, configure the Google OAuth provider and
-approved callback URLs, and review privacy/data-deletion obligations.
-
-No Supabase project, key, migration or live authentication setup has been
-created by this branch.
+- Browsers cannot write kitchen rows directly. Saves go through `save_kitchen_state`, which enforces revisions and always acts on the caller's own row.
+- Cookie consent stays per browser and is never synced.
+- Amounts are never added together during guest import, because both lists may describe the same food.
+- Account prompts stay hidden in production builds until Supabase is configured.
