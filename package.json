@@ -8,6 +8,7 @@
   },
   "scripts": {
     "images:sync": "node scripts/sync-images.mjs",
+    "trends:refresh": "node scripts/refresh-trends.mjs",
     "predev": "node scripts/sync-images.mjs",
     "dev": "next dev",
     "prebuild": "node scripts/sync-images.mjs",
@@ -22,10 +23,12 @@
     "check": "npm run typecheck && npm run lint && npm run test && npm run build"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.12.0",
     "lucide-react": "^1.77.0",
     "next": "^16.4.6",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
+    "server-only": "^0.0.1",
     "zod": "^4.6.7"
   },
   "devDependencies": {

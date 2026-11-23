@@ -11,3 +11,9 @@ next-env.d.ts
 .env.*.local
 .DS_Store
 Thumbs.db
+
+# Local server cache (video metadata, trend snapshots, counters)
+.data/
+
+# Netlify local state
+.netlify/

@@ -108,7 +108,7 @@ export function HomeFinder({
       {/* ── Hero ──
           Phone: copy → photo → search. Tablet: copy → search → photo.
           Desktop: copy + search left, photo right. */}
-      <section className="container-page grid gap-x-14 gap-y-6 pb-10 pt-6 [grid-template-areas:'intro'_'visual'_'search'] sm:gap-y-8 sm:pt-10 sm:[grid-template-areas:'intro'_'search'_'visual'] lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-y-8 lg:pb-16 lg:pt-12 lg:[grid-template-areas:'intro_visual'_'search_visual'] xl:gap-x-20">
+      <section className="container-page grid grid-cols-[minmax(0,1fr)] gap-x-14 gap-y-6 pb-10 pt-6 [grid-template-areas:'intro'_'visual'_'search'] sm:gap-y-8 sm:pt-10 sm:[grid-template-areas:'intro'_'search'_'visual'] lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-y-8 lg:pb-16 lg:pt-12 lg:[grid-template-areas:'intro_visual'_'search_visual'] xl:gap-x-20">
         <div className="[grid-area:intro] lg:self-end">{intro}</div>
         <div className="[grid-area:visual] lg:self-center">{visual}</div>
 

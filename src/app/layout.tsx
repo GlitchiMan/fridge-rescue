@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Newsreader } from "next/font/google";
 import { AdScriptLoader } from "@/components/ads/ad-script-loader";
+import { AssistantProvider } from "@/components/assistant/assistant-provider";
 import { BottomNav } from "@/components/layout/nav-links";
 import { ServiceWorkerRegistration } from "@/components/layout/service-worker";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -63,12 +64,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${newsreader.variable} ${geist.variable}`}>
       <body className="flex min-h-dvh flex-col">
         <ToastProvider>
-          <SiteHeader />
-          <main id="main" tabIndex={-1} className="flex-1 outline-none">
-            {children}
-          </main>
-          <SiteFooter />
-          <BottomNav />
+          <AssistantProvider>
+            <SiteHeader />
+            <main id="main" tabIndex={-1} className="flex-1 outline-none">
+              {children}
+            </main>
+            <SiteFooter />
+            <BottomNav />
+          </AssistantProvider>
         </ToastProvider>
         <ServiceWorkerRegistration />
         <AdScriptLoader />

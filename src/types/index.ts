@@ -240,6 +240,7 @@ export type RecipeSummary = Pick<
   | "ingredients"
   | "equipment"
   | "substitutions"
+  | "cuisine"
 > & { dietaryTags: DietaryTag[] };
 
 /* ----------------------------------------------------------------------------

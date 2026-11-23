@@ -15,6 +15,7 @@ export function toSummaryClient(recipe: Recipe): RecipeSummary {
     ingredients: recipe.ingredients,
     equipment: recipe.equipment,
     substitutions: recipe.substitutions,
+    cuisine: recipe.cuisine,
     dietaryTags: getRecipeDietaryTags(recipe),
   };
 }

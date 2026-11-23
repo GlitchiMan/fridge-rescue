@@ -16,6 +16,8 @@ const nextConfig: NextConfig = {
     qualities: [75, 85],
     deviceSizes: [640, 828, 1080, 1280, 1600, 1920, 2560],
     minimumCacheTTL: 2_678_400,
+    // Official YouTube thumbnail host only (thumbnails returned by the Data API).
+    remotePatterns: [{ protocol: "https", hostname: "i.ytimg.com", pathname: "/vi/**" }],
   },
   async headers() {
     return [

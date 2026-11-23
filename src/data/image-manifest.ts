@@ -15,6 +15,7 @@ export const IMAGE_MANIFEST: {
     "chicken-fried-rice": "/images/recipes/chicken-fried-rice.jpg",
     "classic-cheese-omelette": "/images/recipes/classic-cheese-omelette.jpg",
     "creamy-mushroom-pasta": "/images/recipes/creamy-mushroom-pasta.jpg",
+    "potato-and-egg-skillet": "/images/recipes/potato-and-egg-skillet.jpg",
     "tomato-soup": "/images/recipes/tomato-soup.jpg"
   }
 };

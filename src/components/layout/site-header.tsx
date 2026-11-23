@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AskButton } from "@/components/assistant/ask-button";
 import { Logo } from "@/components/brand/logo";
 import { DesktopNav, HeaderFridgeLink } from "./nav-links";
 
@@ -11,12 +12,23 @@ export function SiteHeader() {
       >
         Skip to content
       </a>
-      <div className="container-page flex h-16 items-center justify-between gap-6">
+      <div className="container-page flex h-16 items-center justify-between gap-4 lg:gap-6">
         <Link href="/" aria-label="Fridge Rescue – home" className="shrink-0 rounded-lg">
           <Logo />
         </Link>
         <DesktopNav />
-        <HeaderFridgeLink />
+        <div className="flex items-center gap-2">
+          <span className="hidden lg:block">
+            <AskButton />
+          </span>
+          <span className="lg:hidden">
+            <AskButton compact />
+          </span>
+          {/* Phones reach My Fridge from the bottom navigation. */}
+          <span className="hidden md:block">
+            <HeaderFridgeLink />
+          </span>
+        </div>
       </div>
     </header>
   );

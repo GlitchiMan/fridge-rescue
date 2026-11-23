@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AdSlot } from "@/components/ads/ad-slot";
+import { RecipeVideos } from "@/components/discover/recipe-videos";
 import { RecipeCard } from "@/components/recipes/recipe-card";
 import { recipeGridClass } from "@/components/recipes/recipe-grid";
 import { RecipeImage } from "@/components/recipes/recipe-image";
@@ -126,7 +127,7 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
         </nav>
 
         {/* ── Header ── */}
-        <header className={hasPhoto ? "mt-6 grid gap-8 lg:mt-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:gap-16" : "mt-6 max-w-4xl lg:mt-8"}>
+        <header className={hasPhoto ? "mt-6 grid grid-cols-[minmax(0,1fr)] gap-8 lg:mt-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:gap-16" : "mt-6 max-w-4xl lg:mt-8"}>
           {/* Photo first on small screens so the dish is the first thing you see. */}
           {hasPhoto && (
             <figure className="no-print lg:order-2">
@@ -169,7 +170,7 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
         </header>
 
         {/* ── Body ── */}
-        <div className="mt-10 grid gap-10 lg:mt-16 lg:grid-cols-[minmax(0,400px)_minmax(0,1fr)] lg:gap-16 xl:gap-24">
+        <div className="mt-10 grid grid-cols-[minmax(0,1fr)] gap-10 lg:mt-16 lg:grid-cols-[minmax(0,400px)_minmax(0,1fr)] lg:gap-16 xl:gap-24">
           <div className="lg:sticky lg:top-24 lg:self-start">
             <IngredientsPanel />
             {recipe.equipment.length > 0 && (
@@ -201,6 +202,8 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
                 ))}
               </ol>
             </section>
+
+            <RecipeVideos slug={recipe.slug} title={recipe.title} />
 
             {recipe.whyItWorks && (
               <section aria-labelledby="why" className="mt-12">

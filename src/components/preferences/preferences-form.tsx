@@ -61,7 +61,7 @@ export function PreferencesForm() {
 
   return (
     <div className="divide-y divide-line">
-      <section className="grid content-start gap-3 py-9 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] md:gap-x-10 md:[&>h2]:row-span-3" aria-labelledby="p-cooking">
+      <section className="grid grid-cols-[minmax(0,1fr)] content-start gap-3 py-9 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] md:gap-x-10 md:[&>h2]:row-span-3" aria-labelledby="p-cooking">
         <h2 id="p-cooking" className="font-display text-[1.375rem] leading-tight">Cooking</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
@@ -80,12 +80,12 @@ export function PreferencesForm() {
         </div>
       </section>
 
-      <section className="grid content-start gap-3 py-9 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] md:gap-x-10 md:[&>h2]:row-span-3" aria-labelledby="p-staples">
+      <section className="grid grid-cols-[minmax(0,1fr)] content-start gap-3 py-9 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] md:gap-x-10 md:[&>h2]:row-span-3" aria-labelledby="p-staples">
         <h2 id="p-staples" className="font-display text-[1.375rem] leading-tight">Pantry staples</h2>
         <StaplesToggle />
       </section>
 
-      <section className="grid content-start gap-3 py-9 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] md:gap-x-10 md:[&>h2]:row-span-3" aria-labelledby="p-diet">
+      <section className="grid grid-cols-[minmax(0,1fr)] content-start gap-3 py-9 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] md:gap-x-10 md:[&>h2]:row-span-3" aria-labelledby="p-diet">
         <h2 id="p-diet" className="font-display text-[1.375rem] leading-tight">Diet</h2>
         <p className="mt-1 text-sm text-muted">Recipes that don&apos;t fit are hidden from recommendations. Labels are worked out from our ingredient data – always check packaging.</p>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -95,7 +95,7 @@ export function PreferencesForm() {
         </div>
       </section>
 
-      <section className="grid content-start gap-3 py-9 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] md:gap-x-10 md:[&>h2]:row-span-3" aria-labelledby="p-excl">
+      <section className="grid grid-cols-[minmax(0,1fr)] content-start gap-3 py-9 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] md:gap-x-10 md:[&>h2]:row-span-3" aria-labelledby="p-excl">
         <h2 id="p-excl" className="font-display text-[1.375rem] leading-tight">Ingredients to avoid</h2>
         <p className="mt-1 text-sm text-muted">
           Recipes that need these are hidden, and we never suggest them as substitutes. This helps with dislikes and allergies, but it can&apos;t guarantee a recipe is allergen-free – always check labels and cross-contact.
@@ -113,7 +113,7 @@ export function PreferencesForm() {
         </div>
       </section>
 
-      <section className="grid content-start gap-3 py-9 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] md:gap-x-10 md:[&>h2]:row-span-3" aria-labelledby="p-equip">
+      <section className="grid grid-cols-[minmax(0,1fr)] content-start gap-3 py-9 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] md:gap-x-10 md:[&>h2]:row-span-3" aria-labelledby="p-equip">
         <h2 id="p-equip" className="font-display text-[1.375rem] leading-tight">Kitchen equipment</h2>
         <p className="mt-1 text-sm text-muted">Leave all unselected to see every recipe. Select what you have to hide recipes needing anything else.</p>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -123,7 +123,7 @@ export function PreferencesForm() {
         </div>
       </section>
 
-      <section className="grid content-start gap-3 py-9 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] md:gap-x-10 md:[&>h2]:row-span-3" aria-labelledby="p-data">
+      <section className="grid grid-cols-[minmax(0,1fr)] content-start gap-3 py-9 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] md:gap-x-10 md:[&>h2]:row-span-3" aria-labelledby="p-data">
         <h2 id="p-data" className="font-display text-[1.375rem] leading-tight">Your data</h2>
         <p className="mt-1 text-sm text-muted">
           Everything is stored only in this browser ({persistent ? "saved" : "storage is blocked – changes won't be kept"}). Clearing your browser data removes it. Export a backup to move it to another device or keep it safe.

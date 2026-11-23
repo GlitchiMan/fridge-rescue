@@ -10,10 +10,10 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <ContentPage eyebrow="Legal" title="Privacy policy" updated="22 November 2026" intro="The short version: Fridge Rescue doesn't need an account, and the things you enter about your kitchen stay in your own browser.">
+    <ContentPage eyebrow="Legal" title="Privacy policy" updated="23 November 2026" intro="The short version: Fridge Rescue doesn't need an account, and the things you enter about your kitchen stay in your own browser unless you choose an optional feature described below.">
       <h2>What we store, and where</h2>
       <p>
-        When you use My Fridge, favourites, the shopping list, the meal planner, cooking history, preferences or cookie choices, that information is saved in your browser&apos;s <strong>local storage</strong> on your device. It is not sent to our servers and we cannot see it.
+        When you use My Fridge, favourites, the shopping list, the meal planner, cooking history, preferences or cookie choices, that information is saved in your browser&apos;s <strong>local storage</strong> on your device. It is not sent to our servers unless you turn on the optional AI feature described below.
       </p>
       <ul>
         <li>It stays until you delete it (Preferences → Delete all my data) or clear your browser&apos;s site data.</li>
@@ -36,6 +36,13 @@ export default function PrivacyPage() {
       <p>
         If you install Fridge Rescue as an app, a service worker stores copies of pages and site files in your browser so they load faster and some pages work offline. This cache contains only public site content.
       </p>
+
+      <h2>Videos and Ask Fridge AI</h2>
+      <ul>
+        <li>When you search for cooking videos, the recipe name or the few ingredient names used for that search go through our server to YouTube. Your full kitchen list is not sent.</li>
+        <li>Videos load from YouTube only after you choose to watch one, and YouTube&apos;s own privacy policy then applies.</li>
+        <li>Ask Fridge AI works in your browser by default. If AI answers are available and you turn them on, your question, and your kitchen list only if you also tick &ldquo;Use my kitchen&rdquo;, go through our server to our AI provider, Anthropic, to write the answer.</li>
+      </ul>
 
       <h2>Contacting us</h2>
       <p>

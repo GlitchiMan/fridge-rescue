@@ -1,17 +1,17 @@
 "use client";
 
-import { BookOpen, CalendarDays, Heart, Refrigerator, ShoppingBasket } from "lucide-react";
+import { BookOpen, CalendarDays, Compass, Refrigerator, ShoppingBasket } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useKitchen } from "@/hooks/use-kitchen";
 import { cn } from "@/lib/utils/cn";
 
 const DESKTOP = [
+  { href: "/discover", label: "Discover" },
   { href: "/recipes", label: "Recipes" },
   { href: "/meal-planner", label: "Meal Planner" },
   { href: "/shopping-list", label: "Shopping List" },
   { href: "/saved", label: "Saved" },
-  { href: "/ideas", label: "Guides" },
 ];
 
 function isActive(pathname: string, href: string) {
@@ -81,10 +81,10 @@ export function HeaderFridgeLink() {
 
 const MOBILE = [
   { href: "/my-fridge", label: "Fridge", icon: Refrigerator },
+  { href: "/discover", label: "Discover", icon: Compass },
   { href: "/recipes", label: "Recipes", icon: BookOpen },
   { href: "/meal-planner", label: "Plan", icon: CalendarDays },
   { href: "/shopping-list", label: "List", icon: ShoppingBasket },
-  { href: "/saved", label: "Saved", icon: Heart },
 ];
 
 export function BottomNav() {
