@@ -167,7 +167,7 @@ export function HomeFinder({
             <>
               <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                  <h2 className="text-[1.875rem] leading-tight sm:text-[2.25rem]">Popular right now</h2>
+                  <h2 className="text-[1.875rem] leading-tight sm:text-[2.25rem]">Made for your next meal</h2>
                   <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Quick filters">
                     {QUICK_LINKS.map((q) => (
                       <li key={q.href}>
