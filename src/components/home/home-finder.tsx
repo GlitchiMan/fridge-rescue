@@ -108,14 +108,13 @@ export function HomeFinder({
       {/* ── Hero ──
           Phone: copy → photo → search. Tablet: copy → search → photo.
           Desktop: copy + search left, photo right. */}
-      <section className="container-page grid grid-cols-[minmax(0,1fr)] gap-x-14 gap-y-6 pb-10 pt-6 [grid-template-areas:'intro'_'visual'_'search'] sm:gap-y-8 sm:pt-10 sm:[grid-template-areas:'intro'_'search'_'visual'] lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-y-8 lg:pb-16 lg:pt-12 lg:[grid-template-areas:'intro_visual'_'search_visual'] xl:gap-x-20">
+      <section className="container-page grid overflow-x-clip grid-cols-[minmax(0,1fr)] gap-x-14 gap-y-6 pb-10 pt-6 [grid-template-areas:'intro'_'visual'_'search'] sm:gap-y-8 sm:pt-10 sm:[grid-template-areas:'intro'_'search'_'visual'] lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-y-8 lg:pb-16 lg:pt-12 lg:[grid-template-areas:'intro_visual'_'search_visual'] xl:gap-x-20">
         <div className="[grid-area:intro] lg:self-end">{intro}</div>
         <div className="[grid-area:visual] lg:self-center">{visual}</div>
 
-        <div className="[grid-area:search] lg:self-start" id="find">
+        <div className="animate-fade-up [animation-delay:180ms] [grid-area:search] lg:self-start" id="find">
           <IngredientPicker
             label="What's in your fridge?"
-            hideLabel
             size="lg"
             selected={selected}
             onAdd={add}
@@ -136,7 +135,7 @@ export function HomeFinder({
                     key={id}
                     type="button"
                     onClick={() => add([id])}
-                    className="inline-flex min-h-9 items-center rounded-[0.5rem] border border-line bg-white/70 px-3 text-[0.8125rem] font-medium text-ink-soft transition-[background-color,border-color,color,transform] duration-150 hover:border-ink/30 hover:bg-white hover:text-ink active:scale-95"
+                    className="inline-flex min-h-9 items-center rounded-[0.5rem] border border-line bg-paper/70 px-3 text-[0.8125rem] font-medium text-ink-soft transition-[background-color,border-color,color,transform] duration-150 hover:border-ink/30 hover:bg-paper hover:text-ink active:scale-95"
                   >
                     + {ing.name.replace(/ \(.*\)/, "")}
                   </button>
@@ -210,7 +209,7 @@ export function HomeFinder({
                 </div>
               </div>
 
-              <details className="group mt-5 rounded-[0.75rem] border border-line bg-white">
+              <details className="group mt-5 rounded-[0.75rem] border border-line bg-paper">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 text-[0.875rem] sm:px-5 [&::-webkit-details-marker]:hidden">
                   <span>
                     <span className="font-medium text-ink">Got pantry basics like oil, salt or butter?</span>{" "}
@@ -228,7 +227,7 @@ export function HomeFinder({
 
               <div className="mt-10">
                 {results.ranked.length === 0 && (
-                  <div className="rounded-[0.875rem] border border-line bg-white px-6 py-10 text-center">
+                  <div className="rounded-[0.875rem] border border-line bg-paper px-6 py-10 text-center">
                     <p className="font-display text-2xl">Try adding a few more ingredients.</p>
                     <p className="mt-2 text-muted">Or relax your preferences – results update as you type.</p>
                   </div>

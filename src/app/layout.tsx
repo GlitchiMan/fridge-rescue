@@ -8,6 +8,8 @@ import { ServiceWorkerRegistration } from "@/components/layout/service-worker";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ToastProvider } from "@/components/ui/toast";
+import { APPEARANCE_BOOT_SCRIPT } from "@/lib/theme/appearance";
+import { ThemeWatcher } from "@/lib/theme/store";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, getSiteUrl } from "@/lib/seo/site";
 import "./globals.css";
 
@@ -54,7 +56,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#F7F5F0",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#F5F0E8" },
+    { media: "(prefers-color-scheme: dark)", color: "#171B1A" },
+  ],
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -62,7 +67,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${newsreader.variable} ${geist.variable}`}>
+    <html lang="en" className={`${newsreader.variable} ${geist.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: APPEARANCE_BOOT_SCRIPT }} />
+      </head>
       <body className="flex min-h-dvh flex-col">
         <ToastProvider>
           <AccountProvider>
@@ -76,6 +84,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </AssistantProvider>
           </AccountProvider>
         </ToastProvider>
+        <ThemeWatcher />
         <ServiceWorkerRegistration />
         <AdScriptLoader />
       </body>

@@ -45,7 +45,7 @@ export function WasteEditorial() {
             </div>
             <Link
               href="/my-fridge"
-              className="inline-flex min-h-12 shrink-0 items-center gap-2 self-start rounded-[0.625rem] bg-white px-5 text-[0.9375rem] font-medium text-ink transition-[background-color,transform] duration-150 hover:bg-cream active:scale-[0.97] lg:self-auto"
+              className="inline-flex min-h-12 shrink-0 items-center gap-2 self-start rounded-[0.625rem] bg-paper px-5 text-[0.9375rem] font-medium text-ink transition-[background-color,transform] duration-150 hover:bg-cream active:scale-[0.97] lg:self-auto"
             >
               Set up My Fridge <ArrowRight className="size-4" aria-hidden />
             </Link>

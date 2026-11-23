@@ -99,7 +99,7 @@ export function IngredientPicker({
       </label>
       <div
         className={cn(
-          "flex items-center gap-2.5 border border-line-strong bg-white pr-1.5 transition-[border-color,box-shadow] hover:border-[#BDB7A9] focus-within:border-forest focus-within:shadow-[0_0_0_3px_rgb(31_77_58_/_0.14)]",
+          "flex items-center gap-2.5 border border-line-strong bg-paper pr-1.5 transition-[border-color,box-shadow] hover:border-[#BDB7A9] focus-within:border-accent focus-within:shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-accent)_22%,transparent)]",
           size === "lg" ? "min-h-[3.75rem] rounded-[0.875rem] pl-4" : "min-h-12 rounded-[0.625rem] pl-3.5",
         )}
       >
@@ -161,7 +161,7 @@ export function IngredientPicker({
           aria-label="Add ingredient"
           className={cn(
             "inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[0.5rem] text-[0.8125rem] font-medium transition-colors disabled:text-faint",
-            query.trim() ? "bg-ink text-white hover:bg-ink-soft" : "bg-transparent",
+            query.trim() ? "bg-charcoal text-white hover:bg-charcoal/85" : "bg-transparent",
             size === "lg" ? "h-11 px-3.5" : "h-9 px-2.5",
           )}
         >
@@ -175,7 +175,7 @@ export function IngredientPicker({
           id={listId}
           role="listbox"
           aria-label="Ingredient suggestions"
-          className="absolute inset-x-0 top-full z-30 mt-2 max-h-80 animate-pop overflow-auto rounded-[0.75rem] border border-line bg-white p-1 shadow-lift"
+          className="absolute inset-x-0 top-full z-30 mt-2 max-h-80 animate-pop overflow-auto rounded-[0.75rem] border border-line bg-paper p-1 shadow-lift"
         >
           {suggestions.map((s, i) => (
             <li

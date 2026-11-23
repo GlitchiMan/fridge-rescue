@@ -12,8 +12,8 @@ export function HeroVisual() {
   const src = getSiteImage("hero-kitchen");
   return (
     // Without the photo, small screens skip the visual so the search follows the headline.
-    <figure className={src ? "relative" : "relative hidden lg:block"}>
-      <div className="relative aspect-[3/2] overflow-hidden rounded-[1rem] bg-cream-deep sm:aspect-[2/1] lg:aspect-[7/5] lg:rounded-[1.25rem]">
+    <figure className={src ? "bleed-right relative" : "bleed-right relative hidden lg:block"}>
+      <div className="relative aspect-[16/9] overflow-hidden rounded-[1rem] bg-cream-deep sm:aspect-[2/1] lg:aspect-auto lg:h-[min(74dvh,42rem)] lg:rounded-l-[1.5rem] lg:rounded-r-none">
         {src ? (
           <Image
             src={src}
@@ -21,7 +21,7 @@ export function HeroVisual() {
             fill
             priority
             quality={85}
-            sizes="(min-width: 1440px) 760px, (min-width: 1024px) 54vw, 100vw"
+            sizes="(min-width: 1024px) 60vw, 100vw"
             className="object-cover object-[100%_45%]"
           />
         ) : (
@@ -42,14 +42,14 @@ function HeroFallback() {
   ];
   return (
     <div aria-hidden className="absolute inset-0 flex items-center justify-center p-6">
-      <div className="w-full max-w-sm rounded-[0.875rem] border border-line bg-white p-5 shadow-lift">
+      <div className="w-full max-w-sm rounded-[0.875rem] border border-line bg-paper p-5 shadow-lift">
         <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">35 min / Easy</p>
         <p className="mt-1.5 font-display text-2xl leading-tight">Potato and Egg Skillet</p>
         <ul className="mt-4 divide-y divide-line border-y border-line text-sm">
           {rows.map((r) => (
             <li key={r.name} className="flex items-center justify-between py-2">
               <span>{r.name}</span>
-              <span className="text-xs text-forest">{r.state}</span>
+              <span className="text-xs text-accent">{r.state}</span>
             </li>
           ))}
         </ul>

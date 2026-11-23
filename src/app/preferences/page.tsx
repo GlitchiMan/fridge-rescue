@@ -14,9 +14,9 @@ export default function PreferencesPage() {
   return (
     <div className="container-page pt-8 sm:pt-12">
       <PageHeader eyebrow="Settings" title="Preferences & data" description="A kitchen that feels like yours. Choose your look and cooking preferences." />
-      <div className="mt-8 max-w-4xl">
+      <div className="mt-9 max-w-4xl">
         <AppearanceControls />
-        <div className="mt-8"><PreferencesForm /></div>
+        <PreferencesForm />
       </div>
     </div>
   );

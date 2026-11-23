@@ -14,7 +14,7 @@ export function AuthShell({ mode }: { mode: AuthMode }) {
         </div>
       )}
       <div className="flex justify-center">
-        <Suspense fallback={<div className="h-[32rem] w-full max-w-[29rem] rounded-[1.125rem] bg-[#101311]" />}>
+        <Suspense fallback={<div className="h-[32rem] w-full max-w-[29rem] rounded-[1.125rem] bg-[#1F2523]" />}>
           <AuthForm mode={mode} />
         </Suspense>
       </div>

@@ -75,7 +75,7 @@ export function VideoMatchPanel({ video, onClose }: { video: { title: string }; 
           <ul className="mt-2.5 flex flex-wrap gap-1.5">
             {ingredients.map((id) => (
               <li key={id} className="animate-chip-in">
-                <span className={`inline-flex min-h-8 items-center gap-1 rounded-[0.5rem] py-0.5 pl-2.5 pr-0.5 text-[0.8125rem] font-medium ${owned.has(id) ? "bg-forest text-white" : "bg-white text-ink"}`}>
+                <span className={`inline-flex min-h-8 items-center gap-1 rounded-[0.5rem] py-0.5 pl-2.5 pr-0.5 text-[0.8125rem] font-medium ${owned.has(id) ? "bg-forest text-white" : "bg-paper text-ink"}`}>
                   {getIngredient(id)?.name}
                   {owned.has(id) && <span className="text-white/70">· have</span>}
                   <button type="button" onClick={() => setIngredients((s) => s.filter((x) => x !== id))} aria-label={`Remove ${getIngredient(id)?.name}`} className="inline-flex size-7 items-center justify-center rounded-[0.375rem] opacity-70 hover:opacity-100">
@@ -104,7 +104,7 @@ export function VideoMatchPanel({ video, onClose }: { video: { title: string }; 
                 type="button"
                 aria-pressed={chosen?.id === recipe.id}
                 onClick={() => setChosenId(recipe.id)}
-                className={`min-h-9 rounded-[0.5rem] border px-3 text-[0.8125rem] font-medium transition-colors ${chosen?.id === recipe.id ? "border-forest bg-forest text-white" : "border-line-strong bg-white text-ink-soft hover:border-ink/40"}`}
+                className={`min-h-9 rounded-[0.5rem] border px-3 text-[0.8125rem] font-medium transition-colors ${chosen?.id === recipe.id ? "border-forest bg-forest text-white" : "border-line-strong bg-paper text-ink-soft hover:border-ink/40"}`}
               >
                 {recipe.title}
               </button>
@@ -113,16 +113,16 @@ export function VideoMatchPanel({ video, onClose }: { video: { title: string }; 
 
           {/* 3 · Exact comparison with the kitchen */}
           {chosen && match && (
-            <div className="mt-4 rounded-[0.75rem] border border-line bg-white p-4">
+            <div className="mt-4 rounded-[0.75rem] border border-line bg-paper p-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <Link href={`/recipes/${chosen.slug}`} onClick={onClose} className="font-display text-[1.25rem] hover:text-forest">{chosen.title}</Link>
+                <Link href={`/recipes/${chosen.slug}`} onClick={onClose} className="font-display text-[1.25rem] hover:text-accent">{chosen.title}</Link>
                 <ReadinessBadge match={match} />
               </div>
               <p className="mt-0.5 text-xs text-muted">{chosen.totalMinutes} min · you have {match.essentialHave} of {match.essentialTotal} ingredients</p>
               <dl className="mt-3 space-y-2 text-[0.875rem]">
                 {have.length > 0 && (
                   <div>
-                    <dt className="text-xs font-semibold text-forest">In your kitchen</dt>
+                    <dt className="text-xs font-semibold text-accent">In your kitchen</dt>
                     <dd className="text-ink-soft">{have.map((m) => `${m.substitutedBy ? `${m.substitutedBy.name.toLowerCase()} (for ${m.name.toLowerCase()})` : m.name.toLowerCase()}${m.status === "unknown-quantity" ? " – check amount" : ""}${m.status === "staple" ? " – pantry" : ""}`).join(", ")}</dd>
                   </div>
                 )}

@@ -51,7 +51,7 @@ export function Dialog({ open, onClose, title, description, children, footer, si
         if (e.target === ref.current) onClose();
       }}
       className={cn(
-        "m-auto max-h-[92dvh] w-[calc(100%-1.5rem)] overflow-hidden rounded-[1rem] border border-line bg-white p-0 text-ink shadow-lift backdrop:bg-ink/35 backdrop:backdrop-blur-[3px] open:animate-pop",
+        "m-auto max-h-[92dvh] w-[calc(100%-1.5rem)] overflow-hidden rounded-[1rem] border border-line bg-paper p-0 text-ink shadow-lift backdrop:bg-ink/35 backdrop:backdrop-blur-[3px] open:animate-pop",
         size === "md" && "max-w-lg",
         size === "lg" && "max-w-2xl",
         size === "full" && "h-[100dvh] max-h-[100dvh] w-full max-w-none rounded-none bg-cream sm:h-[92dvh] sm:max-w-3xl sm:rounded-[1rem]",

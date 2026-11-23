@@ -56,7 +56,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
         <p className="eyebrow">Guide</p>
         <h1 className="mt-4 text-[2.5rem] sm:text-[3.5rem]">{g.title}</h1>
         {g.intro.map((p) => <p key={p} className="lede mt-6">{p}</p>)}
-        <div className="mt-8 flex flex-col gap-4 rounded-[0.875rem] border border-line bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 flex flex-col gap-4 rounded-[0.875rem] border border-line bg-paper p-5 sm:flex-row sm:items-center sm:justify-between">
           <p className="font-display text-[1.25rem] leading-snug">Got {names.join(", ")}?</p>
           <GuideFridgeButton ingredientIds={g.keyIngredients} />
         </div>
@@ -89,7 +89,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
           <ul className="mt-4 divide-y divide-line">
             {others.map((o) => (
               <li key={o.slug}>
-                <Link href={`/ideas/${o.slug}`} className="block py-3 font-display text-[1.25rem] hover:text-forest">{o.title}</Link>
+                <Link href={`/ideas/${o.slug}`} className="block py-3 font-display text-[1.25rem] hover:text-accent">{o.title}</Link>
               </li>
             ))}
           </ul>

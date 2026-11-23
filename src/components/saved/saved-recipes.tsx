@@ -62,7 +62,7 @@ export function SavedRecipes({ recipes }: { recipes: RecipeSummary[] }) {
               return (
                 <li key={h.id} className="flex items-center gap-3 py-4">
                   <div className="min-w-0 flex-1">
-                    <Link href={`/recipes/${r.slug}`} className="font-display text-[1.25rem] leading-tight hover:text-forest">{r.title}</Link>
+                    <Link href={`/recipes/${r.slug}`} className="font-display text-[1.25rem] leading-tight hover:text-accent">{r.title}</Link>
                     <p className="mt-0.5 text-[0.8125rem] text-muted">
                       {new Date(h.cookedAt).toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" })} · {h.servings} servings
                       {h.deductedInventory ? " · fridge updated" : ""}

@@ -32,7 +32,7 @@ export function StaplesToggle({ compact = false }: { compact?: boolean }) {
               onClick={() => toggle(id)}
               className={cn(
                 "inline-flex min-h-9 items-center gap-1.5 rounded-[0.5rem] border px-3 text-[0.8125rem] font-medium transition-colors",
-                on ? "border-forest bg-forest text-white" : "border-line-strong bg-white text-ink-soft hover:border-ink/40 hover:text-ink",
+                on ? "border-forest bg-forest text-white" : "border-line-strong bg-paper text-ink-soft hover:border-ink/40 hover:text-ink",
               )}
             >
               {on && <Check className="size-3.5" aria-hidden strokeWidth={2.25} />}

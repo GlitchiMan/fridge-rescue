@@ -1,5 +1,6 @@
 import { HeroVisual } from "@/components/home/hero-visual";
 import { HomeFinder } from "@/components/home/home-finder";
+import { AccountInvite } from "@/components/account/account-invite";
 import { WasteEditorial } from "@/components/home/waste-editorial";
 import { FEATURED_RECIPE_SLUGS, RECIPES, getRecipeSummaries, toSummary } from "@/data/recipes";
 import { photoFirst } from "@/lib/images";
@@ -21,9 +22,13 @@ export default function HomePage() {
         visual={<HeroVisual />}
         intro={
           <>
-            <p className="eyebrow">YOUR PERSONAL KITCHEN</p>
-            <h1 className="mt-4 text-[3rem] sm:text-[4.25rem] lg:text-[4.5rem] xl:text-[5.5rem]">Your kitchen. Your recipes. Your way.</h1>
-            <p className="lede mt-4 max-w-md">Beautiful ideas for the ingredients you already have. Find your next favorite meal in seconds.</p>
+            <p className="eyebrow animate-fade-up text-champagne-ink">Your personal kitchen</p>
+            <h1 className="mt-4 animate-fade-up text-[2.625rem] [animation-delay:60ms] sm:text-[4.25rem] lg:text-[3.75rem] xl:text-[4.75rem]">
+              <span className="block">Your kitchen.</span>{" "}
+              <span className="block">Your recipes.</span>{" "}
+              <span className="block italic text-champagne-ink">Your way.</span>
+            </h1>
+            <p className="lede mt-4 max-w-md animate-fade-up [animation-delay:120ms]">Beautiful ideas for the ingredients you already have.<span className="hidden sm:inline"> Find your next favorite meal in seconds.</span></p>
           </>
         }
       />
@@ -31,6 +36,7 @@ export default function HomePage() {
       <div className="reveal pt-16 sm:pt-24">
         <WasteEditorial />
       </div>
+      <AccountInvite variant="home" />
     </>
   );
 }

@@ -18,7 +18,7 @@ function trackErrors(page: Page) {
 test("Journey A: first-time visitor finds, opens and saves a recipe", async ({ page }) => {
   const errors = trackErrors(page);
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("What's in your fridge?");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Your kitchen. Your recipes. Your way.");
 
   await addHeroIngredient(page, "eggs");
   await addHeroIngredient(page, "cheese");

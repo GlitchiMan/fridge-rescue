@@ -21,6 +21,8 @@ export function AccountPage() {
   const [typed, setTyped] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [nameDraft, setNameDraft] = useState<string | null>(null);
+  const [nameNote, setNameNote] = useState<string | null>(null);
 
   useEffect(() => {
     if (account.configured && account.status === "guest") router.replace("/login?next=/account");
@@ -52,14 +54,30 @@ export function AccountPage() {
   return (
     <div className="container-page max-w-3xl pt-8 sm:pt-12">
       <PageHeader eyebrow="Account" title={account.name ?? "Your account"} description={account.email ?? undefined} />
-      <dl className="divide-y divide-line border-b border-line">
+      <form
+        className="mt-6 flex items-end gap-2"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          const ok = await account.updateName(nameDraft ?? account.name ?? "");
+          setNameNote(ok ? "Name saved" : "Couldn't save your name. Please try again.");
+          if (ok) setNameDraft(null);
+        }}
+      >
+        <div className="min-w-0 flex-1">
+          <label htmlFor="account-name" className="label">Your name</label>
+          <input id="account-name" className="field" maxLength={80} autoComplete="given-name" value={nameDraft ?? account.name ?? ""} onChange={(e) => { setNameDraft(e.target.value); setNameNote(null); }} />
+        </div>
+        <button type="submit" disabled={nameDraft === null} className={buttonClass("secondary", "md")}>Save</button>
+      </form>
+      {nameNote && <p role="status" className="mt-2 text-sm text-muted">{nameNote}</p>}
+      <dl className="mt-4 divide-y divide-line border-b border-line">
         <div className="flex justify-between gap-4 py-4"><dt className="text-muted">Sync</dt><dd role="status" className="text-right font-medium">{SYNC_LABEL[account.sync]}</dd></div>
         <div className="flex justify-between py-4"><dt className="text-muted">Ingredients</dt><dd className="tabular-nums">{data.inventory.length}</dd></div>
         <div className="flex justify-between py-4"><dt className="text-muted">Saved recipes</dt><dd className="tabular-nums">{data.favorites.length}</dd></div>
         <div className="flex justify-between py-4"><dt className="text-muted">Planned meals</dt><dd className="tabular-nums">{data.mealPlan.length}</dd></div>
       </dl>
       <div className="mt-6 flex flex-wrap gap-2">
-        <Link href="/preferences" className={buttonClass("secondary", "md")}>Preferences</Link>
+        <Link href="/preferences" className={buttonClass("secondary", "md")}>Appearance &amp; preferences</Link>
         <button type="button" disabled={busy} onClick={() => void signOut()} className={buttonClass("secondary", "md")}>Sign out</button>
       </div>
       {unsaved && (

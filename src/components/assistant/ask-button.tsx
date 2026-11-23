@@ -13,12 +13,12 @@ export function AskButton({ className, label = "Ask Fridge AI", compact = false 
       onClick={() => assistant.open()}
       aria-label={compact ? label : undefined}
       className={cn(
-        "inline-flex min-h-9 shrink-0 items-center gap-2 rounded-[0.625rem] border border-line-strong bg-white text-[0.875rem] font-medium text-ink transition-[border-color,transform] hover:border-forest active:scale-[0.97]",
+        "inline-flex min-h-9 shrink-0 items-center gap-2 rounded-[0.625rem] border border-line-strong bg-paper text-[0.875rem] font-medium text-ink transition-[border-color,transform] hover:border-forest active:scale-[0.97]",
         compact ? "size-9 justify-center" : "px-3",
         className,
       )}
     >
-      <MessageSquareText className="size-4 text-forest" aria-hidden strokeWidth={1.9} />
+      <MessageSquareText className="size-4 text-accent" aria-hidden strokeWidth={1.9} />
       {!compact && label}
     </button>
   );

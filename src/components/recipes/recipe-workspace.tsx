@@ -61,8 +61,8 @@ export function RecipeProvider({ recipe, children }: { recipe: Recipe; children:
 /* ───────────────────────── Ingredients panel ───────────────────────── */
 
 const STATUS_META: Record<IngredientMatch["status"], { icon: typeof Check; cls: string; label: string }> = {
-  enough: { icon: CheckCircle2, cls: "text-forest", label: "In your fridge" },
-  staple: { icon: CheckCircle2, cls: "text-forest", label: "Pantry staple" },
+  enough: { icon: CheckCircle2, cls: "text-accent", label: "In your fridge" },
+  staple: { icon: CheckCircle2, cls: "text-accent", label: "Pantry staple" },
   "unknown-quantity": { icon: CircleHelp, cls: "text-orange-ink", label: "In your fridge – check amount" },
   insufficient: { icon: AlertCircle, cls: "text-orange-ink", label: "Not enough" },
   missing: { icon: XCircle, cls: "text-coral-ink", label: "Missing" },
@@ -111,7 +111,7 @@ export function IngredientsPanel() {
         <h2 id="ingredients-heading" className="section-title">
           Ingredients
         </h2>
-        <div className="no-print flex items-center rounded-[0.625rem] border border-line-strong bg-white" role="group" aria-label="Servings">
+        <div className="no-print flex items-center rounded-[0.625rem] border border-line-strong bg-paper" role="group" aria-label="Servings">
           <button type="button" onClick={() => setServings(servings - 1)} disabled={servings <= 1} aria-label="Fewer servings" className="inline-flex size-10 items-center justify-center rounded-l-[0.625rem] text-ink-soft hover:bg-ink/[0.05] disabled:opacity-35">
             <Minus className="size-4" aria-hidden />
           </button>
@@ -135,7 +135,7 @@ export function IngredientsPanel() {
 
       {hasInventory && match && (
         <div className="no-print mt-5 rounded-[0.625rem] bg-forest-50 px-4 py-3 text-sm">
-          <p className="font-medium text-forest">
+          <p className="font-medium text-accent">
             You have {match.essentialHave} of {match.essentialTotal} ingredients
             {match.readiness === "ready" ? " – ready to cook!" : match.readiness === "check-quantities" ? " – check quantities." : "."}
           </p>
@@ -364,7 +364,7 @@ export function RecipeActions() {
             <p className="text-sm text-muted">For {servings} servings, we&apos;d make these changes:</p>
             <ul className="mt-3 space-y-2">
               {lines.map((l) => (
-                <li key={l.itemId} className={cn("rounded-[0.625rem] p-3 text-sm", l.uncertain ? "bg-orange-soft text-orange-ink" : "bg-white border border-line")}>
+                <li key={l.itemId} className={cn("rounded-[0.625rem] p-3 text-sm", l.uncertain ? "bg-orange-soft text-orange-ink" : "bg-paper border border-line")}>
                   {l.description}
                 </li>
               ))}

@@ -126,7 +126,7 @@ export function RecipeBrowser({ recipes }: { recipes: RecipeSummary[] }) {
       onClick={() => setParam(key, on ? null : "1")}
       className={cn(
         "inline-flex min-h-9 items-center rounded-[0.5rem] border px-3 text-[0.8125rem] font-medium transition-colors disabled:opacity-45",
-        on ? "border-forest bg-forest text-white" : "border-line-strong bg-white text-ink-soft hover:border-ink/40 hover:text-ink",
+        on ? "border-forest bg-forest text-white" : "border-line-strong bg-paper text-ink-soft hover:border-ink/40 hover:text-ink",
       )}
     >
       {label}

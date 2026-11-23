@@ -18,7 +18,7 @@ const COPY: Record<AuthMode, { title: string; sub: string; submit: string }> = {
 };
 
 const inputClass =
-  "w-full min-h-12 rounded-[0.625rem] border border-white/15 bg-white/[0.04] px-3.5 text-[1rem] text-white outline-none transition-[border-color,box-shadow] placeholder:text-white/40 hover:border-white/30 focus:border-[#7FB596] focus:shadow-[0_0_0_3px_rgb(127_181_150_/_0.2)] disabled:opacity-50";
+  "w-full min-h-12 rounded-[0.625rem] border border-white/15 bg-white/[0.04] px-3.5 text-[1rem] text-white outline-none transition-[border-color,box-shadow] placeholder:text-white/40 hover:border-white/30 focus:border-[#BD9475] focus:shadow-[0_0_0_3px_rgb(189_148_117_/_0.25)] disabled:opacity-50";
 
 function friendlyError(code: string | undefined): string {
   switch (code) {
@@ -44,6 +44,7 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
   const next = safeNextPath(params.get("next"));
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
   const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(params.get("error") === "link" ? "That link is invalid or has expired. Please try again." : null);
@@ -68,7 +69,7 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
       const supabase = await client();
       if (!supabase) return setError("Accounts aren't connected yet.");
       if (mode === "signup") {
-        const { data, error: err } = await supabase.auth.signUp({ email: email.trim(), password, options: { emailRedirectTo: callback(next) } });
+        const { data, error: err } = await supabase.auth.signUp({ email: email.trim(), password, options: { emailRedirectTo: callback(next), data: fullName.trim() ? { full_name: fullName.trim().slice(0, 80) } : undefined } });
         if (err) return setError(friendlyError(err.code));
         if (data.session) {
           window.location.href = next;
@@ -110,11 +111,11 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
   };
 
   return (
-    <div className="w-full max-w-[29rem] rounded-[1.125rem] border border-white/10 bg-[#101311] p-6 text-white shadow-lift sm:p-8">
+    <div className="w-full max-w-[29rem] rounded-[1.125rem] border border-white/10 bg-[#1F2523] p-6 text-white shadow-lift sm:p-8">
       <p className="flex items-center gap-2 text-[0.9375rem] font-semibold tracking-[-0.02em]">
         <LogoMark className="size-5" /> Fridge Rescue
       </p>
-      <h1 className="mt-6 font-sans text-[1.75rem] font-semibold leading-tight tracking-[-0.025em] text-white">{copy.title}</h1>
+      <h1 className="mt-6 font-display text-[2.375rem] font-normal leading-[1.04] tracking-[-0.028em] text-[#F5F0E8]">{copy.title}</h1>
       <p className="mt-2 text-[0.9375rem] leading-relaxed text-white/70">{copy.sub}</p>
 
       {!configured && (
@@ -124,7 +125,7 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
       )}
 
       {notice ? (
-        <p role="status" className="mt-6 rounded-[0.625rem] bg-[#1C3B2D] px-4 py-3 text-[0.9375rem]">{notice}</p>
+        <p role="status" className="mt-6 rounded-[0.625rem] bg-[#183C31] px-4 py-3 text-[0.9375rem]">{notice}</p>
       ) : (
         <>
           {showGoogle && (
@@ -137,6 +138,12 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
             </>
           )}
           <form onSubmit={(e) => void submit(e)} noValidate className={cn("space-y-4", showGoogle ? "mt-5" : "mt-6")}>
+            {mode === "signup" && (
+              <div>
+                <label htmlFor="auth-name" className="mb-1.5 block text-[0.8125rem] font-medium text-white/85">First name <span className="font-normal text-white/60">(optional)</span></label>
+                <input id="auth-name" type="text" autoComplete="given-name" maxLength={80} value={fullName} onChange={(e) => setFullName(e.target.value)} disabled={!configured} className={inputClass} />
+              </div>
+            )}
             {needsEmail && (
               <div>
                 <label htmlFor="auth-email" className="mb-1.5 block text-[0.8125rem] font-medium text-white/85">Email address</label>
@@ -158,7 +165,7 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
               </div>
             )}
             {error && <p role="alert" className="text-sm text-[#F2B8A8]">{error}</p>}
-            <button type="submit" disabled={!configured || busy} className="min-h-13 w-full rounded-[0.75rem] bg-[#1C3F30] text-[1rem] font-semibold text-white transition-[background-color,transform] hover:bg-[#245240] active:scale-[0.99] disabled:opacity-60">
+            <button type="submit" disabled={!configured || busy} className="min-h-13 w-full rounded-[0.75rem] bg-[#183C31] text-[1rem] font-semibold text-white transition-[background-color,transform] hover:bg-[#205040] active:scale-[0.99] disabled:opacity-60">
               {busy ? "Please wait…" : copy.submit}
             </button>
           </form>

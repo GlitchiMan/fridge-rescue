@@ -6,10 +6,12 @@ import { buttonClass } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/toast";
 import { kitchenStore } from "@/hooks/use-kitchen";
-import { hasKitchenData, mergeGuestIntoAccount } from "@/lib/account/merge";
+import { guestFingerprint, hasKitchenData, mergeGuestIntoAccount } from "@/lib/account/merge";
 import type { KitchenSync, SyncMeta, SyncMetaStorage, SyncStatus } from "@/lib/account/sync";
 import { LocalStorageRepository } from "@/lib/storage/repository";
 import { getSupabaseConfig } from "@/lib/supabase/config";
+import { parseAppearance } from "@/lib/theme/appearance";
+import { appearanceStore } from "@/lib/theme/store";
 import type { StorageSchema } from "@/types";
 
 interface AccountApi {
@@ -21,10 +23,12 @@ interface AccountApi {
   /** Returns false if unsaved changes couldn't reach the cloud (retry with force). */
   signOut: (force?: boolean) => Promise<boolean>;
   deleteAccount: () => Promise<boolean>;
+  updateName: (name: string) => Promise<boolean>;
 }
 
 const AccountContext = createContext<AccountApi | null>(null);
 const DISMISS_KEY = "fridge-rescue:guest-merge-dismissed";
+const IMPORTED_KEY = "fridge-rescue:guest-imported";
 
 function metaStorage(key: string): SyncMetaStorage {
   return {
@@ -118,7 +122,28 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       setStatus("signed-in");
 
       const ok = await sync.start();
-      if (alive && ok && guestState && hasKitchenData(guestState) && sessionStorage.getItem(DISMISS_KEY) !== u.id) setGuest(guestState);
+      const imported = localStorage.getItem(`${IMPORTED_KEY}:${u.id}`);
+      if (alive && ok && guestState && hasKitchenData(guestState) && imported !== guestFingerprint(guestState) && sessionStorage.getItem(DISMISS_KEY) !== u.id) setGuest(guestState);
+
+      // Name and appearance follow the account across devices.
+      const { data: profile } = await supabase.from("profiles").select("display_name, appearance").eq("id", u.id).maybeSingle();
+      if (!alive) return;
+      if (profile?.display_name) setUser((x) => (x ? { ...x, name: profile.display_name as string } : x));
+      const savedLook = parseAppearance(profile?.appearance);
+      const saveLook = () => supabase.from("profiles").update({ appearance: appearanceStore.get() }).eq("id", u.id).then(() => undefined);
+      if (savedLook) appearanceStore.set(savedLook);
+      else if (profile) void saveLook();
+      let lookTimer: ReturnType<typeof setTimeout> | undefined;
+      const offLook = appearanceStore.subscribe(() => {
+        clearTimeout(lookTimer);
+        lookTimer = setTimeout(() => void saveLook(), 500);
+      });
+      const baseCleanup = cleanupRef.current;
+      cleanupRef.current = () => {
+        baseCleanup?.();
+        offLook();
+        clearTimeout(lookTimer);
+      };
 
       const { data: listener } = supabase.auth.onAuthStateChange((event) => {
         if (event === "SIGNED_OUT") {
@@ -165,6 +190,20 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     return true;
   }, [user, leaveAccount]);
 
+  const updateName = useCallback(
+    async (name: string) => {
+      const { getBrowserSupabase } = await import("@/lib/supabase/browser");
+      const supabase = getBrowserSupabase();
+      if (!supabase || !user) return false;
+      const clean = name.trim().slice(0, 80) || null;
+      const { error } = await supabase.from("profiles").update({ display_name: clean }).eq("id", user.id);
+      if (error) return false;
+      setUser((x) => (x ? { ...x, name: clean } : x));
+      return true;
+    },
+    [user],
+  );
+
   const moveGuestData = async () => {
     if (!guest || !syncRef.current) return;
     setMerging(true);
@@ -172,8 +211,8 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     const saved = await syncRef.current.flush();
     setMerging(false);
     if (saved) {
-      // Guest data is removed only after the cloud confirms the save.
-      new LocalStorageRepository().clear();
+      // The guest copy is kept on this device; remember it so we don't ask again.
+      localStorage.setItem(`${IMPORTED_KEY}:${user!.id}`, guestFingerprint(guest));
       setGuest(null);
       toast.show("Your kitchen is now saved to your account");
     } else {
@@ -182,8 +221,8 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   };
 
   const api = useMemo<AccountApi>(
-    () => ({ configured, status, email: user?.email ?? null, name: user?.name ?? null, sync: syncStatus, signOut, deleteAccount }),
-    [configured, status, user, syncStatus, signOut, deleteAccount],
+    () => ({ configured, status, email: user?.email ?? null, name: user?.name ?? null, sync: syncStatus, signOut, deleteAccount, updateName }),
+    [configured, status, user, syncStatus, signOut, deleteAccount, updateName],
   );
 
   return (
@@ -231,7 +270,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
             ))}
           </ul>
         )}
-        <p className="mt-3 text-xs text-muted">Only continue if this is your data. Nothing already in your account is removed, and amounts are never added together.</p>
+        <p className="mt-3 text-xs text-muted">Only continue if this is your data. Nothing in your account is removed, amounts are never added together, and this device keeps its copy.</p>
       </Dialog>
     </AccountContext.Provider>
   );

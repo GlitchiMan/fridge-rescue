@@ -37,7 +37,7 @@ export function FavoriteButton({
         aria-pressed={saved}
         className={cn(
           "inline-flex min-h-11 items-center gap-2 rounded-[0.625rem] border px-4 text-[0.9375rem] font-medium transition-colors",
-          saved ? "border-coral/30 bg-coral-soft text-coral-ink" : "border-line-strong bg-white text-ink hover:border-ink/40",
+          saved ? "border-coral/30 bg-coral-soft text-coral-ink" : "border-line-strong bg-paper text-ink hover:border-ink/40",
           className,
         )}
       >
@@ -54,7 +54,7 @@ export function FavoriteButton({
       aria-pressed={saved}
       aria-label={saved ? `Remove ${title} from saved recipes` : `Save ${title}`}
       className={cn(
-        "inline-flex size-9 items-center justify-center rounded-full bg-white/90 backdrop-blur transition-[color,transform] hover:scale-105",
+        "inline-flex size-9 items-center justify-center rounded-full bg-paper/90 backdrop-blur transition-[color,transform] hover:scale-105",
         saved ? "text-coral" : "text-ink-soft hover:text-coral",
         className,
       )}
