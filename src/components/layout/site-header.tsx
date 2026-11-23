@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AccountLink } from "@/components/account/account-link";
 import { AskButton } from "@/components/assistant/ask-button";
 import { Logo } from "@/components/brand/logo";
 import { DesktopNav, HeaderFridgeLink } from "./nav-links";
@@ -24,6 +25,7 @@ export function SiteHeader() {
           <span className="lg:hidden">
             <AskButton compact />
           </span>
+          <AccountLink />
           {/* Phones reach My Fridge from the bottom navigation. */}
           <span className="hidden md:block">
             <HeaderFridgeLink />

@@ -52,7 +52,15 @@ export class KitchenStore {
   private initialised = false;
   private unsubscribeExternal: (() => void) | null = null;
 
-  constructor(private readonly repo: KitchenRepository) {}
+  constructor(private repo: KitchenRepository) {}
+
+  /** Switch storage (guest ↔ account) and reload from it. */
+  useRepository(repo: KitchenRepository) {
+    this.unsubscribeExternal?.();
+    this.repo = repo;
+    this.init();
+    this.emit();
+  }
 
   /* ── useSyncExternalStore plumbing ── */
 
