@@ -185,7 +185,7 @@ export function HomeFinder({
               <ul className={`mt-6 ${DENSE_LIST}`}>
                 {featured.map((r, i) => (
                   <li key={r.id} className={`animate-fade-up ${DENSE_ITEM}`} style={{ animationDelay: `${i * 35}ms` }}>
-                    <RecipeCard recipe={r} priority={i < 3} />
+                    <RecipeCard recipe={r} />
                   </li>
                 ))}
               </ul>
