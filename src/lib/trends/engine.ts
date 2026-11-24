@@ -58,7 +58,7 @@ export async function refreshTrends(): Promise<{ ok: boolean; message: string; s
   for (const topic of TREND_TOPICS) {
     const found: SocialVideo[] = [];
     if (config.youtube.enabled) {
-      const res = await searchYouTube(topic.query, { order: "viewCount", publishedAfter, maxResults: 10, cacheSeconds: 60 * 60 * 20 });
+      const res = await searchYouTube(topic.query, { order: "viewCount", publishedAfter, maxResults: 10, cacheSeconds: 60 * 60 * 20, duration: topic.short ? "short" : undefined });
       if (res.status === "quota-exceeded") return { ok: false, message: "YouTube quota reached – keeping the previous snapshot." };
       found.push(...res.videos);
     }
@@ -69,7 +69,7 @@ export async function refreshTrends(): Promise<{ ok: boolean; message: string; s
       seen.add(k);
       return true;
     });
-    topics.push(summarizeTopic(topic, unique, now));
+    topics.push(summarizeTopic({ id: topic.id, label: topic.label, query: topic.query }, unique, now));
   }
 
   const snapshot: TrendSnapshot = {

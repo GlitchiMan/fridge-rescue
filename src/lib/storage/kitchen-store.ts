@@ -16,6 +16,7 @@ import type {
 } from "@/types";
 import { LocalStorageRepository, type KitchenRepository } from "./repository";
 import { createEmptyState } from "./schema";
+import { MAX_SAVED_AI_RECIPES, type GeneratedRecipe } from "@/lib/generate/schema";
 
 export interface KitchenSnapshot {
   data: StorageSchema;
@@ -52,7 +53,15 @@ export class KitchenStore {
   private initialised = false;
   private unsubscribeExternal: (() => void) | null = null;
 
-  constructor(private readonly repo: KitchenRepository) {}
+  constructor(private repo: KitchenRepository) {}
+
+  /** Switch storage (guest ↔ account) and reload from it. */
+  useRepository(repo: KitchenRepository) {
+    this.unsubscribeExternal?.();
+    this.repo = repo;
+    this.init();
+    this.emit();
+  }
 
   /* ── useSyncExternalStore plumbing ── */
 
@@ -240,6 +249,20 @@ export class KitchenStore {
       favorites: isFav ? d.favorites.filter((f) => f !== recipeId) : [...d.favorites, recipeId],
     }));
     return !isFav;
+  }
+
+  /* ── Saved AI recipes ── */
+
+  /** Returns false when the saved list is full. */
+  saveGeneratedRecipe(recipe: GeneratedRecipe): boolean {
+    if (this.data.generatedRecipes.some((r) => r.id === recipe.id)) return true;
+    if (this.data.generatedRecipes.length >= MAX_SAVED_AI_RECIPES) return false;
+    this.commit((d) => ({ ...d, generatedRecipes: [{ ...recipe, savedAt: new Date().toISOString() }, ...d.generatedRecipes] }));
+    return true;
+  }
+
+  removeGeneratedRecipe(id: string) {
+    this.commit((d) => ({ ...d, generatedRecipes: d.generatedRecipes.filter((r) => r.id !== id) }));
   }
 
   /* ── Shopping list ── */

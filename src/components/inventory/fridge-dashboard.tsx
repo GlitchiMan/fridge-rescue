@@ -3,6 +3,8 @@
 import { ArrowRight, Settings2 } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
+import { AccountInvite } from "@/components/account/account-invite";
+import { useAccount } from "@/components/account/account-provider";
 import { StaplesToggle } from "@/components/ingredients/staples-toggle";
 import { RecipeGrid } from "@/components/recipes/recipe-grid";
 import { RecipeImage } from "@/components/recipes/recipe-image";
@@ -18,11 +20,12 @@ import { cn } from "@/lib/utils/cn";
 import type { RecipeSummary } from "@/types";
 import { FreshnessBadge, InventoryManager } from "./inventory-manager";
 
-function greeting(hour: number) {
-  if (hour < 5) return "Late-night snack?";
-  if (hour < 12) return "Good morning.";
-  if (hour < 18) return "Good afternoon.";
-  return "Good evening.";
+function greeting(hour: number, name: string | null) {
+  const who = name ? `, ${name}` : "";
+  if (hour < 5) return `Late-night snack${who}?`;
+  if (hour < 12) return `Good morning${who}.`;
+  if (hour < 18) return `Good afternoon${who}.`;
+  return `Good evening${who}.`;
 }
 
 /** Deterministic daily pick: same suggestion all day, changes tomorrow. */
@@ -59,6 +62,8 @@ function SmallLink({ href, children }: { href: string; children: React.ReactNode
 
 export function FridgeDashboard({ recipes }: { recipes: RecipeSummary[] }) {
   const { data, hydrated } = useKitchen();
+  const account = useAccount();
+  const firstName = account.status === "signed-in" ? (account.name?.trim().split(/\s+/)[0] ?? null) : null;
   const today = hydrated ? todayIso() : "";
   const recipeMap = useMemo(() => new Map(recipes.map((r) => [r.id, r])), [recipes]);
 
@@ -83,7 +88,9 @@ export function FridgeDashboard({ recipes }: { recipes: RecipeSummary[] }) {
   const maxMin = data.preferences.maxMinutes;
   const quick = result ? result.groups.quick.filter((m) => !maxMin || (recipeMap.get(m.recipeId)?.totalMinutes ?? 99) <= maxMin) : [];
   const oneAway = result ? result.groups.almost.filter((m) => m.missing.length === 1) : [];
-  const inspirationPool = result ? [...result.groups.canMake, ...result.groups.almost] : [];
+  const matchedIdeas = result ? [...result.groups.canMake, ...result.groups.almost] : [];
+  const photographedIdeas = matchedIdeas.filter((m) => hasRecipeImage(m.slug));
+  const inspirationPool = photographedIdeas.length ? photographedIdeas : matchedIdeas;
   const inspiration = inspirationPool.length ? inspirationPool[dailyIndex(today, inspirationPool.length)] : undefined;
   const inspirationRecipe = inspiration ? recipeMap.get(inspiration.recipeId) : undefined;
   const recentCooked = data.history.filter((h, i, arr) => arr.findIndex((x) => x.recipeId === h.recipeId) === i).slice(0, 4);
@@ -99,8 +106,8 @@ export function FridgeDashboard({ recipes }: { recipes: RecipeSummary[] }) {
     <div>
       <header className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="eyebrow">My Fridge</p>
-          <h1 className="page-title mt-4">{hydrated ? greeting(new Date().getHours()) : "Welcome back."}</h1>
+          <p className="eyebrow text-champagne-ink">{firstName ? "Your kitchen" : "My Fridge"}</p>
+          <h1 className="page-title mt-4">{hydrated ? greeting(new Date().getHours(), firstName) : "Welcome back."}</h1>
           <p className="lede mt-4">Here&apos;s what your kitchen can make today.</p>
         </div>
         <Link href="/preferences" className={buttonClass("secondary", "sm", "self-start lg:self-auto")}>
@@ -118,6 +125,8 @@ export function FridgeDashboard({ recipes }: { recipes: RecipeSummary[] }) {
         ))}
       </dl>
 
+      <AccountInvite variant="fridge" />
+
       <div className="mt-14 grid gap-14 xl:grid-cols-[minmax(0,1fr)_minmax(0,27rem)] xl:gap-16">
         {/* ── Suggestions ── */}
         <div className="min-w-0">
@@ -129,7 +138,7 @@ export function FridgeDashboard({ recipes }: { recipes: RecipeSummary[] }) {
           )}
 
           {empty && (
-            <section aria-labelledby="getting-started" className="rounded-[1rem] border border-line bg-white p-7 sm:p-10">
+            <section aria-labelledby="getting-started" className="rounded-[1rem] border border-line bg-paper p-7 sm:p-10">
               <p className="eyebrow">Getting started</p>
               <h2 id="getting-started" className="mt-4 max-w-lg font-display text-[2rem] leading-tight">Add a few ingredients and we&apos;ll do the rest.</h2>
               <ol className="mt-8 grid gap-6 sm:grid-cols-3">
@@ -146,27 +155,6 @@ export function FridgeDashboard({ recipes }: { recipes: RecipeSummary[] }) {
                 ))}
               </ol>
             </section>
-          )}
-
-          {hydrated && soon.length > 0 && (
-            <Panel id="use-soon" title="Use soon" description="Based on the dates you entered. Storage and the food's condition matter too – check before eating.">
-              <ul className="flex flex-wrap gap-2">
-                {soon.map(({ item, freshness }) => (
-                  <li key={item.id} className="flex items-center gap-2.5 rounded-[0.625rem] border border-line bg-white py-2 pl-3 pr-2 text-[0.9375rem]">
-                    <span className="size-2 rounded-full" style={{ background: getIngredient(item.ingredientId)?.color }} aria-hidden />
-                    <span className="font-medium">{item.displayName}</span>
-                    <FreshnessBadge info={freshness} />
-                  </li>
-                ))}
-              </ul>
-              {result && result.groups.useSoon.length > 0 ? (
-                <div className="mt-8">
-                  <RecipeGrid items={result.groups.useSoon} recipes={recipeMap} limit={3} dense />
-                </div>
-              ) : (
-                <p className="mt-5 text-muted">No close recipe matches for these yet – try adding a few more ingredients.</p>
-              )}
-            </Panel>
           )}
 
           {hydrated && inspiration && inspirationRecipe && (
@@ -189,15 +177,36 @@ export function FridgeDashboard({ recipes }: { recipes: RecipeSummary[] }) {
                   />
                 )}
                 <div className="flex flex-col justify-center p-7 sm:p-9">
-                  <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-white/65">Today&apos;s idea</p>
+                  <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-white">Today&apos;s idea</p>
                   <h2 id="inspiration" className="mt-3 text-[1.75rem] leading-tight text-white sm:text-[2.125rem]">{inspirationRecipe.title}</h2>
-                  <p className="mt-3 text-[0.9375rem] leading-relaxed text-white/80">{inspiration.explanation.slice(0, 3).join(" ")}</p>
+                  <p className="mt-3 text-[0.9375rem] leading-relaxed text-white">{inspiration.explanation.slice(0, 3).join(" ")}</p>
                   <span className="mt-6 inline-flex items-center gap-1.5 text-[0.9375rem] font-medium text-white">
                     Let&apos;s cook <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
                   </span>
                 </div>
               </Link>
             </section>
+          )}
+
+          {hydrated && soon.length > 0 && (
+            <Panel id="use-soon" title="Use soon" description="Based on the dates you entered. Storage and the food's condition matter too – check before eating.">
+              <ul className="flex flex-wrap gap-2">
+                {soon.map(({ item, freshness }) => (
+                  <li key={item.id} className="flex items-center gap-2.5 rounded-[0.625rem] border border-line bg-paper py-2 pl-3 pr-2 text-[0.9375rem]">
+                    <span className="size-2 rounded-full" style={{ background: getIngredient(item.ingredientId)?.color }} aria-hidden />
+                    <span className="font-medium">{item.displayName}</span>
+                    <FreshnessBadge info={freshness} />
+                  </li>
+                ))}
+              </ul>
+              {result && result.groups.useSoon.length > 0 ? (
+                <div className="mt-8">
+                  <RecipeGrid items={result.groups.useSoon} recipes={recipeMap} limit={3} dense />
+                </div>
+              ) : (
+                <p className="mt-5 text-muted">No close recipe matches for these yet – try adding a few more ingredients.</p>
+              )}
+            </Panel>
           )}
 
           {hydrated && data.inventory.length > 0 && (
@@ -250,7 +259,7 @@ export function FridgeDashboard({ recipes }: { recipes: RecipeSummary[] }) {
                     const r = recipeMap.get(id);
                     return r ? (
                       <li key={id}>
-                        <Link href={`/recipes/${r.slug}`} className="block py-2.5 text-[0.9375rem] hover:text-forest">
+                        <Link href={`/recipes/${r.slug}`} className="block py-2.5 text-[0.9375rem] hover:text-accent">
                           {r.title}
                         </Link>
                       </li>
@@ -292,7 +301,7 @@ export function FridgeDashboard({ recipes }: { recipes: RecipeSummary[] }) {
                   const r = recipeMap.get(h.recipeId);
                   return r ? (
                     <li key={h.id} className="flex items-center justify-between gap-3">
-                      <Link href={`/recipes/${r.slug}`} className="py-2.5 text-[0.9375rem] hover:text-forest">
+                      <Link href={`/recipes/${r.slug}`} className="py-2.5 text-[0.9375rem] hover:text-accent">
                         {r.title}
                       </Link>
                       <span className="shrink-0 text-xs tabular-nums text-muted">{new Date(h.cookedAt).toLocaleDateString(undefined, { day: "numeric", month: "short" })}</span>

@@ -1,8 +1,9 @@
+import { AccountInvite } from "@/components/account/account-invite";
+import { KitchenGenerator } from "@/components/generate/kitchen-generator";
 import { HeroVisual } from "@/components/home/hero-visual";
-import { HomeFinder } from "@/components/home/home-finder";
-import { WasteEditorial } from "@/components/home/waste-editorial";
+import { InspirationRail, type KitchenPhoto } from "@/components/home/inspiration-rail";
 import { FEATURED_RECIPE_SLUGS, RECIPES, getRecipeSummaries, toSummary } from "@/data/recipes";
-import { photoFirst } from "@/lib/images";
+import { getRecipeImage, photoFirst } from "@/lib/images";
 
 export default function HomePage() {
   const summaries = getRecipeSummaries();
@@ -12,25 +13,17 @@ export default function HomePage() {
     ...RECIPES.filter((r) => !FEATURED_RECIPE_SLUGS.includes(r.slug)),
   ].map(toSummary);
   const featured = photoFirst(ordered).slice(0, 6);
+  // The app's own photography, shown in the inspiration row until live videos are connected.
+  const kitchen: KitchenPhoto[] = ordered.flatMap((r) => {
+    const image = getRecipeImage(r.slug);
+    return image ? [{ slug: r.slug, title: r.title, totalMinutes: r.totalMinutes, image }] : [];
+  });
 
   return (
     <>
-      <HomeFinder
-        recipes={summaries}
-        featured={featured}
-        visual={<HeroVisual />}
-        intro={
-          <>
-            <p className="eyebrow">Free · No sign-up</p>
-            <h1 className="mt-4 text-[3rem] sm:text-[4.25rem] lg:text-[4.5rem] xl:text-[5.5rem]">What&apos;s in your fridge?</h1>
-            <p className="lede mt-4 max-w-md">Add what you have and get recipes you can cook right now.</p>
-          </>
-        }
-      />
-
-      <div className="reveal pt-16 sm:pt-24">
-        <WasteEditorial />
-      </div>
+      <InspirationRail kitchen={kitchen} />
+      <KitchenGenerator recipes={summaries} featured={featured} visual={<HeroVisual />} />
+      <AccountInvite variant="home" />
     </>
   );
 }

@@ -159,7 +159,7 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
             {tags.length > 0 && (
               <ul className="mt-5 flex flex-wrap gap-1.5" aria-label="Dietary information">
                 {tags.map((t) => (
-                  <li key={t} className="tag border border-forest-200 text-forest">{DIETARY_LABELS[t]}</li>
+                  <li key={t} className="tag border border-forest-200 text-accent">{DIETARY_LABELS[t]}</li>
                 ))}
               </ul>
             )}
@@ -252,7 +252,7 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
             )}
 
             <div className="mt-14 grid gap-6 xl:grid-cols-2">
-              <section aria-labelledby="allergens" className="rounded-[0.875rem] border border-line bg-white p-6">
+              <section aria-labelledby="allergens" className="rounded-[0.875rem] border border-line bg-paper p-6">
                 <h2 id="allergens" className="font-display text-[1.25rem]">Allergens</h2>
                 {allergens.contains.length > 0 ? (
                   <p className="mt-3 text-[0.9375rem]">Contains: <strong className="font-medium">{allergens.contains.map((a) => ALLERGEN_LABELS[a]).join(", ")}</strong>.</p>

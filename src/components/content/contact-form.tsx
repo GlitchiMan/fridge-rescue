@@ -11,7 +11,7 @@ export function ContactForm({ email }: { email: string }) {
   const [error, setError] = useState<string | null>(null);
   return (
     <form
-      className="space-y-4 rounded-[0.875rem] border border-line bg-white p-6"
+      className="space-y-4 rounded-[0.875rem] border border-line bg-paper p-6"
       noValidate
       onSubmit={(e) => {
         e.preventDefault();

@@ -79,7 +79,7 @@ export function VideoResults({ params, fallbackQuery, limit = 6, columns = "sm:g
           {result?.status === "disabled" && <p className="mt-1 text-xs text-faint">Site owner: add a YouTube Data API key – see docs/DISCOVER.md.</p>}
         </div>
       </div>
-      <a href={youTubeSearchUrl(query)} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 shrink-0 items-center gap-1.5 self-start rounded-[0.625rem] border border-line-strong bg-white px-3.5 text-sm font-medium hover:border-ink/40 sm:self-auto">
+      <a href={youTubeSearchUrl(query)} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 shrink-0 items-center gap-1.5 self-start rounded-[0.625rem] border border-line-strong bg-paper px-3.5 text-sm font-medium hover:border-ink/40 sm:self-auto">
         Search YouTube <ExternalLink className="size-3.5" aria-hidden />
       </a>
     </div>

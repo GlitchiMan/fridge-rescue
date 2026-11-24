@@ -25,7 +25,7 @@ export function readinessLabel(m: Pick<RecipeMatch, "readiness" | "missing">): s
 
 const READINESS_STYLE: Record<Readiness, { tag: string; dot: string; bar: string }> = {
   ready: { tag: "bg-forest text-white", dot: "bg-white", bar: "bg-forest" },
-  "check-quantities": { tag: "bg-forest-50 text-forest", dot: "bg-forest", bar: "bg-forest" },
+  "check-quantities": { tag: "bg-forest-50 text-accent", dot: "bg-forest", bar: "bg-forest" },
   short: { tag: "bg-orange-soft text-orange-ink", dot: "bg-orange", bar: "bg-orange" },
   missing: { tag: "bg-cream-deep text-ink-soft", dot: "bg-faint", bar: "bg-ink/40" },
 };
@@ -119,7 +119,7 @@ export function RecipeCard({
   return (
     <article
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-[1rem] border border-line bg-white transition-[transform,box-shadow,border-color] duration-200 ease-out",
+        "group relative flex flex-col overflow-hidden rounded-[1rem] border border-line bg-paper transition-[transform,box-shadow,border-color] duration-200 ease-out",
         "hover:-translate-y-1 hover:border-line-strong hover:shadow-[0_14px_32px_-18px_rgb(22_26_23_/_0.35)] has-[a:focus-visible]:outline has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-forest motion-reduce:hover:translate-y-0",
       )}
     >
@@ -136,7 +136,7 @@ export function RecipeCard({
               imageClassName="transition-transform duration-500 ease-out group-hover:scale-[1.04] motion-reduce:group-hover:scale-100"
             />
             {soon && (
-              <span className="tag absolute bottom-3 left-3 z-[2] bg-white/95 text-orange-ink backdrop-blur">
+              <span className="tag absolute bottom-3 left-3 z-[2] bg-paper/95 text-orange-ink backdrop-blur">
                 <span aria-hidden className="size-1.5 rounded-full bg-orange" />
                 Uses your {soon}
               </span>

@@ -81,7 +81,7 @@ export function StepTimer({ minutes, label, large = false }: { minutes: number; 
   return (
     <div
       className={cn(
-        "no-print inline-flex items-center gap-1 rounded-[0.625rem] border bg-white p-1 pl-3 text-[0.875rem]",
+        "no-print inline-flex items-center gap-1 rounded-[0.625rem] border bg-paper p-1 pl-3 text-[0.875rem]",
         done ? "border-coral/50 bg-coral-soft" : running ? "border-forest" : "border-line-strong",
         large && "p-1.5 pl-4 text-lg",
       )}

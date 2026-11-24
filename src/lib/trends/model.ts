@@ -11,16 +11,19 @@ import type { SocialVideo } from "@/lib/videos/model";
  *             both. One recent video is never a trend.
  * Without a qualifying earlier snapshot, the section is "Fresh cooking ideas".
  */
+/**
+ * Browsing categories. Each costs one YouTube search (101 quota units) per daily
+ * refresh. "short" asks YouTube for videos under 4 minutes (Shorts-style).
+ */
 export const TREND_TOPICS = [
-  { id: "dinners", label: "Dinners", query: "easy dinner recipe" },
-  { id: "quick-breakfast", label: "Quick breakfasts", query: "quick breakfast recipe" },
-  { id: "high-protein", label: "High-protein", query: "high protein meal recipe" },
-  { id: "budget", label: "Budget", query: "cheap budget meal recipe" },
-  { id: "air-fryer", label: "Air fryer", query: "air fryer recipe" },
-  { id: "easy-pasta", label: "Easy pasta", query: "easy pasta recipe" },
-  { id: "vegetarian", label: "Vegetarian", query: "vegetarian dinner recipe" },
-  { id: "student", label: "Student meals", query: "student meals recipe" },
-  { id: "desserts", label: "Desserts", query: "easy dessert recipe" },
+  { id: "quick-dinners", label: "Quick dinners", query: "quick dinner recipe", short: true },
+  { id: "viral-snacks", label: "Viral snacks", query: "viral snack recipe", short: true },
+  { id: "high-protein", label: "High-protein meals", query: "high protein meal recipe", short: true },
+  { id: "comfort", label: "Comfort food", query: "comfort food recipe", short: false },
+  { id: "desserts", label: "Desserts", query: "easy dessert recipe", short: true },
+  { id: "student", label: "Easy student meals", query: "easy student meals recipe", short: false },
+  { id: "budget", label: "Budget", query: "cheap budget meal recipe", short: false },
+  { id: "vegetarian", label: "Vegetarian", query: "vegetarian dinner recipe", short: false },
 ] as const;
 export type TrendTopicId = (typeof TREND_TOPICS)[number]["id"];
 

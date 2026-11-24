@@ -65,7 +65,7 @@ export function HeaderFridgeLink() {
       aria-current={active ? "page" : undefined}
       className={cn(
         "inline-flex min-h-9 shrink-0 items-center gap-2 rounded-[0.625rem] px-3.5 text-[0.875rem] font-medium transition-colors",
-        active ? "bg-ink text-white" : "bg-forest text-white hover:bg-forest-700",
+        active ? "bg-charcoal text-white" : "bg-forest text-white hover:bg-forest-700",
       )}
     >
       <Refrigerator className="size-4" aria-hidden strokeWidth={1.75} />

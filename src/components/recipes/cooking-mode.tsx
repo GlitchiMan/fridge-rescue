@@ -11,7 +11,7 @@ interface WakeLockSentinelLike {
   release: () => Promise<void>;
 }
 
-export function CookingMode({ recipe, open, onClose, onFinish }: { recipe: Recipe; open: boolean; onClose: () => void; onFinish: () => void }) {
+export function CookingMode({ recipe, open, onClose, onFinish }: { recipe: Pick<Recipe, "title" | "instructions">; open: boolean; onClose: () => void; onFinish: () => void }) {
   const [step, setStep] = useState(0);
   const [screenOn, setScreenOn] = useState(false);
   const total = recipe.instructions.length;

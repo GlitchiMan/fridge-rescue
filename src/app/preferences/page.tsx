@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/layout/page-header";
 import { PreferencesForm } from "@/components/preferences/preferences-form";
+import { AppearanceControls } from "@/components/preferences/appearance-controls";
 
 export const metadata: Metadata = {
   title: "Preferences & Data",
@@ -12,8 +13,9 @@ export const metadata: Metadata = {
 export default function PreferencesPage() {
   return (
     <div className="container-page pt-8 sm:pt-12">
-      <PageHeader eyebrow="Settings" title="Preferences & data" description="All optional – Fridge Rescue works without any setup." />
-      <div className="mt-4 max-w-4xl">
+      <PageHeader eyebrow="Settings" title="Preferences & data" description="A kitchen that feels like yours. Choose your look and cooking preferences." />
+      <div className="mt-9 max-w-4xl">
+        <AppearanceControls />
         <PreferencesForm />
       </div>
     </div>

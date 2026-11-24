@@ -60,7 +60,7 @@ export function ShoppingList() {
   return (
     <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_20rem] xl:gap-16">
       <div className="min-w-0">
-        <form onSubmit={add} className="flex flex-col gap-3 rounded-[0.875rem] border border-line bg-white p-3 sm:flex-row sm:items-end sm:p-4" noValidate>
+        <form onSubmit={add} className="flex flex-col gap-3 rounded-[0.875rem] border border-line bg-paper p-3 sm:flex-row sm:items-end sm:p-4" noValidate>
           <div className="flex-1">
             <label htmlFor="shop-name" className="label">Add an item</label>
             <input id="shop-name" className="field" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. onions" maxLength={120} autoComplete="off" />
@@ -107,7 +107,7 @@ export function ShoppingList() {
                             checked={item.purchased}
                             onChange={() => kitchenStore.toggleShoppingPurchased(item.id)}
                           />
-                          <span aria-hidden className={cn("flex size-[1.35rem] shrink-0 items-center justify-center rounded-[0.375rem] border-[1.5px] transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-forest", item.purchased ? "border-forest bg-forest text-white" : "border-line-strong bg-white")}>
+                          <span aria-hidden className={cn("flex size-[1.35rem] shrink-0 items-center justify-center rounded-[0.375rem] border-[1.5px] transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-forest", item.purchased ? "border-forest bg-forest text-white" : "border-line-strong bg-paper")}>
                             {item.purchased && <Check className="size-3.5" strokeWidth={2.5} />}
                           </span>
                           <span className={cn("text-[1rem] transition-colors", item.purchased && "text-faint line-through decoration-ink/30")}>{formatShoppingItem(item)}</span>
@@ -129,7 +129,7 @@ export function ShoppingList() {
       </div>
 
       <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-        <div className="rounded-[0.875rem] border border-line bg-white p-5">
+        <div className="rounded-[0.875rem] border border-line bg-paper p-5">
           {hydrated && (
             <div className="mb-4 grid grid-cols-2 border-b border-line pb-4">
               <div>
@@ -137,7 +137,7 @@ export function ShoppingList() {
                 <p className="mt-1.5 text-xs text-muted">to buy</p>
               </div>
               <div className="border-l border-line pl-4">
-                <p className="font-display text-[2.25rem] leading-none tabular-nums text-forest">{purchased.length}</p>
+                <p className="font-display text-[2.25rem] leading-none tabular-nums text-accent">{purchased.length}</p>
                 <p className="mt-1.5 text-xs text-muted">in basket</p>
               </div>
             </div>

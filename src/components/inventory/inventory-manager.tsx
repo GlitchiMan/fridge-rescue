@@ -183,7 +183,7 @@ export function InventoryManager() {
                 onClick={() => setTab(value)}
                 className={cn(
                   "inline-flex min-h-9 items-center justify-center gap-1.5 rounded-[0.5rem] px-2 text-[0.8125rem] font-medium transition-colors",
-                  tab === value ? "bg-white text-ink shadow-soft" : "text-muted hover:text-ink",
+                  tab === value ? "bg-paper text-ink shadow-soft" : "text-muted hover:text-ink",
                 )}
               >
                 {label} <span className="tabular-nums text-faint">{hydrated ? count : ""}</span>
@@ -236,7 +236,7 @@ export function InventoryManager() {
                         </span>
                         {(item.isLeftover || fresh.status !== "no-date" || item.location !== ing?.defaultLocation || item.notes) && (
                           <span className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-muted">
-                            {item.isLeftover && <span className="tag bg-forest-50 text-forest"><UtensilsCrossed className="size-3" aria-hidden />Leftover</span>}
+                            {item.isLeftover && <span className="tag bg-forest-50 text-accent"><UtensilsCrossed className="size-3" aria-hidden />Leftover</span>}
                             <FreshnessBadge info={fresh} />
                             <span>
                               {LOCATION_LABELS[item.location]}

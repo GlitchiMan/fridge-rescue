@@ -132,7 +132,7 @@ function ItemForm({
         <legend className="label">Stored in</legend>
         <div className="grid grid-cols-4 gap-0.5 rounded-[0.625rem] bg-ink/[0.05] p-0.5">
           {STORAGE_LOCATIONS.map((l) => (
-            <label key={l} className={`flex min-h-10 cursor-pointer items-center justify-center rounded-[0.5rem] text-[0.8125rem] font-medium transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-forest ${location === l ? "bg-white text-ink shadow-soft" : "text-muted hover:text-ink"}`}>
+            <label key={l} className={`flex min-h-10 cursor-pointer items-center justify-center rounded-[0.5rem] text-[0.8125rem] font-medium transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-forest ${location === l ? "bg-paper text-ink shadow-soft" : "text-muted hover:text-ink"}`}>
               <input type="radio" name="location" value={l} checked={location === l} onChange={() => setLocation(l)} className="sr-only" />
               {LOCATION_LABELS[l]}
             </label>

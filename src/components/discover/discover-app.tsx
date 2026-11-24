@@ -94,7 +94,7 @@ function ForYou({ recipes, featured }: { recipes: RecipeSummary[]; featured: Rec
           )}
         </>
       ) : (
-        <section className="mb-12 flex flex-col gap-5 rounded-[1rem] border border-line bg-white p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+        <section className="mb-12 flex flex-col gap-5 rounded-[1rem] border border-line bg-paper p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div>
             <h2 className="font-display text-[1.625rem] leading-tight">Personal picks start with your kitchen.</h2>
             <p className="mt-1.5 text-muted">Add a few ingredients and this page fills with meals you can actually make.</p>
@@ -205,7 +205,7 @@ function Fresh() {
             type="button"
             aria-pressed={topic === t.id}
             onClick={() => setTopic(t.id)}
-            className={cn("min-h-9 rounded-[0.5rem] border px-3 text-[0.8125rem] font-medium transition-colors", topic === t.id ? "border-forest bg-forest text-white" : "border-line-strong bg-white text-ink-soft hover:border-ink/40")}
+            className={cn("min-h-9 rounded-[0.5rem] border px-3 text-[0.8125rem] font-medium transition-colors", topic === t.id ? "border-forest bg-forest text-white" : "border-line-strong bg-paper text-ink-soft hover:border-ink/40")}
           >
             {t.label}
             {trendingIds.has(t.id) && <span className={cn("ml-1.5 text-[0.6875rem]", topic === t.id ? "text-white/80" : "text-orange-ink")}>trending</span>}
@@ -278,19 +278,19 @@ function Watch({ recipes, featured }: { recipes: RecipeSummary[]; featured: Reci
       <p className="mt-6 text-xs font-semibold uppercase tracking-[0.12em] text-muted">Or watch videos for</p>
       <div className="mt-2.5 flex flex-wrap gap-1.5">
         {hydrated && ingredientIds.length > 0 && (
-          <button type="button" aria-pressed={current === "__kitchen" && !search} onClick={() => { setSearch(null); setSelected("__kitchen"); }} className={cn("min-h-9 rounded-[0.5rem] border px-3 text-[0.8125rem] font-medium", current === "__kitchen" && !search ? "border-forest bg-forest text-white" : "border-line-strong bg-white text-ink-soft hover:border-ink/40")}>
+          <button type="button" aria-pressed={current === "__kitchen" && !search} onClick={() => { setSearch(null); setSelected("__kitchen"); }} className={cn("min-h-9 rounded-[0.5rem] border px-3 text-[0.8125rem] font-medium", current === "__kitchen" && !search ? "border-forest bg-forest text-white" : "border-line-strong bg-paper text-ink-soft hover:border-ink/40")}>
             My ingredients
           </button>
         )}
         {choices.map((r) => (
-          <button key={r.id} type="button" aria-pressed={current === r.slug && !search} onClick={() => { setSearch(null); setSelected(r.slug); }} className={cn("min-h-9 rounded-[0.5rem] border px-3 text-[0.8125rem] font-medium", current === r.slug && !search ? "border-forest bg-forest text-white" : "border-line-strong bg-white text-ink-soft hover:border-ink/40")}>
+          <button key={r.id} type="button" aria-pressed={current === r.slug && !search} onClick={() => { setSearch(null); setSelected(r.slug); }} className={cn("min-h-9 rounded-[0.5rem] border px-3 text-[0.8125rem] font-medium", current === r.slug && !search ? "border-forest bg-forest text-white" : "border-line-strong bg-paper text-ink-soft hover:border-ink/40")}>
             {r.title}
           </button>
         ))}
       </div>
 
       {current && current !== "__kitchen" && !search && (
-        <Link href={`/recipes/${current}`} className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-forest hover:underline">
+        <Link href={`/recipes/${current}`} className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline">
           Open the tested recipe <ArrowRight className="size-3.5" aria-hidden />
         </Link>
       )}
@@ -306,7 +306,7 @@ function Watch({ recipes, featured }: { recipes: RecipeSummary[]; featured: Reci
 function PersonaliseDialog({ open, onClose, cuisines }: { open: boolean; onClose: () => void; cuisines: string[] }) {
   const s = useDiscoverSettings();
   const toggle = <T extends string>(list: T[], v: T) => (list.includes(v) ? list.filter((x) => x !== v) : [...list, v]);
-  const chip = (on: boolean) => cn("min-h-9 rounded-[0.5rem] border px-3 text-[0.8125rem] font-medium", on ? "border-forest bg-forest text-white" : "border-line-strong bg-white text-ink-soft");
+  const chip = (on: boolean) => cn("min-h-9 rounded-[0.5rem] border px-3 text-[0.8125rem] font-medium", on ? "border-forest bg-forest text-white" : "border-line-strong bg-paper text-ink-soft");
   return (
     <Dialog open={open} onClose={onClose} title="Personalise Discover" description="Saved in this browser only.">
       <label className="flex items-start gap-3 rounded-[0.625rem] border border-line p-3.5">
@@ -357,7 +357,7 @@ export function DiscoverApp({ recipes, featured }: { recipes: RecipeSummary[]; f
       <button
         type="button"
         onClick={() => assistant.open()}
-        className="group mt-6 flex w-full max-w-2xl items-center gap-3 rounded-[0.875rem] border border-line-strong bg-white px-4 py-3.5 text-left transition-[border-color,box-shadow] hover:border-forest hover:shadow-[0_0_0_3px_rgb(31_77_58_/_0.1)]"
+        className="group mt-6 flex w-full max-w-2xl items-center gap-3 rounded-[0.875rem] border border-line-strong bg-paper px-4 py-3.5 text-left transition-[border-color,box-shadow] hover:border-forest hover:shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-accent)_22%,transparent)]"
       >
         <span className="flex size-8 items-center justify-center rounded-[0.5rem] bg-forest text-white"><MessageSquareText className="size-4" aria-hidden /></span>
         <span className="flex-1 text-[0.9375rem] text-faint group-hover:text-muted">Ask Fridge AI – “I have chicken, rice and eggs…”</span>

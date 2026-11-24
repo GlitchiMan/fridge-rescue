@@ -22,6 +22,8 @@ interface Props {
   onEnterEmpty?: () => void;
   /** Lets a parent commit whatever is still typed (returns the new ids). */
   actionRef?: React.MutableRefObject<{ commit: () => string[] } | null>;
+  /** Accept foods that aren't in the ingredient list as free text. */
+  onAddCustom?: (names: string[]) => void;
 }
 
 export function IngredientPicker({
@@ -37,6 +39,7 @@ export function IngredientPicker({
   inputId,
   onEnterEmpty,
   actionRef,
+  onAddCustom,
 }: Props) {
   const [query, setQuery] = useState("");
   const [leaving, setLeaving] = useState<string | null>(null);
@@ -78,7 +81,11 @@ export function IngredientPicker({
     if (pickedId) ids.push(pickedId);
     const fresh = Array.from(new Set(ids)).filter((x) => !selected.includes(x));
     if (fresh.length) onAdd(fresh);
-    setNotFound(unknown);
+    // Callers that accept free text (e.g. AI generation) take unknown foods as-is.
+    if (onAddCustom && unknown.length) {
+      onAddCustom(unknown.map((u) => u.slice(0, 60)));
+      setNotFound([]);
+    } else setNotFound(unknown);
     setQuery("");
     setActive(0);
     setOpen(false);
@@ -99,7 +106,7 @@ export function IngredientPicker({
       </label>
       <div
         className={cn(
-          "flex items-center gap-2.5 border border-line-strong bg-white pr-1.5 transition-[border-color,box-shadow] hover:border-[#BDB7A9] focus-within:border-forest focus-within:shadow-[0_0_0_3px_rgb(31_77_58_/_0.14)]",
+          "flex items-center gap-2.5 border border-line-strong bg-paper pr-1.5 transition-[border-color,box-shadow] hover:border-[#BDB7A9] focus-within:border-accent focus-within:shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-accent)_22%,transparent)]",
           size === "lg" ? "min-h-[3.75rem] rounded-[0.875rem] pl-4" : "min-h-12 rounded-[0.625rem] pl-3.5",
         )}
       >
@@ -161,7 +168,7 @@ export function IngredientPicker({
           aria-label="Add ingredient"
           className={cn(
             "inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[0.5rem] text-[0.8125rem] font-medium transition-colors disabled:text-faint",
-            query.trim() ? "bg-ink text-white hover:bg-ink-soft" : "bg-transparent",
+            query.trim() ? "bg-charcoal text-white hover:bg-charcoal/85" : "bg-transparent",
             size === "lg" ? "h-11 px-3.5" : "h-9 px-2.5",
           )}
         >
@@ -175,7 +182,7 @@ export function IngredientPicker({
           id={listId}
           role="listbox"
           aria-label="Ingredient suggestions"
-          className="absolute inset-x-0 top-full z-30 mt-2 max-h-80 animate-pop overflow-auto rounded-[0.75rem] border border-line bg-white p-1 shadow-lift"
+          className="absolute inset-x-0 top-full z-30 mt-2 max-h-80 animate-pop overflow-auto rounded-[0.75rem] border border-line bg-paper p-1 shadow-lift"
         >
           {suggestions.map((s, i) => (
             <li

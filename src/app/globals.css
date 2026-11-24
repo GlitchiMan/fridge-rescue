@@ -10,34 +10,40 @@
    every component shares one palette.
    ──────────────────────────────────────────────────────────── */
 @theme {
-  /* Accent: herb green */
-  --color-forest-50: #EEF2EE;
-  --color-forest-100: #DFE7E1;
-  --color-forest-200: #C3D2C7;
-  --color-forest: #1F4D3A;
-  --color-forest-700: #183E2F;
-  --color-forest-800: #132F24;
-  --color-leaf: #4F7F63;
-  --color-leaf-soft: #E5ECE6;
+  /* Brand: forest, sage, ivory, champagne, charcoal */
+  --color-forest-50: #EDF0EA;
+  --color-forest-100: #DDE4DB;
+  --color-forest-200: #BECBBE;
+  --color-forest: #183C31;      /* filled surfaces with white text */
+  --color-forest-700: #122F26;
+  --color-forest-800: #0E251E;
+  --color-accent: #183C31;      /* accent text, links and focus */
+  --color-sage: #9DAE9B;
+  --color-leaf: #6E8770;
+  --color-leaf-soft: #E3E8DF;
+  --color-champagne: #BD9475;
+  --color-champagne-ink: #80593C;
+  --color-charcoal: #272D2B;    /* solid dark surfaces, in every theme */
 
   /* Neutrals */
-  --color-cream: #F7F5F0;       /* page (paper) */
-  --color-cream-deep: #EFECE5;  /* sunken surfaces */
-  --color-surface: #F3F1EB;     /* subtle fill */
-  --color-ink: #161A17;
-  --color-ink-soft: #2E332F;
-  --color-muted: #5D635D;
-  --color-faint: #8A8F88;       /* decorative only, never body text */
-  --color-line: #E5E1D8;
-  --color-line-strong: #D2CDC1;
+  --color-cream: #F5F0E8;       /* page: warm ivory */
+  --color-cream-deep: #ECE5D9;
+  --color-surface: #F0EADF;
+  --color-paper: #FFFCF7;       /* cards and inputs */
+  --color-ink: #272D2B;
+  --color-ink-soft: #3B4340;
+  --color-muted: #5A625D;
+  --color-faint: #686F69;
+  --color-line: #E3DBCD;
+  --color-line-strong: #CFC6B6;
 
   /* Status */
-  --color-orange: #C7782E;      /* amber: use soon */
-  --color-orange-soft: #F6EBDD;
-  --color-orange-ink: #8A4B12;
-  --color-coral: #B4472F;       /* tomato: missing / past date */
-  --color-coral-soft: #F6E5E0;
-  --color-coral-ink: #96351F;
+  --color-orange: #BD9475;
+  --color-orange-soft: #F4E9DC;
+  --color-orange-ink: #7A4F30;
+  --color-coral: #B4472F;
+  --color-coral-soft: #F6E3DC;
+  --color-coral-ink: #8F3420;
 
   --font-display: var(--font-newsreader), ui-serif, Georgia, serif;
   --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -109,7 +115,7 @@
   h1 { letter-spacing: -0.028em; line-height: 1.02; }
   p { text-wrap: pretty; }
   :focus-visible {
-    outline: 2px solid var(--color-forest);
+    outline: 2px solid var(--color-accent);
     outline-offset: 3px;
     border-radius: 6px;
   }
@@ -148,7 +154,7 @@
   }
 
   .card {
-    background: white;
+    background: var(--color-paper);
     border: 1px solid var(--color-line);
     border-radius: var(--radius-card);
   }
@@ -157,17 +163,17 @@
     min-height: 2.75rem;
     border-radius: 0.625rem;
     border: 1px solid var(--color-line-strong);
-    background: white;
+    background: var(--color-paper);
     padding: 0.55rem 0.8rem;
     color: var(--color-ink);
     transition: border-color 150ms, box-shadow 150ms;
   }
   .field::placeholder { color: var(--color-faint); }
-  .field:hover { border-color: #BDB7A9; }
+  .field:hover { border-color: var(--color-muted); }
   .field:focus {
     outline: none;
-    border-color: var(--color-forest);
-    box-shadow: 0 0 0 3px rgb(31 77 58 / 0.14);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 22%, transparent);
   }
   select.field {
     appearance: none;
@@ -237,10 +243,10 @@
   }
   .hairline-top { border-top: 1px solid var(--color-line); }
   .link {
-    color: var(--color-forest);
+    color: var(--color-accent);
     font-weight: 500;
     text-decoration-line: underline;
-    text-decoration-color: rgb(31 77 58 / 0.3);
+    text-decoration-color: color-mix(in oklab, var(--color-accent) 35%, transparent);
     text-underline-offset: 0.2em;
     transition: text-decoration-color 150ms;
   }
@@ -281,4 +287,52 @@
   .card { box-shadow: none !important; border-color: #ccc !important; }
   a { color: black; text-decoration: none; }
   .print-break-avoid { break-inside: avoid; }
+}
+
+/* ── Appearance ──
+   Palettes and modes only change tokens, so every component follows them. */
+:root[data-palette="sage"] {
+  --color-forest: #4A6552; --color-forest-700: #3B5243; --color-forest-800: #2E4135;
+  --color-forest-50: #EEF1EC; --color-forest-100: #DFE6DE; --color-forest-200: #C4D0C3;
+  --color-accent: #435C4B;
+}
+:root[data-palette="champagne"] {
+  --color-forest: #7C5A40; --color-forest-700: #664931; --color-forest-800: #523A27;
+  --color-forest-50: #F6EFE6; --color-forest-100: #EDE1D2; --color-forest-200: #DCC8B2;
+  --color-accent: #75533A;
+}
+:root[data-palette="midnight"] {
+  --color-forest: #2B4558; --color-forest-700: #223747; --color-forest-800: #1A2B38;
+  --color-forest-50: #ECF0F3; --color-forest-100: #DCE4EA; --color-forest-200: #BFCDD7;
+  --color-accent: #2B4558;
+}
+:root[data-mode="dark"] {
+  color-scheme: dark;
+  --color-cream: #171B1A; --color-cream-deep: #202624; --color-surface: #1E2422; --color-paper: #232A27;
+  --color-ink: #F5F0E8; --color-ink-soft: #E2DDD3; --color-muted: #B5BBB3; --color-faint: #A3A9A2;
+  --color-line: #343C38; --color-line-strong: #4A534E;
+  --color-charcoal: #0F1211;
+  --color-forest: #2F5F4D; --color-forest-700: #37705B; --color-forest-800: #254C3D;
+  --color-accent: #A9C6B1;
+  --color-forest-50: color-mix(in oklab, var(--color-accent) 12%, var(--color-cream));
+  --color-forest-100: color-mix(in oklab, var(--color-accent) 20%, var(--color-cream));
+  --color-forest-200: color-mix(in oklab, var(--color-accent) 34%, var(--color-cream));
+  --color-leaf-soft: #2A3530;
+  --color-champagne-ink: #DDBB9E;
+  --color-orange-soft: #3A2E24; --color-orange-ink: #E7BE99;
+  --color-coral-soft: #3D2825; --color-coral-ink: #F3B3A2;
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-lift: 0 1px 2px rgb(0 0 0 / 0.3), 0 14px 34px -12px rgb(0 0 0 / 0.6);
+}
+:root[data-mode="dark"][data-palette="sage"] { --color-forest: #4F6E59; --color-forest-700: #5A7C65; --color-forest-800: #41594A; --color-accent: #B7CCB8; }
+:root[data-mode="dark"][data-palette="champagne"] { --color-forest: #8A6547; --color-forest-700: #7A5940; --color-forest-800: #70513A; --color-accent: #DDBB9E; }
+:root[data-mode="dark"][data-palette="midnight"] { --color-forest: #3E6079; --color-forest-700: #4A6F8A; --color-forest-800: #324E63; --color-accent: #A9C6DC; }
+html { transition: background-color 200ms ease; }
+
+/* Hero photo runs to the right edge of the screen. */
+@media (min-width: 1024px) {
+  .bleed-right { margin-right: calc(-1 * max(2rem, (100vw - 90rem) / 2 + 2rem)); }
+}
+@media (min-width: 1280px) {
+  .bleed-right { margin-right: calc(-1 * max(3rem, (100vw - 90rem) / 2 + 3rem)); }
 }

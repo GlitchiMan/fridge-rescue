@@ -45,7 +45,7 @@ export function MealPlanner({ recipes }: { recipes: RecipeSummary[] }) {
 
   return (
     <div>
-      <div className="flex flex-col gap-4 rounded-[0.875rem] border border-line bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-[0.875rem] border border-line bg-paper p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="font-display text-[1.375rem] leading-tight">{hydrated ? `${data.mealPlan.length} meal${data.mealPlan.length === 1 ? "" : "s"} planned this week` : "…"}</p>
           <p className="mt-1 text-sm text-muted">
@@ -68,7 +68,7 @@ export function MealPlanner({ recipes }: { recipes: RecipeSummary[] }) {
         </div>
       </div>
       {needs.length > 0 && (
-        <details className="group mt-3 rounded-[0.875rem] border border-line bg-white text-sm">
+        <details className="group mt-3 rounded-[0.875rem] border border-line bg-paper text-sm">
           <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-3.5 font-medium [&::-webkit-details-marker]:hidden">
             See what&apos;s missing
             <span aria-hidden className="text-lg leading-none text-muted transition-transform group-open:rotate-45">+</span>
@@ -83,10 +83,10 @@ export function MealPlanner({ recipes }: { recipes: RecipeSummary[] }) {
         {WEEKDAYS.map((day) => {
           const isToday = todayKey === day;
           return (
-            <section key={day} aria-labelledby={`day-${day}`} className={cn("flex flex-col bg-white", isToday && "bg-[#FBFCFA]")}>
+            <section key={day} aria-labelledby={`day-${day}`} className={cn("flex flex-col bg-paper", isToday && "bg-paper")}>
               <h2 id={`day-${day}`} className={cn("flex items-center justify-between border-b px-4 py-3 font-display text-[1.25rem] leading-tight", isToday ? "border-forest" : "border-line")}>
                 {DAY[day]}
-                {isToday && <span className="font-sans text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-forest">Today</span>}
+                {isToday && <span className="font-sans text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-accent">Today</span>}
               </h2>
               <div className="flex flex-1 flex-col divide-y divide-line">
                 {MEAL_SLOTS.map((slot) => {
@@ -115,7 +115,7 @@ export function MealPlanner({ recipes }: { recipes: RecipeSummary[] }) {
                                   </div>
                                 )}
                                 <div className="px-2.5 py-2">
-                                <Link href={`/recipes/${r?.slug ?? e.recipeId}`} className="line-clamp-2 text-[0.875rem] font-medium leading-snug text-ink hover:text-forest">
+                                <Link href={`/recipes/${r?.slug ?? e.recipeId}`} className="line-clamp-2 text-[0.875rem] font-medium leading-snug text-ink hover:text-accent">
                                   {r?.title ?? "Unknown recipe"}
                                 </Link>
                                 <div className="mt-1 flex items-center justify-between">

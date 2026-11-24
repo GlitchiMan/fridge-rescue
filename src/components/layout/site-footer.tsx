@@ -32,7 +32,7 @@ export function SiteFooter() {
             <ul className="grid grid-cols-2 gap-x-8 gap-y-1 sm:flex sm:flex-wrap sm:gap-x-6">
               {PRIMARY.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="inline-block py-1.5 text-sm text-ink-soft transition-colors hover:text-forest">
+                  <Link href={l.href} className="inline-block py-1.5 text-sm text-ink-soft transition-colors hover:text-accent">
                     {l.label}
                   </Link>
                 </li>

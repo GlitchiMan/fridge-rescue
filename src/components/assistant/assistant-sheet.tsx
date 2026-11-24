@@ -32,7 +32,7 @@ interface Turn {
 
 const READINESS: Record<string, { label: string; cls: string }> = {
   ready: { label: "Ready to cook", cls: "bg-forest text-white" },
-  "check-quantities": { label: "Check quantities", cls: "bg-forest-50 text-forest" },
+  "check-quantities": { label: "Check quantities", cls: "bg-forest-50 text-accent" },
   short: { label: "Need a little more", cls: "bg-orange-soft text-orange-ink" },
   missing: { label: "Missing some", cls: "bg-cream-deep text-ink-soft" },
 };
@@ -51,12 +51,12 @@ function PickRow({ pick, onNavigate }: { pick: AssistantPick; onNavigate: () => 
     toast.show(`Added ${additions.length} item${additions.length === 1 ? "" : "s"} to your shopping list`);
   };
   return (
-    <li className="flex gap-3 rounded-[0.75rem] border border-line bg-white p-3">
+    <li className="flex gap-3 rounded-[0.75rem] border border-line bg-paper p-3">
       {recipe && hasRecipeImage(recipe.slug) && (
         <RecipeImage slug={recipe.slug} title={recipe.title} ingredients={recipe.ingredients} sizes="72px" compact className="size-[4.5rem] shrink-0 rounded-[0.5rem]" />
       )}
       <div className="min-w-0 flex-1">
-        <Link href={`/recipes/${pick.slug}`} onClick={onNavigate} className="font-display text-[1.125rem] leading-tight hover:text-forest">
+        <Link href={`/recipes/${pick.slug}`} onClick={onNavigate} className="font-display text-[1.125rem] leading-tight hover:text-accent">
           {pick.title}
         </Link>
         <p className="mt-0.5 text-xs text-muted">
@@ -75,7 +75,7 @@ function PickRow({ pick, onNavigate }: { pick: AssistantPick; onNavigate: () => 
         <div className="mt-2 flex flex-wrap items-center gap-2">
           {pick.readiness && <span className={cn("tag", READINESS[pick.readiness]?.cls)}>{READINESS[pick.readiness]?.label}</span>}
           {pick.missing.length > 0 && (
-            <button type="button" onClick={addMissing} className="inline-flex items-center gap-1 text-xs font-medium text-forest hover:underline">
+            <button type="button" onClick={addMissing} className="inline-flex items-center gap-1 text-xs font-medium text-accent hover:underline">
               <ShoppingBasket className="size-3.5" aria-hidden /> Add missing to list
             </button>
           )}
@@ -175,12 +175,12 @@ export function AssistantSheet({ open, request, onClose }: { open: boolean; requ
       <div className="flex min-h-[60dvh] flex-col">
         {/* Privacy & mode controls */}
         <div className="flex flex-wrap gap-2 border-b border-line pb-3">
-          <label className="inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-[0.5rem] border border-line bg-white px-3 text-[0.8125rem]">
+          <label className="inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-[0.5rem] border border-line bg-paper px-3 text-[0.8125rem]">
             <input type="checkbox" className="size-4 accent-forest" checked={settings.shareKitchen} onChange={(e) => discoverSettings.update({ shareKitchen: e.target.checked })} />
             Use my kitchen{kitchenCount ? ` (${kitchenCount} items)` : ""}
           </label>
           {aiAvailable && (
-            <label className="inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-[0.5rem] border border-line bg-white px-3 text-[0.8125rem]">
+            <label className="inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-[0.5rem] border border-line bg-paper px-3 text-[0.8125rem]">
               <input type="checkbox" className="size-4 accent-forest" checked={settings.useAi} onChange={(e) => discoverSettings.update({ useAi: e.target.checked })} />
               AI answers
             </label>
@@ -207,7 +207,7 @@ export function AssistantSheet({ open, request, onClose }: { open: boolean; requ
               {t.answer && (
                 <div className="mt-3">
                   <div className="flex items-center gap-2">
-                    <span className={cn("tag", t.answer.mode === "ai" ? "bg-ink text-white" : "bg-cream-deep text-ink-soft")}>{t.answer.mode === "ai" ? "AI answer" : "Smart match"}</span>
+                    <span className={cn("tag", t.answer.mode === "ai" ? "bg-charcoal text-white" : "bg-cream-deep text-ink-soft")}>{t.answer.mode === "ai" ? "AI answer" : "Smart match"}</span>
                     {t.aiPending && <span className="text-xs text-muted">Asking the AI…</span>}
                   </div>
                   <p className="mt-2 text-[0.9375rem] leading-relaxed">{t.answer.text}</p>
@@ -235,7 +235,7 @@ export function AssistantSheet({ open, request, onClose }: { open: boolean; requ
                   )}
                   {t.answer.notes.length > 0 && <ul className="mt-2 space-y-0.5 text-xs text-muted">{t.answer.notes.map((n) => <li key={n}>{n}</li>)}</ul>}
                   {t.answer.showTrending && (
-                    <Link href="/discover?tab=trending" onClick={onClose} className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-forest hover:underline">
+                    <Link href="/discover?tab=trending" onClick={onClose} className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline">
                       Open Trending <ExternalLink className="size-3.5" aria-hidden />
                     </Link>
                   )}
@@ -248,7 +248,7 @@ export function AssistantSheet({ open, request, onClose }: { open: boolean; requ
                     </ul>
                   )}
                   {t.videos && t.videos.status !== "ok" && t.answer.videoQuery && (
-                    <a href={youTubeSearchUrl(t.answer.videoQuery)} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-forest hover:underline">
+                    <a href={youTubeSearchUrl(t.answer.videoQuery)} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline">
                       Search YouTube for “{t.answer.videoQuery}” <ExternalLink className="size-3.5" aria-hidden />
                     </a>
                   )}
@@ -272,7 +272,7 @@ export function AssistantSheet({ open, request, onClose }: { open: boolean; requ
           {turns.length === 0 && (
             <div className="-mx-1 mb-2 flex gap-1.5 overflow-x-auto px-1 pb-1 [scrollbar-width:none]">
               {QUICK.map((q) => (
-                <button key={q} type="button" onClick={() => void ask(q, videoTitle)} className="min-h-9 shrink-0 rounded-[0.5rem] border border-line bg-white px-3 text-[0.8125rem] text-ink-soft hover:border-ink/30 hover:text-ink">
+                <button key={q} type="button" onClick={() => void ask(q, videoTitle)} className="min-h-9 shrink-0 rounded-[0.5rem] border border-line bg-paper px-3 text-[0.8125rem] text-ink-soft hover:border-ink/30 hover:text-ink">
                   {q}
                 </button>
               ))}
@@ -283,7 +283,7 @@ export function AssistantSheet({ open, request, onClose }: { open: boolean; requ
               e.preventDefault();
               void ask(input, videoTitle);
             }}
-            className="flex items-center gap-2 rounded-[0.875rem] border border-line-strong bg-white p-1.5 pl-4 focus-within:border-forest"
+            className="flex items-center gap-2 rounded-[0.875rem] border border-line-strong bg-paper p-1.5 pl-4 focus-within:border-accent"
           >
             <label htmlFor="assistant-input" className="sr-only">Ask Fridge AI</label>
             <input

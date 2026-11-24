@@ -18,7 +18,7 @@ const EQUIPMENT_LABELS: Record<string, string> = { stovetop: "Stovetop", oven: "
 
 function Chip({ on, onClick, children }: { on: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
-    <button type="button" aria-pressed={on} onClick={onClick} className={cn("inline-flex min-h-9 items-center rounded-[0.5rem] border px-3 text-[0.8125rem] font-medium transition-colors", on ? "border-forest bg-forest text-white" : "border-line-strong bg-white text-ink-soft hover:border-ink/40 hover:text-ink")}>
+    <button type="button" aria-pressed={on} onClick={onClick} className={cn("inline-flex min-h-9 items-center rounded-[0.5rem] border px-3 text-[0.8125rem] font-medium transition-colors", on ? "border-forest bg-forest text-white" : "border-line-strong bg-paper text-ink-soft hover:border-ink/40 hover:text-ink")}>
       {children}
     </button>
   );
