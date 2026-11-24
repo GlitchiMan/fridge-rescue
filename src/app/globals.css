@@ -325,7 +325,7 @@
   --shadow-lift: 0 1px 2px rgb(0 0 0 / 0.3), 0 14px 34px -12px rgb(0 0 0 / 0.6);
 }
 :root[data-mode="dark"][data-palette="sage"] { --color-forest: #4F6E59; --color-forest-700: #5A7C65; --color-forest-800: #41594A; --color-accent: #B7CCB8; }
-:root[data-mode="dark"][data-palette="champagne"] { --color-forest: #8A6547; --color-forest-700: #987253; --color-forest-800: #70513A; --color-accent: #DDBB9E; }
+:root[data-mode="dark"][data-palette="champagne"] { --color-forest: #8A6547; --color-forest-700: #7A5940; --color-forest-800: #70513A; --color-accent: #DDBB9E; }
 :root[data-mode="dark"][data-palette="midnight"] { --color-forest: #3E6079; --color-forest-700: #4A6F8A; --color-forest-800: #324E63; --color-accent: #A9C6DC; }
 html { transition: background-color 200ms ease; }
 

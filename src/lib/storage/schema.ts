@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { generatedRecipeSchema, MAX_SAVED_AI_RECIPES } from "@/lib/generate/schema";
 import { isIsoDate } from "@/lib/matching/freshness";
 import {
   DIETARY_TAGS,
@@ -105,6 +106,7 @@ export function createEmptyState(): StorageSchema {
     mealPlan: [],
     history: [],
     consent: { ...DEFAULT_CONSENT },
+    generatedRecipes: [],
   };
 }
 
@@ -190,6 +192,8 @@ export function parseStoredState(raw: unknown): ParseResult {
       mealPlan: salvageArray(migrated.mealPlan, mealPlanEntrySchema, LIMITS.mealPlan, issues, "meal plan"),
       history: salvageArray(migrated.history, historyEntrySchema, LIMITS.history, issues, "cooking history"),
       consent: consent.success ? consent.data : base.consent,
+      // Older data has no saved AI recipes – an empty list is the right default.
+      generatedRecipes: salvageArray(migrated.generatedRecipes ?? [], generatedRecipeSchema, MAX_SAVED_AI_RECIPES, issues, "saved AI recipes"),
     },
   };
 }

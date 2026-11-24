@@ -2,8 +2,9 @@
 
 import { Bookmark, ChefHat, ExternalLink, Play, Search } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useAssistant } from "@/components/assistant/assistant-provider";
+import { setInspiration } from "@/lib/generate/client";
 import { Dialog } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/toast";
 import { discoverSettings, useDiscoverSettings } from "@/lib/discover/settings";
@@ -28,7 +29,7 @@ export function VideoCard({ video, compact = false, now }: { video: SocialVideo;
   const [matching, setMatching] = useState(false);
   const settings = useDiscoverSettings();
   const toast = useToast();
-  const assistant = useAssistant();
+  const router = useRouter();
   const saved = settings.savedIdeas.some((s) => s.platform === video.platform && s.id === video.id);
   const badges = now ? videoBadges(video, now) : [];
   const duration = formatDuration(video.durationSeconds);
@@ -92,10 +93,14 @@ export function VideoCard({ video, compact = false, now }: { video: SocialVideo;
             </button>
             <button
               type="button"
-              onClick={() => assistant.open({ message: `Make something like “${video.title}” with my ingredients`, videoTitle: video.title })}
+              onClick={() => {
+                // Fridge AI makes its own version from the dish idea – it never sees the video itself.
+                setInspiration({ title: video.title.slice(0, 200), creator: video.creator.slice(0, 100), platform: video.platform, url: video.url });
+                router.push("/#cook");
+              }}
               className="inline-flex min-h-8 items-center gap-1 rounded-[0.5rem] px-2 text-xs font-medium text-ink-soft hover:bg-ink/[0.05]"
             >
-              <ChefHat className="size-3.5" aria-hidden /> Make it with my ingredients
+              <ChefHat className="size-3.5" aria-hidden /> Make something like this
             </button>
           </div>
         )}

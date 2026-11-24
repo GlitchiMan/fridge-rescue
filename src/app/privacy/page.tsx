@@ -42,11 +42,12 @@ export default function PrivacyPage() {
         <li>When you search for cooking videos, the recipe name or the few ingredient names used for that search go through our server to YouTube. Your full kitchen list is not sent.</li>
         <li>Videos load from YouTube only after you choose to watch one, and YouTube&apos;s own privacy policy then applies.</li>
         <li>Ask Fridge AI works in your browser by default. If AI answers are available and you turn them on, your question, and your kitchen list only if you also tick &ldquo;Use my kitchen&rdquo;, go through our server to our AI provider, Anthropic, to write the answer.</li>
+        <li>When you press &ldquo;Generate my recipes&rdquo;, the ingredients you entered (with amounts if you saved them in My Fridge), the pantry basics, diets and foods to avoid from your preferences, and any video title you chose as inspiration go through our server to Anthropic to create the recipes. Your IP address is turned into a short anonymous code to apply daily limits. Generated recipes stay in your browser unless you save them to an account.</li>
       </ul>
 
       <h2>If you create an account</h2>
       <p>
-        Accounts are optional. If you create one, your email address, sign-in details and the kitchen data you choose to keep in your account (ingredients, favourites, lists, meal plan, history and preferences) are stored with our database and authentication provider, Supabase, so they can follow you across devices. If you use Google sign-in, Google shares your basic profile with us. Cookie choices stay in each browser.
+        Accounts are optional. If you create one, your email address, sign-in details and the kitchen data you choose to keep in your account (ingredients, favourites, lists, meal plan, history, saved AI recipes and preferences) are stored with our database and authentication provider, Supabase, so they can follow you across devices. If you use Google sign-in, Google shares your basic profile with us. Cookie choices stay in each browser.
       </p>
       <p>You can permanently delete your account and its cloud data at any time from your Account page.</p>
 

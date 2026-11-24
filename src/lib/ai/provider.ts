@@ -1,6 +1,6 @@
 import "server-only";
 import Anthropic from "@anthropic-ai/sdk";
-import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
+import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import type { z } from "zod";
 import { getServerConfig } from "@/lib/server/config";
 import { dayKey, getStore } from "@/lib/server/store";
@@ -18,7 +18,17 @@ export interface AiUsage {
 export interface AiProvider {
   readonly id: string;
   readonly model: string;
-  generate<T>(req: { system: string; user: string; schema: z.ZodType<T>; maxTokens: number }): Promise<{ data: T | null; usage: AiUsage }>;
+  generate<T>(req: GenerateRequest<T>): Promise<{ data: T | null; usage: AiUsage }>;
+}
+
+export interface GenerateRequest<T> {
+  system: string;
+  user: string;
+  schema: z.ZodType<T>;
+  maxTokens: number;
+  /** Thinking depth. "low" keeps latency and cost down. */
+  effort?: "low" | "medium" | "high";
+  timeoutMs?: number;
 }
 
 /** US$ per 1M tokens (input, output). Used only for spend estimates/limits. */
@@ -26,12 +36,18 @@ const PRICES: Record<string, [number, number]> = {
   "claude-opus-5-5": [4, 20],
   "claude-sonnet-5-5": [2, 10],
   "claude-haiku-5-5": [0.1, 0.5],
+  "claude-opus-5": [5, 25],
+  "claude-opus-4-8": [5, 25],
+  "claude-sonnet-5": [2, 10],
 };
 
 export function estimateCost(model: string, inputTokens: number, outputTokens: number): number {
   const [inP, outP] = PRICES[model] ?? [5, 25]; // unknown model → assume a pricier tier
   return (inputTokens * inP + outputTokens * outP) / 1_000_000;
 }
+
+/** Models that accept the server-side refusal fallback. */
+const FALLBACK_MODELS = new Set(["claude-opus-5-5", "claude-sonnet-5-5", "claude-fable-5-2", "claude-fable-5-1", "claude-opus-5"]);
 
 class AnthropicProvider implements AiProvider {
   readonly id = "anthropic";
@@ -41,20 +57,26 @@ class AnthropicProvider implements AiProvider {
     this.client = new Anthropic({ timeout: timeoutMs, maxRetries: 1 });
   }
 
-  async generate<T>({ system, user, schema, maxTokens }: { system: string; user: string; schema: z.ZodType<T>; maxTokens: number }) {
-    const response = await this.client.messages.parse({
-      model: this.model,
-      max_tokens: maxTokens,
-      // Short, conversational answers: low effort keeps latency and cost down.
-      output_config: { effort: "low", format: zodOutputFormat(schema) },
-      // Stable system prompt first so it can be served from the prompt cache.
-      system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
-      messages: [{ role: "user", content: user }],
-    });
+  async generate<T>({ system, user, schema, maxTokens, effort = "low", timeoutMs }: GenerateRequest<T>) {
+    const response = await this.client.beta.messages.parse(
+      {
+        model: this.model,
+        max_tokens: maxTokens,
+        output_config: { effort, format: betaZodOutputFormat(schema) },
+        // If the model declines a request, the API retries it on a suitable fallback model.
+        ...(FALLBACK_MODELS.has(this.model) ? { betas: ["server-side-fallback-2026-07-01"], fallbacks: "default" as const } : {}),
+        // Stable system prompt first so it can be served from the prompt cache.
+        system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
+        messages: [{ role: "user", content: user }],
+      },
+      timeoutMs ? { timeout: timeoutMs } : undefined,
+    );
+    // Price by the model that actually answered (a fallback may have served it).
+    const billedModel = response.model || this.model;
     const usage: AiUsage = {
       inputTokens: response.usage.input_tokens + (response.usage.cache_read_input_tokens ?? 0) + (response.usage.cache_creation_input_tokens ?? 0),
       outputTokens: response.usage.output_tokens,
-      costUsd: estimateCost(this.model, response.usage.input_tokens + (response.usage.cache_creation_input_tokens ?? 0) * 1.25 + (response.usage.cache_read_input_tokens ?? 0) * 0.1, response.usage.output_tokens),
+      costUsd: estimateCost(billedModel, response.usage.input_tokens + (response.usage.cache_creation_input_tokens ?? 0) * 1.25 + (response.usage.cache_read_input_tokens ?? 0) * 0.1, response.usage.output_tokens),
     };
     // A refusal or truncated answer → no data; the caller falls back to the local answer.
     if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") return { data: null, usage };

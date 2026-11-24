@@ -360,6 +360,9 @@ export interface ConsentSettings {
   updatedAt: string | null;
 }
 
+// Generated recipes are stored alongside kitchen data so they sync with accounts.
+import type { GeneratedRecipe } from "@/lib/generate/schema";
+
 export interface StorageSchemaV1 {
   version: 1;
   inventory: InventoryItem[];
@@ -369,6 +372,8 @@ export interface StorageSchemaV1 {
   mealPlan: MealPlanEntry[];
   history: CookingHistoryEntry[];
   consent: ConsentSettings;
+  /** AI recipes the user chose to save (optional field, added without a version bump). */
+  generatedRecipes: GeneratedRecipe[];
 }
 
 export type StorageSchema = StorageSchemaV1;

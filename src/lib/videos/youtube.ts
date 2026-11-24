@@ -45,6 +45,8 @@ export interface YouTubeSearchOptions {
   maxResults?: number;
   order?: "relevance" | "viewCount" | "date";
   publishedAfter?: string;
+  /** "short" = under 4 minutes (Shorts-style), "medium" = 4–20 minutes. */
+  duration?: "short" | "medium";
   /** Cache lifetime for this query. */
   cacheSeconds?: number;
 }
@@ -58,7 +60,7 @@ export async function searchYouTube(rawQuery: string, opts: YouTubeSearchOptions
 
   const store = getStore();
   const max = Math.min(Math.max(opts.maxResults ?? 8, 1), 15);
-  const cacheKey = `yt-search:${opts.order ?? "relevance"}:${opts.publishedAfter?.slice(0, 10) ?? "any"}:${max}:${query.toLowerCase()}`;
+  const cacheKey = `yt-search:${opts.duration ?? "any"}:${opts.order ?? "relevance"}:${opts.publishedAfter?.slice(0, 10) ?? "any"}:${max}:${query.toLowerCase()}`;
   const cached = await store.get<VideoSearchResult>(cacheKey);
   if (cached) return cached;
 
@@ -80,6 +82,7 @@ export async function searchYouTube(rawQuery: string, opts: YouTubeSearchOptions
       relevanceLanguage: "en",
       regionCode: config.regionCode,
       ...(opts.publishedAfter ? { publishedAfter: opts.publishedAfter } : {}),
+      ...(opts.duration ? { videoDuration: opts.duration } : {}),
       key: config.apiKey,
     }).toString();
     const sRes = await fetch(search, { cache: "no-store", signal: AbortSignal.timeout(8_000) });

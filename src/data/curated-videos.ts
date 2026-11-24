@@ -15,7 +15,7 @@
  *   url: "https://www.tiktok.com/@creator/video/7300000000000000000",
  *   title: "15-minute garlic noodles",
  *   creator: "@creator",
- *   topic: "easy-pasta",
+ *   topic: "quick-dinners",
  *   addedAt: "2026-11-22",
  *   relatedRecipe: "garlic-butter-pasta",
  * },
@@ -24,7 +24,7 @@ export interface CuratedVideoEntry {
   url: string;
   title: string;
   creator: string;
-  /** One of the topic ids in src/lib/trends/topics.ts. */
+  /** One of the topic ids in TREND_TOPICS (src/lib/trends/model.ts). */
   topic: string;
   /** ISO date you verified the post. */
   addedAt: string;

@@ -12,7 +12,7 @@ export function sameCloudState(a: StorageSchema, b: StorageSchema): boolean {
 
 export function hasKitchenData(s: StorageSchema): boolean {
   return Boolean(
-    s.inventory.length || s.favorites.length || s.shoppingList.length || s.mealPlan.length || s.history.length || JSON.stringify(s.preferences) !== JSON.stringify(DEFAULT_PREFERENCES),
+    s.inventory.length || s.favorites.length || s.generatedRecipes.length || s.shoppingList.length || s.mealPlan.length || s.history.length || JSON.stringify(s.preferences) !== JSON.stringify(DEFAULT_PREFERENCES),
   );
 }
 
@@ -70,6 +70,7 @@ export function threeWayMerge(base: StorageSchema, local: StorageSchema, remote:
     mealPlan: mergeById(base.mealPlan, local.mealPlan, remote.mealPlan),
     history: mergeById(base.history, local.history, remote.history),
     favorites: mergeSet(base.favorites, local.favorites, remote.favorites),
+    generatedRecipes: mergeById(base.generatedRecipes, local.generatedRecipes, remote.generatedRecipes),
     preferences,
     consent: local.consent,
   };
@@ -98,6 +99,7 @@ export function mergeGuestIntoAccount(guest: StorageSchema, account: StorageSche
     ...account,
     inventory: uniqueBy([...account.inventory, ...guest.inventory], (i) => JSON.stringify([i.ingredientId, i.quantity, i.unit, i.location, i.useBy ?? "", i.bestBefore ?? "", Boolean(i.isLeftover)])),
     favorites: Array.from(new Set([...account.favorites, ...guest.favorites])),
+    generatedRecipes: uniqueBy([...account.generatedRecipes, ...guest.generatedRecipes], (r) => r.id),
     shoppingList: uniqueBy([...account.shoppingList, ...guest.shoppingList], (i) => JSON.stringify([i.ingredientId ?? i.name.toLowerCase(), i.quantity, i.unit, i.purchased])),
     mealPlan: uniqueBy([...account.mealPlan, ...guest.mealPlan], (m) => `${m.day}:${m.slot}:${m.recipeId}`),
     history: uniqueBy([...account.history, ...guest.history], (h) => `${h.recipeId}:${h.cookedAt}`).sort((a, b) => b.cookedAt.localeCompare(a.cookedAt)),

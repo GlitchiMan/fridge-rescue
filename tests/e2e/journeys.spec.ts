@@ -18,7 +18,7 @@ function trackErrors(page: Page) {
 test("Journey A: first-time visitor finds, opens and saves a recipe", async ({ page }) => {
   const errors = trackErrors(page);
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Your kitchen. Your recipes. Your way.");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("What are we cooking?");
 
   await addHeroIngredient(page, "eggs");
   await addHeroIngredient(page, "cheese");
@@ -27,7 +27,7 @@ test("Journey A: first-time visitor finds, opens and saves a recipe", async ({ p
   await expect(chips.getByText("Eggs")).toBeVisible();
   await expect(chips.getByText("Potatoes")).toBeVisible();
 
-  await page.getByRole("button", { name: "Find recipes" }).click();
+  await page.getByRole("button", { name: "Generate my recipes" }).click();
   await expect(page.getByText(/We found \d+ recipes? that use your ingredients/)).toBeVisible();
   const omelette = page.getByRole("link", { name: "Classic Cheese Omelette" }).first();
   await expect(omelette).toBeVisible();

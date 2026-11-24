@@ -22,6 +22,8 @@ interface Props {
   onEnterEmpty?: () => void;
   /** Lets a parent commit whatever is still typed (returns the new ids). */
   actionRef?: React.MutableRefObject<{ commit: () => string[] } | null>;
+  /** Accept foods that aren't in the ingredient list as free text. */
+  onAddCustom?: (names: string[]) => void;
 }
 
 export function IngredientPicker({
@@ -37,6 +39,7 @@ export function IngredientPicker({
   inputId,
   onEnterEmpty,
   actionRef,
+  onAddCustom,
 }: Props) {
   const [query, setQuery] = useState("");
   const [leaving, setLeaving] = useState<string | null>(null);
@@ -78,7 +81,11 @@ export function IngredientPicker({
     if (pickedId) ids.push(pickedId);
     const fresh = Array.from(new Set(ids)).filter((x) => !selected.includes(x));
     if (fresh.length) onAdd(fresh);
-    setNotFound(unknown);
+    // Callers that accept free text (e.g. AI generation) take unknown foods as-is.
+    if (onAddCustom && unknown.length) {
+      onAddCustom(unknown.map((u) => u.slice(0, 60)));
+      setNotFound([]);
+    } else setNotFound(unknown);
     setQuery("");
     setActive(0);
     setOpen(false);

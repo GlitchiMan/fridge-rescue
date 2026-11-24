@@ -48,6 +48,34 @@ export function SavedRecipes({ recipes }: { recipes: RecipeSummary[] }) {
         )}
       </section>
 
+      {data.generatedRecipes.length > 0 && (
+        <section aria-labelledby="ai-saved" className="mt-20">
+          <div className="mb-2 flex items-end justify-between border-b border-line pb-4">
+            <div>
+              <h2 id="ai-saved" className="section-title">Made with Fridge AI</h2>
+              <p className="mt-1 text-[0.8125rem] text-muted">AI-generated recipes, not kitchen-tested.</p>
+            </div>
+            <p className="text-sm tabular-nums text-muted">{data.generatedRecipes.length} saved</p>
+          </div>
+          <ul className="divide-y divide-line">
+            {data.generatedRecipes.map((r) => (
+              <li key={r.id} data-testid="saved-ai-recipe" className="flex items-center justify-between gap-4 py-3.5">
+                <Link href={`/ai-recipe?id=${encodeURIComponent(r.id)}`} className="min-w-0 flex-1 hover:underline">
+                  <span className="block truncate font-medium text-ink">{r.title}</span>
+                  <span className="text-xs text-muted">
+                    {r.prepMinutes + r.cookMinutes} min · Serves {r.servings}
+                    {r.cuisine && ` · ${r.cuisine}`}
+                  </span>
+                </Link>
+                <button type="button" onClick={() => kitchenStore.removeGeneratedRecipe(r.id)} className="shrink-0 text-xs font-medium text-muted hover:text-ink" aria-label={`Remove ${r.title}`}>
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <section aria-labelledby="history" className="mt-20">
         <div className="mb-2 border-b border-line pb-4">
           <h2 id="history" className="section-title">Cooking history</h2>
